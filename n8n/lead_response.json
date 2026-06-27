@@ -1,0 +1,60 @@
+{
+  "name": "AI Lead-Response Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-response",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-4a01-9001-000000000001",
+      "name": "New Lead (Webhook)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "YOUR_ANTHROPIC_API_KEY" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 500,\n  \"system\": \"You are a friendly, professional assistant replying to a new business lead. Write a warm, concise reply (under 150 words) that answers their question, builds trust, and proposes a clear next step. Plain text, no placeholders.\",\n  \"messages\": [\n    { \"role\": \"user\", \"content\": \"New lead.\\nName: {{ $json.body.name }}\\nEmail: {{ $json.body.email }}\\nMessage: {{ $json.body.message }}\\n\\nWrite the reply.\" }\n  ]\n}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0002-4a01-9001-000000000002",
+      "name": "Claude — Draft Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=🟢 New lead: {{ $('New Lead (Webhook)').item.json.body.name }} ({{ $('New Lead (Webhook)').item.json.body.email }})\n\nDraft reply:\n{{ $json.content[0].text }}",
+        "additionalFields": {}
+      },
+      "id": "a1b2c3d4-0003-4a01-9001-000000000003",
+      "name": "Notify (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [800, 300]
+    }
+  ],
+  "connections": {
+    "New Lead (Webhook)": { "main": [[{ "node": "Claude — Draft Reply", "type": "main", "index": 0 }]] },
+    "Claude — Draft Reply": { "main": [[{ "node": "Notify (Telegram)", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {}
+}
