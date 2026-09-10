@@ -18,5 +18,12 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install --disable-pip-version-check pandas numpy pyarrow
-      - name: Download and inspect real NQ 1m bars
+      - name: Run Astra 6 Transition Engine
         run: python astra_nq_bars.py
+      - name: Publish Astra results
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra6-nq-transition-results
+          path: |
+            astra_transition_events.parquet
+            astra_transition_summary.csv
