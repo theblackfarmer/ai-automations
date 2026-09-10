@@ -69,3 +69,5 @@ if len(out):
         x=out[f'ret_{h}']; print(f'H{h}_N',len(x),'MEAN_RETURN_PCT',round(x.mean()*100,4),'MEDIAN_RETURN_PCT',round(x.median()*100,4),'WIN_RATE',round((x>0).mean()*100,2),'MFE_PCT',round(out[f'mfe_{h}'].mean()*100,4),'MAE_PCT',round(out[f'mae_{h}'].mean()*100,4))
     print('YEAR_COUNTS',out.assign(year=out.timestamp.dt.year).groupby('year').size().to_dict())
 else: print('NO_EVENTS')
+
+# Trigger comment: force a fresh push-run of the frozen development engine.
