@@ -63,11 +63,16 @@ for idx,direction,L,b,r,p,c in sorted(events):
     rows.append(row)
 out=pd.DataFrame(rows)
 print('REAL_NQ_ROWS',len(df)); print('REAL_NQ_RANGE',df.timestamp.iloc[0],df.timestamp.iloc[-1]); print('TRANSITION_EVENTS',len(out))
+summary=[]
 if len(out):
     print('DIRECTION_COUNTS',out.direction.value_counts().to_dict())
     for h in (5,15,30,60):
-        x=out[f'ret_{h}']; print(f'H{h}_N',len(x),'MEAN_RETURN_PCT',round(x.mean()*100,4),'MEDIAN_RETURN_PCT',round(x.median()*100,4),'WIN_RATE',round((x>0).mean()*100,2),'MFE_PCT',round(out[f'mfe_{h}'].mean()*100,4),'MAE_PCT',round(out[f'mae_{h}'].mean()*100,4))
+        x=out[f'ret_{h}']; rec={'horizon':h,'n':len(x),'mean_return_pct':x.mean()*100,'median_return_pct':x.median()*100,'win_rate_pct':(x>0).mean()*100,'mfe_pct':out[f'mfe_{h}'].mean()*100,'mae_pct':out[f'mae_{h}'].mean()*100}; summary.append(rec)
+        print(f'H{h}_N',len(x),'MEAN_RETURN_PCT',round(x.mean()*100,4),'MEDIAN_RETURN_PCT',round(x.median()*100,4),'WIN_RATE',round((x>0).mean()*100,2),'MFE_PCT',round(out[f'mfe_{h}'].mean()*100,4),'MAE_PCT',round(out[f'mae_{h}'].mean()*100,4))
     print('YEAR_COUNTS',out.assign(year=out.timestamp.dt.year).groupby('year').size().to_dict())
-else: print('NO_EVENTS')
+else:
+    print('NO_EVENTS')
 
-# Trigger comment: force a fresh push-run of the frozen development engine.
+# Persist machine-readable research outputs for downstream Astra analysis.
+out.to_parquet('astra_transition_events.parquet',index=False)
+pd.DataFrame(summary).to_csv('astra_transition_summary.csv',index=False)
