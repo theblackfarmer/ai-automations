@@ -6,6 +6,7 @@ on:
       - '.github/workflows/astra-nq-bars.yml'
       - 'astra_nq_bars.py'
       - 'astra_transition_feature_audit.py'
+      - 'astra6_causal_transition_engine.py'
   workflow_dispatch:
 
 jobs:
@@ -19,7 +20,9 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install --disable-pip-version-check pandas numpy pyarrow scipy
-      - name: Run Astra 6 Transition Engine
+      - name: Run Astra 6 causal transition engine
+        run: python astra6_causal_transition_engine.py
+      - name: Run Astra 6 legacy discovery baseline
         run: python astra_nq_bars.py
       - name: Run Astra 6 Feature Audit
         run: python astra_transition_feature_audit.py
@@ -28,6 +31,8 @@ jobs:
         with:
           name: astra6-nq-transition-results
           path: |
+            astra6_causal_setups.parquet
+            astra6_causal_summary.csv
             astra_transition_events.parquet
             astra_transition_summary.csv
             astra_transition_feature_bins.csv
