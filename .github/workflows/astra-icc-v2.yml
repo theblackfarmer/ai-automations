@@ -5,6 +5,7 @@ on:
     paths:
       - 'astra_v6_icc_event_engine_v2.py'
       - 'astra_v6_icc_audit.py'
+      - 'astra_v6_icc_event_quality_audit.py'
       - '.github/workflows/astra-icc-v2.yml'
   workflow_dispatch:
 
@@ -21,6 +22,8 @@ jobs:
         run: python -m pip install --disable-pip-version-check pandas numpy pyarrow
       - name: Run ICC V2 structural audit
         run: python astra_v6_icc_audit.py
+      - name: Run ICC V2 event-quality audit
+        run: python astra_v6_icc_event_quality_audit.py
       - name: Publish ICC V2 structural artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -29,3 +32,5 @@ jobs:
             astra6_icc_v2_events.parquet
             astra6_icc_v2_summary.csv
             astra6_icc_v2_invariant_audit.csv
+            astra6_icc_v2_event_quality_audit.csv
+            astra6_icc_v2_event_quality_summary.csv
