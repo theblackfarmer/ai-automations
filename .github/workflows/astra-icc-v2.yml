@@ -1,0 +1,31 @@
+name: Astra NQ ICC V2 Audit
+
+on:
+  push:
+    paths:
+      - 'astra_v6_icc_event_engine_v2.py'
+      - 'astra_v6_icc_audit.py'
+      - '.github/workflows/astra-icc-v2.yml'
+  workflow_dispatch:
+
+jobs:
+  icc-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas numpy pyarrow
+      - name: Run ICC V2 structural audit
+        run: python astra_v6_icc_audit.py
+      - name: Publish ICC V2 structural artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra6-icc-v2-structural-audit
+          path: |
+            astra6_icc_v2_events.parquet
+            astra6_icc_v2_summary.csv
+            astra6_icc_v2_invariant_audit.csv
