@@ -45,6 +45,21 @@ def main():
     identity = ["direction","indication_time","correction_start_time",
                 "correction_structure_known_time","continuation_time"]
     identity_dups = int(e.duplicated(identity, keep=False).sum())
+    canonical = identity + ["indication_level","source_pivot_time"]
+    canonical_dups = int(e.duplicated(canonical, keep=False).sum())
+    duplicate_identity_rows = e[e.duplicated(identity, keep=False)].sort_values(identity)
+    duplicate_identity_rows.to_csv("astra6_icc_v2_duplicate_identity_rows.csv", index=False)
+    indication_groups = (
+        e.groupby(["direction","indication_time"], dropna=False)
+         .agg(events=("direction","size"),
+              distinct_levels=("indication_level","nunique"),
+              distinct_source_pivots=("source_pivot_time","nunique"),
+              first_K=("continuation_time","min"),
+              last_K=("continuation_time","max"))
+         .reset_index()
+    )
+    indication_groups[indication_groups["events"] > 1].to_csv(
+        "astra6_icc_v2_multi_event_indications.csv", index=False)
 
     strict_order = int((~(
         (e.indication_time < e.correction_start_time) &
@@ -96,7 +111,7 @@ def main():
     rows = [
         ("population_frozen_140", int(len(e) != 140), 0),
         ("exact_duplicate_rows", exact_dups, 0),
-        ("duplicate_event_identities", identity_dups, 0),
+        ("canonical_duplicate_event_identities", canonical_dups, 0),
         ("strict_I_C_structure_K", strict_order, 0),
         ("correction_pivots_after_C", pivots_after_c, 0),
         ("pivot_known_by_structure", missing_known + known_after_structure + transition_mismatch, 0),
@@ -115,7 +130,8 @@ def main():
         "long_events": int(e.direction.eq("long").sum()),
         "short_events": int(e.direction.eq("short").sum()),
         "exact_duplicate_rows": exact_dups,
-        "duplicate_event_identities": identity_dups,
+        "duplicate_event_identities_diagnostic": identity_dups,
+        "canonical_duplicate_event_identities": canonical_dups,
         "overlap_pairs_diagnostic": overlap_pairs,
         "overlap_same_indication_diagnostic": overlap_same_indication,
         "pivot_known_missing": missing_known,
@@ -126,6 +142,9 @@ def main():
     summary.to_csv("astra6_icc_v2_event_quality_summary.csv", index=False)
     print(summary.to_string(index=False))
     print(out.to_string(index=False))
+    print("NOTE: duplicate_event_identities_diagnostic counts rows sharing the I/C/structure/K timestamps.")
+    print("These are diagnostic unless the full canonical identity (including I level/source pivot) duplicates.")
+    print("multi_event_indication_groups", int((indication_groups["events"] > 1).sum()))
     if not out["pass"].all():
         raise SystemExit("FAIL: ICC V2 event-quality audit")
     print("PASS: frozen 140-event population cleared event-quality audit")
