@@ -231,6 +231,7 @@ def _correction_structure(
     corr: pd.DataFrame,
     *,
     direction: str,
+    correction_start_time: pd.Timestamp,
     pivots_left: int,
     pivots_right: int,
 ) -> Optional[tuple[Pivot, Pivot, Pivot]]:
@@ -247,8 +248,14 @@ def _correction_structure(
     """
     highs, lows = causal_pivots(corr, left=pivots_left, right=pivots_right)
 
+    # Only pivots produced after the correction begins may define the
+    # correction structure. This prevents a pre-correction pivot from being
+    # reused as C_STRUCTURE.
+    highs = [h for h in highs if h.time > correction_start_time]
+    lows = [l for l in lows if l.time > correction_start_time]
+
     if direction == "long":
-        for i, low1 in enumerate(lows):
+        for low1 in lows:
             highs_after = [h for h in highs if h.idx > low1.idx]
             if not highs_after:
                 continue
@@ -303,19 +310,9 @@ def build_icc_events(
         if len(corr_slice) < (pivot_left + pivot_right + 1):
             continue
 
-        structure = _correction_structure(
-            corr_slice,
-            direction=ind.direction,
-            pivots_left=pivot_left,
-            pivots_right=pivot_right,
-        )
-        if structure is None:
-            continue
-
-        first_pivot, reaction_pivot, transition_pivot = structure
-        structure_known = transition_pivot.known_time
-
-        # Correction starts at the first counter-direction movement after I.
+        # Correction starts at the first observable counter-direction
+        # movement after I. This is a provisional research proxy; the source
+        # material does not specify a unique bar-level mechanical rule.
         correction_start = None
         for i in range(corr_start, corr_end):
             if ind.direction == "long":
@@ -327,7 +324,29 @@ def build_icc_events(
                     correction_start = corr.at[i, "timestamp"]
                     break
 
-        if correction_start is None or correction_start >= structure_known:
+        if correction_start is None:
+            continue
+
+        structure = _correction_structure(
+            corr_slice,
+            direction=ind.direction,
+            correction_start_time=correction_start,
+            pivots_left=pivot_left,
+            pivots_right=pivot_right,
+        )
+        if structure is None:
+            continue
+
+        first_pivot, reaction_pivot, transition_pivot = structure
+        structure_known = transition_pivot.known_time
+
+        # The structure itself must be causally downstream of correction start.
+        if not (
+            correction_start < first_pivot.time
+            < reaction_pivot.time
+            < transition_pivot.time
+            < structure_known
+        ):
             continue
 
         conf_start = _bar_idx_at_or_after(conf, structure_known)
