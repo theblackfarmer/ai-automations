@@ -34,3 +34,5 @@ jobs:
             astra6_icc_v2_invariant_audit.csv
             astra6_icc_v2_event_quality_audit.csv
             astra6_icc_v2_event_quality_summary.csv
+            astra6_icc_v2_duplicate_identity_rows.csv
+            astra6_icc_v2_multi_event_indications.csv
