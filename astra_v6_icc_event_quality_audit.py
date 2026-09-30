@@ -157,7 +157,7 @@ def main():
     print("multi_event_indication_groups", int((indication_groups["events"] > 1).sum()))
     if not out["pass"].all():
         raise SystemExit("FAIL: ICC V2 event-quality audit")
-    print("PASS: frozen 140-event population cleared event-quality audit")
+    print(f"PASS: frozen {len(e)}-event population cleared event-quality audit")
 
 if __name__ == "__main__":
     main()
