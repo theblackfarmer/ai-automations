@@ -1,4 +1,5 @@
 name: Astra NQ ICC V2 Audit
+# Autonomous verification is also enforced by the main-branch PR workflow.
 
 on:
   push:
