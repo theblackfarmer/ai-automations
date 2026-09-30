@@ -8,6 +8,7 @@ on:
       - 'astra_v6_icc_event_quality_audit.py'
       - 'astra_v6_icc_stale_indication_audit.py'
       - 'astra_v6_icc_competing_pivot_audit.py'
+      - 'test_astra_v6_icc_event_identity.py'
       - '.github/workflows/astra-icc-v2.yml'
   workflow_dispatch:
 
@@ -22,6 +23,8 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install --disable-pip-version-check pandas numpy pyarrow
+      - name: Run ICC V2 event-identity regression tests
+        run: python test_astra_v6_icc_event_identity.py
       - name: Run ICC V2 structural audit
         run: python astra_v6_icc_audit.py
       - name: Run ICC V2 stale-indication audit
