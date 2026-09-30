@@ -47,6 +47,14 @@ def main():
     identity_dups = int(e.duplicated(identity, keep=False).sum())
     canonical = identity + ["indication_level","source_pivot_time"]
     canonical_dups = int(e.duplicated(canonical, keep=False).sum())
+    path_identity = [
+        "direction", "indication_level", "indication_time",
+        "correction_start_time", "correction_first_pivot_time",
+        "correction_reaction_pivot_time", "correction_transition_pivot_time",
+        "correction_structure_known_time", "continuation_time",
+        "continuation_price",
+    ]
+    semantic_path_dups = int(e.duplicated(path_identity, keep=False).sum())
     duplicate_identity_rows = e[e.duplicated(identity, keep=False)].sort_values(identity)
     duplicate_identity_rows.to_csv("astra6_icc_v2_duplicate_identity_rows.csv", index=False)
     indication_groups = (
@@ -109,9 +117,10 @@ def main():
                     overlap_same_indication += 1
 
     rows = [
-        ("population_frozen_140", int(len(e) != 140), 0),
+        ("population_frozen_139", int(len(e) != 139), 0),
         ("exact_duplicate_rows", exact_dups, 0),
         ("canonical_duplicate_event_identities", canonical_dups, 0),
+        ("semantic_duplicate_icc_paths", semantic_path_dups, 0),
         ("strict_I_C_structure_K", strict_order, 0),
         ("correction_pivots_after_C", pivots_after_c, 0),
         ("pivot_known_by_structure", missing_known + known_after_structure + transition_mismatch, 0),
@@ -132,6 +141,7 @@ def main():
         "exact_duplicate_rows": exact_dups,
         "duplicate_event_identities_diagnostic": identity_dups,
         "canonical_duplicate_event_identities": canonical_dups,
+        "semantic_duplicate_icc_paths": semantic_path_dups,
         "overlap_pairs_diagnostic": overlap_pairs,
         "overlap_same_indication_diagnostic": overlap_same_indication,
         "pivot_known_missing": missing_known,
@@ -143,7 +153,7 @@ def main():
     print(summary.to_string(index=False))
     print(out.to_string(index=False))
     print("NOTE: duplicate_event_identities_diagnostic counts rows sharing the I/C/structure/K timestamps.")
-    print("These are diagnostic unless the full canonical identity (including I level/source pivot) duplicates.")
+    print("semantic_duplicate_icc_paths must be zero: one causal ICC path is one event.")
     print("multi_event_indication_groups", int((indication_groups["events"] > 1).sum()))
     if not out["pass"].all():
         raise SystemExit("FAIL: ICC V2 event-quality audit")
