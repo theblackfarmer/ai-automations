@@ -35,3 +35,25 @@ jobs:
         run: python astra_v6_icc_competing_pivot_audit.py
       - name: Run ICC V2 event-quality audit
         run: python astra_v6_icc_event_quality_audit.py
+      - name: Publish ICC V2 validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra6-icc-v2-validation
+          if-no-files-found: error
+          path: |
+            astra6_icc_v2_events.parquet
+            astra6_icc_v2_summary.csv
+            astra6_icc_v2_invariant_audit.csv
+            astra6_icc_v2_event_quality_audit.csv
+            astra6_icc_v2_event_quality_summary.csv
+            astra6_icc_v2_duplicate_identity_rows.csv
+            astra6_icc_v2_multi_event_indications.csv
+            astra6_icc_v2_stale_summary.csv
+            astra6_icc_v2_stale_age_distribution.csv
+            astra6_icc_v2_stale_top30.csv
+            astra6_icc_v2_stale_event_detail.csv
+            astra6_icc_v2_competing_pivot_summary.csv
+            astra6_icc_v2_competing_pivot_by_direction.csv
+            astra6_icc_v2_competing_pivot_detail.csv
+            astra6_icc_v2_competing_pivot_examples.csv
