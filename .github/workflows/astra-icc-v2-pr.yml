@@ -1,0 +1,37 @@
+name: Astra NQ ICC V2 PR Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'astra_v6_icc_event_engine_v2.py'
+      - 'astra_v6_icc_audit.py'
+      - 'astra_v6_icc_event_quality_audit.py'
+      - 'astra_v6_icc_stale_indication_audit.py'
+      - 'astra_v6_icc_competing_pivot_audit.py'
+      - 'test_astra_v6_icc_event_identity.py'
+      - '.github/workflows/astra-icc-v2.yml'
+      - '.github/workflows/astra-icc-v2-pr.yml'
+
+jobs:
+  icc-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pandas numpy pyarrow
+      - name: Run ICC V2 event-identity regression tests
+        run: python test_astra_v6_icc_event_identity.py
+      - name: Run ICC V2 structural audit
+        run: python astra_v6_icc_audit.py
+      - name: Run ICC V2 stale-indication audit
+        run: python astra_v6_icc_stale_indication_audit.py
+      - name: Run ICC V2 competing-pivot audit
+        run: python astra_v6_icc_competing_pivot_audit.py
+      - name: Run ICC V2 event-quality audit
+        run: python astra_v6_icc_event_quality_audit.py
