@@ -284,7 +284,47 @@ def build_icc_events(
         out.continuation_price > out.indication_level,
         out.continuation_price < out.indication_level,
     )
-    return out.reset_index(drop=True)
+    return deduplicate_icc_events(out).reset_index(drop=True)
+
+
+def deduplicate_icc_events(events: pd.DataFrame) -> pd.DataFrame:
+    """Collapse duplicate source-pivot records that resolve to one ICC path.
+
+    Source-pivot provenance is retained when it identifies a genuinely
+    different event path. If two records have the same direction, indication
+    level/time, correction structure, and continuation, they represent one
+    causal ICC event even when older and newer HTF pivots produced the same
+    indication level. Prefer the newest causally-known source pivot
+    deterministically.
+    """
+    if events.empty:
+        return events.copy()
+
+    path_identity = [
+        "direction",
+        "indication_level",
+        "indication_time",
+        "correction_start_time",
+        "correction_first_pivot_time",
+        "correction_reaction_pivot_time",
+        "correction_transition_pivot_time",
+        "correction_structure_known_time",
+        "continuation_time",
+        "continuation_price",
+    ]
+    missing = [c for c in path_identity if c not in events.columns]
+    if missing:
+        raise ValueError(f"missing ICC event identity columns: {missing}")
+
+    out = events.copy()
+    sort_cols = [c for c in ["source_pivot_known_time", "source_pivot_time"] if c in out.columns]
+    if sort_cols:
+        out = out.sort_values(sort_cols, kind="stable")
+    out = out.drop_duplicates(path_identity, keep="last")
+    return out.sort_values(
+        ["indication_time", "direction", "indication_level", "continuation_time"],
+        kind="stable",
+    ).reset_index(drop=True)
 
 
 def audit_invariants(events: pd.DataFrame) -> dict[str, int]:
