@@ -7,6 +7,7 @@ on:
       - 'astra_v6_icc_audit.py'
       - 'astra_v6_icc_event_quality_audit.py'
       - 'astra_v6_icc_stale_indication_audit.py'
+      - 'astra_v6_icc_competing_pivot_audit.py'
       - '.github/workflows/astra-icc-v2.yml'
   workflow_dispatch:
 
@@ -25,6 +26,8 @@ jobs:
         run: python astra_v6_icc_audit.py
       - name: Run ICC V2 stale-indication audit
         run: python astra_v6_icc_stale_indication_audit.py
+      - name: Run ICC V2 competing-pivot audit
+        run: python astra_v6_icc_competing_pivot_audit.py
       - name: Run ICC V2 event-quality audit
         run: python astra_v6_icc_event_quality_audit.py
       - name: Publish ICC V2 structural artifacts
@@ -43,3 +46,7 @@ jobs:
             astra6_icc_v2_stale_age_distribution.csv
             astra6_icc_v2_stale_top30.csv
             astra6_icc_v2_stale_event_detail.csv
+            astra6_icc_v2_competing_pivot_summary.csv
+            astra6_icc_v2_competing_pivot_by_direction.csv
+            astra6_icc_v2_competing_pivot_detail.csv
+            astra6_icc_v2_competing_pivot_examples.csv
