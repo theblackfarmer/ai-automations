@@ -1,0 +1,96 @@
+name: Astra NQ ICC V2 PR Verification
+
+on:
+  push:
+    branches:
+      - astra-v6-icc-v2
+    paths:
+      - 'astra_v6_icc_event_engine_v2.py'
+      - 'astra_v6_icc_audit.py'
+      - 'astra_v6_icc_event_quality_audit.py'
+      - 'astra_v6_icc_stale_indication_audit.py'
+      - 'astra_v6_icc_competing_pivot_audit.py'
+      - 'test_astra_v6_icc_event_identity.py'
+      - '.github/workflows/astra-icc-v2-pr.yml'
+      - '.github/workflows/astra-icc-v2.yml'
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'astra_v6_icc_event_engine_v2.py'
+      - 'astra_v6_icc_audit.py'
+      - 'astra_v6_icc_event_quality_audit.py'
+      - 'astra_v6_icc_stale_indication_audit.py'
+      - 'astra_v6_icc_competing_pivot_audit.py'
+      - 'test_astra_v6_icc_event_identity.py'
+      - '.github/workflows/astra-icc-v2-pr.yml'
+      - '.github/workflows/astra-icc-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  icc-v2-validation:
+    name: ICC V2 Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Run ICC V2 validation
+        run: |
+          python test_astra_v6_icc_event_identity.py
+          python astra_v6_icc_audit.py
+          python astra_v6_icc_event_quality_audit.py
+          python astra_v6_icc_stale_indication_audit.py
+          python astra_v6_icc_competing_pivot_audit.py
+
+      - name: Publish ICC V2 validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra6-icc-v2-validation
+          if-no-files-found: warn
+          path: |
+            astra6_icc_v2_events.parquet
+            astra6_icc_v2_summary.csv
+            astra6_icc_v2_invariant_audit.csv
+            astra6_icc_v2_event_quality_audit.csv
+            astra6_icc_v2_event_quality_summary.csv
+            astra6_icc_v2_duplicate_identity_rows.csv
+            astra6_icc_v2_multi_event_indications.csv
+            astra6_icc_v2_stale_summary.csv
+            astra6_icc_v2_stale_age_distribution.csv
+            astra6_icc_v2_stale_top30.csv
+            astra6_icc_v2_stale_event_detail.csv
+            astra6_icc_v2_competing_pivot_summary.csv
+            astra6_icc_v2_competing_pivot_by_direction.csv
+            astra6_icc_v2_competing_pivot_detail.csv
+            astra6_icc_v2_competing_pivot_examples.csv
+
+      - name: Write validation summary
+        if: always()
+        run: |
+          {
+            echo "## ASTRA ICC V2 Validation"
+            echo
+            echo "**Commit:** \`${GITHUB_SHA}\`"
+            echo
+            echo "**Workflow run:** https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            echo "Validation completed automatically."
+          } >> "$GITHUB_STEP_SUMMARY"
