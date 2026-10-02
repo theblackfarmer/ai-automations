@@ -1,25 +1,22 @@
-name: Astra NQ Bars
+name: Astra Legacy Discovery Replay (not deployment validation)
 
 on:
-  push:
-    paths:
-      - '.github/workflows/astra-nq-bars.yml'
-      - 'astra_nq_bars.py'
-      - 'astra_transition_feature_audit.py'
-      - 'astra6_causal_transition_engine.py'
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   bars:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: python -m pip install --disable-pip-version-check pandas numpy pyarrow scipy
+        run: python -m pip install --disable-pip-version-check -r requirements-astra.txt
       - name: Run Astra 6 causal transition engine
         run: python astra6_causal_transition_engine.py
       - name: Run Astra 6 legacy discovery baseline
@@ -27,9 +24,12 @@ jobs:
       - name: Run Astra 6 Feature Audit
         run: python astra_transition_feature_audit.py
       - name: Publish Astra results
-        uses: actions/upload-artifact@v4
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: astra6-nq-transition-results
+          name: legacy-unaudited-discovery-${{ github.run_id }}
+          if-no-files-found: error
+          retention-days: 90
           path: |
             astra6_causal_setups.parquet
             astra6_causal_summary.csv

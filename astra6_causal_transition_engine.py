@@ -9,9 +9,12 @@ import io, urllib.request
 import numpy as np
 import pandas as pd
 
-URL='https://github.com/s-k-28/nq-es-trader-5k-payout/raw/refs/heads/main/data/Dataset_NQ_1min_2022_2025.csv'
+URL='https://raw.githubusercontent.com/s-k-28/nq-es-trader-5k-payout/a2f9ae2a339e1965842b6d5c6b88aaaf71141c69/data/Dataset_NQ_1min_2022_2025.csv'
 req=urllib.request.Request(URL,headers={'User-Agent':'Astra6/1.0'})
 with urllib.request.urlopen(req,timeout=180) as r: raw=r.read()
+import hashlib
+if hashlib.sha256(raw).hexdigest() != '1577e60a7feab411e49da7a56c7052a64738cd1757cfd60aa11fd783ff43b60b':
+    raise ValueError('Historical research source SHA256 mismatch')
 df=pd.read_csv(io.BytesIO(raw))
 df.columns=['timestamp','open','high','low','close','volume','vwap_rth','vwap_eth']
 df['timestamp']=pd.to_datetime(df.timestamp); df=df.sort_values('timestamp').reset_index(drop=True)
