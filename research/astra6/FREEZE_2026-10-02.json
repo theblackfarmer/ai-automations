@@ -1,0 +1,53 @@
+{
+ "id":"ASTRA6-R1-20261002","status":"FROZEN BEFORE NEW PERFORMANCE","baseline_commit":"5689036","authorization":"2026-10-02 user instructed operator to resolve mechanical choices through reasoning and existing information",
+ "scope":"Two explicit ASTRA research interpretations; not claims to replicate every discretionary educator decision. No ICT/FVG/trend/news/volatility filters. No adaptive parameter selection.",
+ "provenance":"forensic/2026-10-02/SPECIFICATION_REGISTER.json plus primary Sci transcripts and Vincent SMSqQTBxjc0",
+ "data":{
+  "revision":"a2f9ae2a339e1965842b6d5c6b88aaaf71141c69",
+  "historical_file":"Dataset_NQ_1min_2022_2025.csv","historical_sha256":"1577e60a7feab411e49da7a56c7052a64738cd1757cfd60aa11fd783ff43b60b",
+  "forward_file":"mnq_2026_1min.csv","forward_sha256":"5eb2bd28a1c7ee7bf3c9014a8ee5748da8273eceb013fccd1739587cd8bd6835",
+  "partitions":{"train":["2022-12-26","2023-12-31"],"validation":["2024-01-01","2024-12-31"],"legacy_test_reused":["2025-01-01","2025-12-11"],"forward_oos":["2026-03-05","2026-05-01"]},
+  "forward_exclusion":"Before performance inspection: Jan2-Mar4 has16420 off-tick rows and16422 zero-volume rows, so this segment is inadmissible as MNQ execution data; never silently round or fill it. PostMar4 quality must independently pass. No test of the discarded segment.",
+  "timestamp_assumption":"Historical header ET localized America/New_York; aware forward timestamps converted. Treat source stamp as interval OPEN and availability=stamp+1minute; if actual source close this adds latency rather than using price early. Unknown vendor convention remains deployment blocker.",
+  "resampling":"Complete consecutive raw minute intervals only. OHLC aggregate with close-known right boundary; UTC-aware chronological processing. ET 18:00 session anchor for 4H; midnight equivalent for 1H/15M/5M/2M. Missing intervals are not filled. Drop incomplete aggregation buckets; pivot windows require contiguous expected bars. Unknown contract adjustment/roll provenance blocks deployment.",
+  "tick":0.25
+ },
+ "icc":{
+  "variants":[{"name":"icc_1h_15m","htf_minutes":60,"ltf_minutes":15},{"name":"icc_1h_5m","htf_minutes":60,"ltf_minutes":5},{"name":"icc_4h_15m","htf_minutes":240,"ltf_minutes":15}],
+  "pivots":"Existing2-left/2-right symmetric pivot substrate. Strict greater/less than every other high/low in window; tied or dual-kind pivots excluded. Confirmation known only at rightmost bar CLOSE. Sensitivity separately1-left/1-right and3-left/3-right, no selection.",
+  "indication":"First HTF close crossing latest confirmed unbroken high(long)/low(short), prior close on other side. Directional candle and body>=50percent of full range operationalize user's strong momentum without an ATR/volatility filter. Freeze50percent now; sensitivities40/60percent. Both crossings same bar rejected. New indication supersedes any active one, including opposite direction. Superseded pivots never resurrect.",
+  "correction":"First strictly post-I completed LTF directional countertrend candle (long close<open;short close>open). Latest known HTF excursion from I through bars known by C fixes target extreme; target must be beyond entry later. Countertrend move represents liquidity-taking pressure, not an added mandatory sweep at an invented named level.",
+  "structure":"Online, post-C full pivot windows only. Long low->reaction high->higher low; short high->reaction low->lower high. Use first chronological adjacent alternating three-pivot sequence; replace consecutive same-kind pivot with newest only BEFORE structure frozen. Never choose earliest starting pivot conditional on future completion. Structure known at third pivot confirmation. No structural evidence before C.",
+  "continuation":"Strictly later LTF close crosses reaction pivot in HTF direction AND lies beyond original I level. Prior LTF close must be on other side of reaction. Original I need only directional side, matching source distinction; reaction provides actual cross. Entry next raw minute open at/after this close-known time. One emitted signal per I. If a new indication arrives first it cancels old state.",
+  "invalidation":"Long close below first structure low /short above first structure high cancels before entry. Setup expires after96 completed LTF bars from C; inherited research horizon, sensitivity72/120. No expiry performance selection.",
+  "stop_target":"Stop one tick beyond transition higher-low/lower-high pivot. Initial target known excursion extreme fixed at C. Reject if target not beyond filled entry or risk<1point; execution gap makes same check. Fixed risk1R, two equal contracts for50percent TP1 then runner. No scaling in.",
+  "runner":"After TP1, move residual stop to entry breakeven on NEXT minute only; then ratchet to newest confirmed same-direction protecting LTF pivot minus/plus1tick, effective only after pivot known. No loosening. Day max hold24elapsed hours; swing120elapsed hours. Exit at first raw open at/after deadline; no retrospective flatten through missing data.",
+  "limits":"Research interpretation of structure/strong momentum/correction/expiry/trail. Not the earlier mechanically incomplete exact-educator claim. Day/swing categorization changes holding limit, not a session filter."
+ },
+ "vincent":{
+  "name":"vincent_2m","ltf_minutes":2,
+  "levels":"Prior completed09:30-16:00 ET RTH high/low and current04:00-09:30 ET premarket high/low. Require complete prior RTH and current premarket minutes; skip days lacking these source periods. These are08:30-15:00 and03:00-08:30 Central respectively; convert timezones programmatically.",
+  "ntz":"At RTH open, nearest lower and upper levels bracketing opening price form NTZ. Trade only outward through upper boundary long or lower boundary short; if open outside all levels, nearest level behind price may be retested in opening direction. Frozen level rank distance then label alphabetically for exact ties.",
+  "break":"A completed2M close crosses selected level outward; gap outside at open also eligible. Never enter breakout bar.",
+  "retest":"Subsequent bar touches selected level within1tick and closes back on breakout side. Freeze rejection-bar high/low as battle-zone bounds; no fixed3-5 candle wait. If later bar closes through opposite rejection bound cancel. Setup expires at16:00 ET; later clean crossing can create new setup after cancellation.",
+  "confirmation":"Strictly later2M close breaks rejection/battle-zone high for long or low for short, remaining outside NTZ. Prior close inside/on bound. This is an explicit minimal flag/consolidation-break interpretation. Next1M open entry. One event per break/retest; no same-bar retest/entry.",
+  "stop_target":"Stop1tick beyond frozen rejection extreme. TP1 most extreme price from break through bars BEFORE retest, frozen upon retest. Reject target behind entry or risk<1point. Two equal contracts,50percent partial at TP1; runner then breakeven and confirmed2L/2R2M protecting pivot trail effective next minute only. Flat at16:00 ET/15:00 Central first available open.",
+  "sensitivity":"Retest tolerance0/2ticks around base1tick; execution3M around base2M; no selecting winners.",
+  "source_limit":"Vincent also discusses ES/NQ/SPY/QQQ alignment and discretionary NTZ/runner decisions. This is explicitly NQ-only core-pattern research. No claim of full Vincent fidelity or deployment PASS without independently sourced synchronized multi-market confirmation evidence. Missing alignment is a deployment limitation, never falsely labeled satisfied."
+ },
+ "execution":{
+  "signal_schema":"strategy,direction(+1/-1),decision_time UTC,stop,target,expiry_time UTC,structure_known_time UTC,indication_time UTC,correction_time UTC; optional provenance fields. Decision fields only. Entry simulator separately uses next raw open.",
+  "accounting":"Each strategy independently one position at a time; skip signals while a position remains open including same-minute exit. Across variants no portfolio sum. Overlap measured on all candidates.",
+  "costs":"NQ:20USD/point/contract,5USD roundtrip commission/fees per contract; MNQ:2USD/point/contract,1.50USD roundtrip. ASSUMED all-in stressable costs, not broker quote. One tick adverse entry and every exit including target (conservative market-on-touch). Stress2ticks and2xfees. Targets cannot be guaranteed fills.",
+  "order":"1M path resolution. Gap stops fill at worse open; stop and target same minute=>stop first. Count ambiguities. Partial then runner cannot improve stop until next minute. Time exits at available open. No use of future extrema. Data-end/partition-end open trades marked censored and excluded with counts, not fake realized PnL.",
+  "risk":"Initial filled-entry to fixed stop distance; min1point. Fixed2 contracts; report netR and per2contract USD. Prop diagnostics assumed50k/2000USD static drawdown only, no actual firm feasibility claim without chosen firm/rules."
+ },
+ "gates":{
+  "seed":2601002,"bootstrap_repetitions":2000,
+  "before_performance":"Nonvacuous regression tests; raw truncation for EVERY emitted candidate at its decision time with matching full fields, using reusable streaming checkpoints when equivalent; deliberately broken future-dependent control must fail. No pass by metadata-only audit. Source fidelity limitations explicit.",
+  "minimum_samples":"At least100 nonoverlap forward-OOS trades per base strategy variant and30 in each direction; minimum3 distinct OOS months. Sparse result is INSUFFICIENT, not proof of no edge.",
+  "acceptance":"Positive net expectancy under base and stress costs in validation and forwardOOS; block bootstrap95percent lower mean>0; PF>1; top5 share of gross profit<=25percent; neighboring sensitivity directions do not reverse expectancy; no month>50percent total positive profit; no causal failure; no material source/data fidelity gap. Otherwise no deployment.",
+  "metrics":"N,meanR,PF,winrate,win/loss quantiles,drawdown starting at0,tail loss,streaks,duration,monthly/directional slices,source gap/ambiguity/overlap/censor counts,concentration,bootstrap intervals,random-entry same-exit diagnostic and source/execution limitations. Market-condition diagnostics never used as filters.",
+  "multiple_tests":"Three ICC variants plus Vincent base; sensitivity counted separately, no selection. Holm-adjusted one-sided bootstrap/null evidence across base family where computed. All prior ASTRA model mining remains a caveat; old2025 is reused test, not untouchedOOS."
+ }
+}

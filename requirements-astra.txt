@@ -1,0 +1,14 @@
+# Frozen reproducible Python 3.11 research environment.
+pandas==2.3.3
+numpy==2.2.6
+pyarrow==21.0.0
+scipy==1.16.2
+pytest==8.4.2
+python-dateutil==2.9.0.post0
+pytz==2025.2
+tzdata==2025.2
+six==1.17.0
+iniconfig==2.1.0
+packaging==25.0
+pluggy==1.6.0
+Pygments==2.19.2

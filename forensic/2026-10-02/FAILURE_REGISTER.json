@@ -1,0 +1,100 @@
+[
+  [
+    "F01",
+    "CRITICAL",
+    "Hourly/15M OHLC left-labeled but used as close-known.",
+    "astra_v6_icc_audit.py:38; astra_v6_icc_event_engine_v2.py:96,124",
+    "Need raw-bar interval/known-time contract, incomplete-bar exclusion and raw-minute truncation tests."
+  ],
+  [
+    "F02",
+    "CRITICAL",
+    "Future pivots replace earlier completed correction/event.",
+    "astra_v6_icc_event_engine_v2.py:164-180",
+    "Full vs prefix synthetic event changes K; real raw-prefix diagnostic misses1 of first10 historical events. Existing timestamp checks cannot detect selection leakage."
+  ],
+  [
+    "F03",
+    "HIGH",
+    "I=C candidate causes entire indication rejection instead of searching strictly post-I.",
+    "astra_v6_icc_event_engine_v2.py:197,205,228",
+    "Freeze correction definition and add builder-positive regression."
+  ],
+  [
+    "F04",
+    "HIGH",
+    "K checks price beyond I, not an actual crossing; original objective absent.",
+    "astra_v6_icc_event_engine_v2.py:239-245",
+    "Do not conflate broken level with indication extreme/target."
+  ],
+  [
+    "F05",
+    "HIGH",
+    "Unbounded stale pivots, competing levels and skipped adverse intermediate pivots.",
+    "astra_v6_icc_event_engine_v2.py:116-132,169",
+    "Source-authorized supersession/invalidation policy needed; do not optimize expiry from results."
+  ],
+  [
+    "F06",
+    "HIGH",
+    "Validator silently removes bad values and fails to validate geometry/completeness/timezone.",
+    "astra_v6_icc_event_engine_v2.py:65-77",
+    "Add explicit schema, OHLC, finite, time and session validation."
+  ],
+  [
+    "F07",
+    "HIGH",
+    "Weak/vacuous tests: conditional None passes; monotonic fixture has no pivots; manual rows bypass builder.",
+    "tests/test_astra_v6_icc_v2.py; tests/test_icc_v2.py",
+    "Nonvacuous long/short event fixtures, mutations, causal positive controls required."
+  ],
+  [
+    "F08",
+    "HIGH",
+    "Audit trusts stored booleans/timestamps, not market-derived structure; overlap only per direction.",
+    "astra_v6_icc_event_quality_audit.py:81-117",
+    "Independent market reconstruction and cross-direction overlap required."
+  ],
+  [
+    "F09",
+    "HIGH",
+    "Missing dependencies breaks clean PR runner.",
+    "8d1fc87; run36801077008",
+    "Pinned dependency manifest/install required after spec gate."
+  ],
+  [
+    "F10",
+    "HIGH",
+    "Primary artifact steps skip on failure; misleading unconditional PR completion summary.",
+    ".github/workflows/astra-icc-v2.yml; astra-icc-v2-pr.yml",
+    "Always preserve diagnostics; explicit stage results; require expected successful outputs."
+  ],
+  [
+    "F11",
+    "HIGH",
+    "Mutable data, repeated independent downloads, floating dependencies and incomplete trigger paths.",
+    "All3 workflows; audit loaders",
+    "One immutable hashed input per run, environment manifest, expanded triggers."
+  ],
+  [
+    "F12",
+    "HIGH",
+    "Most historical code/results local-only; V3/V4 missing generator provenance.",
+    "evidence/inventory.json",
+    "Preserve inventory; do not stage entire research dump."
+  ],
+  [
+    "F13",
+    "HIGH",
+    "Historical execution units, ambiguity, overlap and future-conditioned diagnostics invalidate profitability interpretation.",
+    "astra_v5_trade_test.py:58-101; astra_execution_v2.py:159-165; astra_v5_2_structure_reversal.py:145-238",
+    "Preserve historical failures; new execution research only after faithful specs and causal gates."
+  ],
+  [
+    "F14",
+    "BLOCKER",
+    "Both exact executable specs missing; existing2L/2R explicitly an ASTRA interpretation.",
+    "Source conversations/transcripts below",
+    "Need approval for declared research interpretations or exact mechanical definitions. No performance-selected rules."
+  ]
+]
