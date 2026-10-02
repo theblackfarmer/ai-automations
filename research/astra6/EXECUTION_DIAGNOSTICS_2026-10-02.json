@@ -1,0 +1,9 @@
+{
+ "status":"PRE-PERFORMANCE elaboration of frozen diagnostics; no entry/rule changes",
+ "seed":2601002,
+ "random_entry_null":{"repetitions":100,"scope":"Four base variants, validation and forwardOOS only; after causal gate","mechanism":"Randomize entry timestamps within same calendar month and same strategy session eligibility; preserve each completed original trade direction, initial risk and target distances, original timeout horizon, same minute simulator and causal pivot trail. Sample without replacement; single-position accounting may change realized N. Never use random results to select strategy rules.","comparison":"Empirical one-sided p=(1+null_mean>=observed_mean)/(1+valid_repetitions). Holm familywise correction across four forwardOOS base tests. Fewer than30 observed trades: compute descriptive null if feasible, no significance or pass. Empty admissible times/trades recorded."},
+ "diagnostics":"Report prior-day return direction and prior-day range versus trailing20-day median, using only completed days at entry; groups descriptive, never eligibility filters.",
+ "gaps":"Count every held-position missing minute. Scheduled closures are included conservatively in gap uncertainty count; no assertion a missing interval is harmless. Report affected trades; no deployment pass with unresolved execution gaps.",
+ "prop":"50k nominal,2000USD STATIC loss illustration with fixed2contracts. Include conservative stop-bounded intraminute equity marks and realized-trade drawdown; not an actual firm's rules/approval. No trailing prop equivalence claim.",
+ "contracts_sources":["https://www.cmegroup.com/markets/equities/nasdaq/e-mini-nasdaq-100.contractSpecs.html","https://www.cmegroup.com/markets/equities/nasdaq/micro-e-mini-nasdaq-100.contractSpecs.html"]
+}
