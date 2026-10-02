@@ -1,0 +1,516 @@
+{
+  "date": "2026-10-02",
+  "status": "FROZEN INTERPRETATIONS TESTED; BOTH DEPLOYMENT NO_GO",
+  "supersedes": "Initial blocked execution status in forensic/2026-10-02/BASELINE.json; historical evidence and failures remain valid.",
+  "authorization": "User instructed operator to resolve mechanical choices using reasoning and existing information; explicit research interpretations frozen in abce181 before performance.",
+  "methods": {
+    "Sci ICC": {
+      "category": "C: unproven research; frozen R1 fails advancement",
+      "deployment": "NO_GO",
+      "reasons": "1H/15M loses validation and later OOS; 1H/5M has positive but concentrated and unstable 12-trade OOS; 4H/15M has no executable base trades. No variant meets sample, robustness and source-quality gates."
+    },
+    "Vincent Desiano Break & Retest": {
+      "category": "C: unproven research; frozen NQ-only R1 fails advancement",
+      "deployment": "NO_GO",
+      "reasons": "Negative cost-adjusted validation and 26-trade later OOS; all three predeclared neighbors negative later OOS; full ES/NQ/SPY/QQQ alignment absent."
+    },
+    "legacy causal/profitability claims": {
+      "category": "D: backtest artifact",
+      "status": "RETRACTED as evidence of causal or deployable edge; preserved numeric outputs are unaudited historical artifacts, not winning models."
+    }
+  },
+  "interpretation_limits": [
+    "These are explicit frozen ASTRA operationalizations, not exact copies of every discretionary educator decision. Negative/sparse estimates do not disprove the broader methods.",
+    "Source chart-frame fidelity and vendor/contract-roll provenance remain incomplete. Additional authentic data/source evidence would be required for further claims.",
+    "4H complete-bucket and contiguous-pivot requirements interact with futures closures; sparse output is not proof that swing trading lacks an edge.",
+    "No new filters or performance-selected variants. No strategy promoted, no live orders, no claim of forward-paper proof."
+  ],
+  "completion_scope": "Forensic baseline, two operational freezes, new causal/execution research, all25 allowed configurations, clean Actions artifacts and independent base rerun are complete enough for NO_GO. This is not a claim that every historical missing generator was recovered or every discretionary educator chart was replicated.",
+  "freeze": {
+    "id": "ASTRA6-R1-20261002",
+    "commit": "abce18140abc1a2a57da0f759bd720aa09da45ea",
+    "path": "research/astra6/FREEZE_2026-10-02.json",
+    "sha256": "0ed076091d5c2157f8b542dd0c613cfebda36e7ddf1066c84db64add99f02436"
+  },
+  "infrastructure": {
+    "failed_run36801077008": "Missing pandas caused failure before tests; absent optional requirements install was the actual log evidence.",
+    "fixes": [
+      "Pinned direct/transitive dependency manifest and action commits; Ubuntu24.04/Python3.11 environment recorded.",
+      "Immutable data revision and SHA256, atomic downloads, corrupt-cache failure, source and dependency hashes plus archived source snapshot.",
+      "Expanded research triggers, pipefail, explicit outcome and always-preserved logs/artifacts.",
+      "Resolved PR1 add/add workflow conflict by merging main history and retaining corrected workflow; no force push or lost commits.",
+      "Legacy replay now manual, clearly unaudited, pinned input bytes/dependencies/actions, failure logs retained. Historical model logic unchanged."
+    ],
+    "remaining": [
+      "Python patch and hosted runner image float; installed native/code hashes and pip environment record the actual build. Wheel hashes are not installation-enforced.",
+      "Artifacts expire after90days; source-host availability is external.",
+      "workflow_outcome.json records pre-upload research status; final Actions API conclusion confirms completed upload.",
+      "V3/V4 missing generator provenance remains unresolved; preexisting local artifacts preserved, not blindly committed."
+    ]
+  },
+  "causality": {
+    "regression_tests_passed": 68,
+    "legacy_identity_script": "PASS",
+    "configurations": 25,
+    "source_config_audits": 50,
+    "candidate_prefix_comparisons": 12271,
+    "matched": 12271,
+    "detector_positive_controls_caught": 43,
+    "empty_populations": 7,
+    "method": "Independent reconstruction of every cached raw OHLCV bucket and scalar pivot; prefix-bounded event rebuild at every candidate; deliberately leaking detector and corrupt/missing-bar controls. Finite evidence, not an unlimited proof against every possible defect."
+  },
+  "regression_coverage": {
+    "F01 known-time / partial bars / timezone": [
+      "test_complete_buckets_only_and_pivot_gap_firewall",
+      "test_historical_et_localization_and_source_availability",
+      "test_independent_four_hour_membership_across_dst",
+      "test_four_hour_anchor_uses_et18_across_dst"
+    ],
+    "F02 future-dependent pivot replacement": [
+      "test_future_append_cannot_replace_first_completed_structure",
+      "test_positive_complete_sequence_and_every_raw_prefix",
+      "test_verified_cache_equals_uncached_at_every_bar_prefix"
+    ],
+    "F03 and F07 same-bar / nonvacuous builder": [
+      "test_positive_complete_sequence_and_every_raw_prefix",
+      "test_no_same_bar_retest_or_entry"
+    ],
+    "F04 and F05 actual reaction crossing / pre-C / competing and expired states": [
+      "test_pre_c_windows_and_cross_not_just_side",
+      "test_expiry_and_new_indication_supersession",
+      "test_strict_ties_and_dual_pivots_are_excluded"
+    ],
+    "F06 malformed data and missing session": [
+      "test_data_rejects_defects",
+      "test_missing_source_session_minute_rejects_day",
+      "test_duplicate_source_minutes_not_treated_as_complete",
+      "test_load_forward_excludes_frozen_bad_segment_before_validation"
+    ],
+    "F08 independent reconstruction / positive controls": [
+      "test_preprocessing_control_checks_earlier_buckets_not_only_last",
+      "test_preprocessing_control_detects_deleted_bucket",
+      "test_real_leaking_detector_flows_through_prefix_audit",
+      "test_cache_rejects_unverified_changed_source_and_corrupt_pivots"
+    ],
+    "F09-F11 reproducibility": [
+      "test_immutable_download_and_reuse",
+      "test_bad_download_never_publishes",
+      "test_corrupt_existing_evidence_is_preserved",
+      "test_interrupted_transfer_cleans_partial_file",
+      "test_unfrozen_or_unsafe_input_rejected",
+      "Real clean-runner install, test, research and artifact completion in run37022916371"
+    ],
+    "F13 cost / units / ambiguity / overlap / censor": [
+      "test_same_minute_stop_target_is_stop_first",
+      "test_partial_breakeven_not_retroactive_on_target_bar",
+      "test_gap_stop_adverse_fill_and_costs",
+      "test_mirrored_short_stop",
+      "test_no_same_minute_reentry_after_exit",
+      "test_end_of_data_is_censored_not_fake_timeout_win",
+      "test_target_behind_gap_entry_rejected",
+      "test_expired_before_delayed_fill_is_rejected",
+      "test_drawdown_includes_initial_loss",
+      "test_timeout_gap_loss_in_static_equity",
+      "test_verdict_counts_censored_validation_gaps",
+      "test_gap_exit_extremes_are_labelled_envelopes_not_exact_excursions"
+    ],
+    "Vincent target knowledge": [
+      "test_confirmation_extreme_not_used_as_target",
+      "test_retest_extreme_is_excluded_from_frozen_target",
+      "test_full_raw_prefix_stability_and_cached_path",
+      "test_rejection_bound_failure_cancels_before_confirmation"
+    ],
+    "New integration defect": [
+      "test_vincent_prefix_ignores_other_engines_prepared_cache"
+    ]
+  },
+  "139_vs_140": "[KNOWN] 5d86d62 deduplicated semantic source-pivot paths to139;75febcb updated assertion but retained stale140 print;3da86ef printed actual length. Regenerated139 equals prior artifact after timestamp-unit normalization.139 never meant139 independent or causally validated trades.",
+  "base_metrics_conditional_on_assumed_data_and_execution": {
+    "icc_1h_15m": {
+      "train": {
+        "MNQ_base": {
+          "n": 28,
+          "expectancy_R": -0.0018921884778234088,
+          "profit_factor": 0.994590603777944,
+          "win_rate": 0.6071428571428571,
+          "max_drawdown_R": 4.378740591181447,
+          "top5_gross_profit_share": 0.7828475082625289,
+          "bootstrap_mean_95": [
+            -0.26718319156592113,
+            0.26502842709722946
+          ]
+        },
+        "MNQ_stress_mean_R": -0.03628453181802033,
+        "NQ_base_mean_R": 0.013323107570730883,
+        "NQ_stress_mean_R": -0.006200020566993619
+      },
+      "validation": {
+        "MNQ_base": {
+          "n": 32,
+          "expectancy_R": -0.44285136088883775,
+          "profit_factor": 0.24553662540330476,
+          "win_rate": 0.375,
+          "max_drawdown_R": 14.171243548442808,
+          "top5_gross_profit_share": 0.911040410043928,
+          "bootstrap_mean_95": [
+            -0.6702711170168737,
+            -0.21462854267818657
+          ]
+        },
+        "MNQ_stress_mean_R": -0.4777287385455603,
+        "NQ_base_mean_R": -0.42640656633547536,
+        "NQ_stress_mean_R": -0.4452351240253066
+      },
+      "legacy_test_reused": {
+        "MNQ_base": {
+          "n": 23,
+          "expectancy_R": -0.21549669413106406,
+          "profit_factor": 0.5152542419084218,
+          "win_rate": 0.4782608695652174,
+          "max_drawdown_R": 5.577401131572268,
+          "top5_gross_profit_share": 0.790229846575995,
+          "bootstrap_mean_95": [
+            -0.4740178544812643,
+            0.07865237853575051
+          ]
+        },
+        "MNQ_stress_mean_R": -0.24789901027998054,
+        "NQ_base_mean_R": -0.20519026166832208,
+        "NQ_stress_mean_R": -0.2274000117287328
+      },
+      "forward_oos": {
+        "MNQ_base": {
+          "n": 6,
+          "expectancy_R": -0.033474461085555816,
+          "profit_factor": 0.9025932301595002,
+          "win_rate": 0.6666666666666666,
+          "max_drawdown_R": 2.061938475551691,
+          "top5_gross_profit_share": 1.0000000000000002,
+          "bootstrap_mean_95": [
+            -0.8275402838649639,
+            0.7892580150450388
+          ]
+        },
+        "MNQ_stress_mean_R": -0.05165832961134842,
+        "NQ_base_mean_R": -0.02539536538885227,
+        "NQ_stress_mean_R": -0.03562058202388848
+      }
+    },
+    "icc_1h_5m": {
+      "train": {
+        "MNQ_base": {
+          "n": 49,
+          "expectancy_R": -0.2042003897100015,
+          "profit_factor": 0.5889982681601524,
+          "win_rate": 0.40816326530612246,
+          "max_drawdown_R": 14.35199795616035,
+          "top5_gross_profit_share": 0.690553225539214,
+          "bootstrap_mean_95": [
+            -0.501629869723169,
+            0.1199441565387344
+          ]
+        },
+        "MNQ_stress_mean_R": -0.2608030723157693,
+        "NQ_base_mean_R": -0.17879890466219694,
+        "NQ_stress_mean_R": -0.2109771060170951
+      },
+      "validation": {
+        "MNQ_base": {
+          "n": 47,
+          "expectancy_R": 0.2266120135445323,
+          "profit_factor": 1.7015198585410949,
+          "win_rate": 0.5957446808510638,
+          "max_drawdown_R": 4.841953514725245,
+          "top5_gross_profit_share": 0.6618847616679776,
+          "bootstrap_mean_95": [
+            -0.10502774315745148,
+            0.6403370067372984
+          ]
+        },
+        "MNQ_stress_mean_R": 0.1779616056742226,
+        "NQ_base_mean_R": 0.24754165023471536,
+        "NQ_stress_mean_R": 0.21951333918090138
+      },
+      "legacy_test_reused": {
+        "MNQ_base": {
+          "n": 51,
+          "expectancy_R": -0.09113645736820633,
+          "profit_factor": 0.781041116479944,
+          "win_rate": 0.5098039215686274,
+          "max_drawdown_R": 8.557790824135175,
+          "top5_gross_profit_share": 0.6691371498799263,
+          "bootstrap_mean_95": [
+            -0.3463825729811696,
+            0.14981293073124433
+          ]
+        },
+        "MNQ_stress_mean_R": -0.13098720938725075,
+        "NQ_base_mean_R": -0.07544875136805927,
+        "NQ_stress_mean_R": -0.09957246219816324
+      },
+      "forward_oos": {
+        "MNQ_base": {
+          "n": 12,
+          "expectancy_R": 0.20378908054000078,
+          "profit_factor": 1.7988660300058268,
+          "win_rate": 0.6666666666666666,
+          "max_drawdown_R": 3.053822368108082,
+          "top5_gross_profit_share": 0.9159132661399975,
+          "bootstrap_mean_95": [
+            -0.4692366064709324,
+            0.7418327978512295
+          ]
+        },
+        "MNQ_stress_mean_R": 0.18257631731673643,
+        "NQ_base_mean_R": 0.21273233337725198,
+        "NQ_stress_mean_R": 0.20036459201980203
+      }
+    },
+    "icc_4h_15m": {
+      "train": {
+        "MNQ_base": {
+          "n": 0,
+          "expectancy_R": null,
+          "profit_factor": null,
+          "win_rate": null,
+          "max_drawdown_R": null,
+          "top5_gross_profit_share": null,
+          "bootstrap_mean_95": null
+        },
+        "MNQ_stress_mean_R": null,
+        "NQ_base_mean_R": null,
+        "NQ_stress_mean_R": null
+      },
+      "validation": {
+        "MNQ_base": {
+          "n": 0,
+          "expectancy_R": null,
+          "profit_factor": null,
+          "win_rate": null,
+          "max_drawdown_R": null,
+          "top5_gross_profit_share": null,
+          "bootstrap_mean_95": null
+        },
+        "MNQ_stress_mean_R": null,
+        "NQ_base_mean_R": null,
+        "NQ_stress_mean_R": null
+      },
+      "legacy_test_reused": {
+        "MNQ_base": {
+          "n": 0,
+          "expectancy_R": null,
+          "profit_factor": null,
+          "win_rate": null,
+          "max_drawdown_R": null,
+          "top5_gross_profit_share": null,
+          "bootstrap_mean_95": null
+        },
+        "MNQ_stress_mean_R": null,
+        "NQ_base_mean_R": null,
+        "NQ_stress_mean_R": null
+      },
+      "forward_oos": {
+        "MNQ_base": {
+          "n": 0,
+          "expectancy_R": null,
+          "profit_factor": null,
+          "win_rate": null,
+          "max_drawdown_R": null,
+          "top5_gross_profit_share": null,
+          "bootstrap_mean_95": null
+        },
+        "MNQ_stress_mean_R": null,
+        "NQ_base_mean_R": null,
+        "NQ_stress_mean_R": null
+      }
+    },
+    "vincent_2m": {
+      "train": {
+        "MNQ_base": {
+          "n": 164,
+          "expectancy_R": -0.04329056188141992,
+          "profit_factor": 0.8865505964806636,
+          "win_rate": 0.43902439024390244,
+          "max_drawdown_R": 16.111659235622493,
+          "top5_gross_profit_share": 0.35088852439538687,
+          "bootstrap_mean_95": [
+            -0.20023959854959764,
+            0.11010982343493854
+          ]
+        },
+        "MNQ_stress_mean_R": -0.10541955203843392,
+        "NQ_base_mean_R": -0.01439457506675396,
+        "NQ_stress_mean_R": -0.050256195152076515
+      },
+      "validation": {
+        "MNQ_base": {
+          "n": 153,
+          "expectancy_R": -0.12533027199816837,
+          "profit_factor": 0.709065146863267,
+          "win_rate": 0.477124183006536,
+          "max_drawdown_R": 24.137401202098573,
+          "top5_gross_profit_share": 0.35718745176896444,
+          "bootstrap_mean_95": [
+            -0.2655468996476436,
+            0.01041388600743198
+          ]
+        },
+        "MNQ_stress_mean_R": -0.18320200236753253,
+        "NQ_base_mean_R": -0.10006867502988419,
+        "NQ_stress_mean_R": -0.13332693904811443
+      },
+      "legacy_test_reused": {
+        "MNQ_base": {
+          "n": 150,
+          "expectancy_R": 0.032215898718166054,
+          "profit_factor": 1.088266698555991,
+          "win_rate": 0.5266666666666666,
+          "max_drawdown_R": 10.816004381019564,
+          "top5_gross_profit_share": 0.2714034570994022,
+          "bootstrap_mean_95": [
+            -0.13346774658791222,
+            0.22002116793735857
+          ]
+        },
+        "MNQ_stress_mean_R": -0.009151248295816154,
+        "NQ_base_mean_R": 0.051798003324911066,
+        "NQ_stress_mean_R": 0.02918852654324965
+      },
+      "forward_oos": {
+        "MNQ_base": {
+          "n": 26,
+          "expectancy_R": -0.08146650977049756,
+          "profit_factor": 0.7983564642344277,
+          "win_rate": 0.5384615384615384,
+          "max_drawdown_R": 5.369369948822019,
+          "top5_gross_profit_share": 0.88792731230701,
+          "bootstrap_mean_95": [
+            -0.3256466229574007,
+            0.1906035026447405
+          ]
+        },
+        "MNQ_stress_mean_R": -0.12143284350900097,
+        "NQ_base_mean_R": -0.06610547919812262,
+        "NQ_stress_mean_R": -0.09084685418489354
+      }
+    }
+  },
+  "mechanism_findings": [
+    "[KNOWN] By next-open confirmation, the frozen target is already behind the entry in18/24 ICC1H15M,23/35 ICC1H5M,1/1 ICC4H15M and51/77 Vincent later-period candidates. These are invalid entries under the frozen objective, not omitted losing trades.",
+    "[KNOWN] ICC1H5M positive later result is concentrated: top5winning trades91.5913% gross profit; March81.2644% of positive-month profit. Pivot1neighbor mean -0.317874R.",
+    "[KNOWN] ICC1H5M two gap-flagged positions contribute+3.68848R; other10total-1.24301R. This is diagnostic decomposition, not a proposed filter. Gap flags include scheduled market closures until classified.",
+    "[KNOWN] Independent reviewer reconciled all100 MNQ-base trade/summary pairs, no count/PnL/concentration/overlap errors; zero censored positions in all recorded scenarios."
+  ],
+  "statistical_limits": [
+    "Randomized same-exit benchmark uses100repetitions but changed overlap/censor compositions prevent calibrated significance. Tail fractions and Holm fields are descriptive only; inference explicitly disabled.",
+    "No base meets100laterOOStrades or30perdirection. Two bases lack3observedmonths. Positive expectancy intervals cross0.",
+    "NQ/MNQ results are cost/value scenarios on the supplied feed; not independent market replication. Historical file is labeledNQ, later fileMNQ.",
+    "All drawdown/tail figures are conditional model estimates. Static50k/2000USD example is not a funded-firm approval; no firm-specific trailing, payout or evaluation rules verified."
+  ],
+  "evidence": {
+    "research_run": {
+      "id": 37022916371,
+      "commit": "91a85c3f1c5a8d80ef88a5e0210c7f766d2e556f",
+      "conclusion": "success",
+      "url": "https://github.com/theblackfarmer/ai-automations/actions/runs/37022916371",
+      "artifact_id": 11235340455,
+      "artifact_name": "astra6-research-37022916371-1",
+      "artifact_url": "https://github.com/theblackfarmer/ai-automations/actions/runs/37022916371/artifacts/11235340455"
+    },
+    "legacy_replay": {
+      "id": 37024237890,
+      "commit": "6c21854c5f04855e0f2202950a0d94573f64e343",
+      "conclusion": "success",
+      "artifact_id": 11234916612
+    },
+    "independent_local": {
+      "scope": "4 base variants, all four partitions and both instruments/cost scenarios; all candidate fields and MNQ base completed trades",
+      "candidate_exact": true,
+      "metrics_tolerance": 1e-11,
+      "files_compared": [
+        "icc_1h_15m_historical_events.parquet",
+        "icc_1h_15m_forward_events.parquet",
+        "icc_1h_15m_train_trades.csv",
+        "icc_1h_15m_validation_trades.csv",
+        "icc_1h_15m_legacy_test_reused_trades.csv",
+        "icc_1h_15m_forward_oos_trades.csv",
+        "icc_1h_5m_historical_events.parquet",
+        "icc_1h_5m_forward_events.parquet",
+        "icc_1h_5m_train_trades.csv",
+        "icc_1h_5m_validation_trades.csv",
+        "icc_1h_5m_legacy_test_reused_trades.csv",
+        "icc_1h_5m_forward_oos_trades.csv",
+        "icc_4h_15m_historical_events.parquet",
+        "icc_4h_15m_forward_events.parquet",
+        "icc_4h_15m_train_trades.csv",
+        "icc_4h_15m_validation_trades.csv",
+        "icc_4h_15m_legacy_test_reused_trades.csv",
+        "icc_4h_15m_forward_oos_trades.csv",
+        "vincent_2m_historical_events.parquet",
+        "vincent_2m_forward_events.parquet",
+        "vincent_2m_train_trades.csv",
+        "vincent_2m_validation_trades.csv",
+        "vincent_2m_legacy_test_reused_trades.csv",
+        "vincent_2m_forward_oos_trades.csv"
+      ],
+      "mismatches": [],
+      "pass": true,
+      "ci_manifest": {
+        "python": "3.11.16",
+        "pandas": "2.3.3",
+        "numpy": "2.2.6"
+      },
+      "local_manifest": {
+        "python": "3.9.6",
+        "pandas": "2.3.3",
+        "numpy": "2.0.2"
+      }
+    },
+    "commits": [
+      "6c21854c5f04855e0f2202950a0d94573f64e343 Retain legacy replay logs even when research fails",
+      "4f950dd9fe827c56dcdd5edbb566e65ee9ac6140 Pin legacy replay inputs and isolate unaudited discovery workflow",
+      "b57e144f3da2c45ddd1a9ed7d341eb4f682f5643 Merge main history while retaining reproducible research verification",
+      "91a85c3f1c5a8d80ef88a5e0210c7f766d2e556f Run frozen research on clean CI and retain failure artifacts",
+      "dca67e605a6166eb69d5ab5a3a3a44db5d68c6f4 Gate research on prefix causality and adverse execution evidence",
+      "400408ae5d44a3fb48dc61ad6ed32d559c16780f Implement frozen causal ICC and Vincent research interpretations",
+      "ebe4bbf6ffc248fe1014d52119e95bb8ba12b6b9 Make frozen ASTRA inputs and dependencies reproducible",
+      "abce18140abc1a2a57da0f759bd720aa09da45ea research: freeze sourced ICC and Vincent interpretations before testing",
+      "5689036128aff09e86fe75ff62f615d4d80ac171 docs: preserve ASTRA forensic baseline and source fidelity gaps",
+      "5a703b5792c6a799fc2a192c55e3a499c4f7c8ed ci: automate ASTRA ICC V2 validation triggers",
+      "cccf870927045813b4950d526d2ff24d2412e5f6 ci: persist autonomous ICC V2 validation artifacts",
+      "5c54a2cb50a51bb2401d6f2a58ceadf219272f94 Add autonomous ICC V2 PR verification"
+    ],
+    "pr_run": {
+      "id": 37023995239,
+      "head_commit": "4f950dd9fe827c56dcdd5edbb566e65ee9ac6140",
+      "conclusion": "success",
+      "url": "https://github.com/theblackfarmer/ai-automations/actions/runs/37023995239",
+      "artifact_id": 11234273143,
+      "artifact_name": "astra6-research-37023995239-1"
+    },
+    "pr_run_latest": {
+      "id": 37024203514,
+      "head_commit": "6c21854c5f04855e0f2202950a0d94573f64e343",
+      "checkout_commit": "9d8d17a356fceeb7d53ff33706bc9717929971a1",
+      "conclusion": "success",
+      "url": "https://github.com/theblackfarmer/ai-automations/actions/runs/37024203514",
+      "same_result_bytes_as_first_run": {
+        "results.json": true,
+        "causality.json": true,
+        "execution_diagnostics.json": true,
+        "random_entry_null.json": true,
+        "condition_diagnostics.json": true
+      },
+      "artifact_id": 11234229094,
+      "artifact_name": "astra6-research-37024203514-1"
+    }
+  },
+  "confidence": "High in reproduced CI/code/finite causal checks and NO_GO; limited in generalized market or educator-method claims.",
+  "unknowns": [
+    "Vendor timestamps/contract adjustments and missing-interval classification",
+    "Exact complete discretionary educator fidelity",
+    "Calibrated null significance",
+    "Forward-paper and live execution"
+  ],
+  "how_to_verify": "Checkout91a85c3, install requirements-astra.txt, acquire pinned inputs, run research pytest plus identity script, then python -m astra_research.run. Compare manifest, all50population files, results.json, execution diagnostics and100MNQ-base trade files. No profitability claim follows from a green workflow."
+}
