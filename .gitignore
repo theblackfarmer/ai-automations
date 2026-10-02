@@ -16,3 +16,8 @@ venv/
 .DS_Store
 .vscode/
 .idea/
+
+# Reproducible ASTRA research inputs and generated evidence
+/data_cache/
+/results/
+/forensic/*/evidence/
