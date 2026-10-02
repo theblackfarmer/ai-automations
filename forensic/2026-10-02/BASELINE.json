@@ -1,0 +1,461 @@
+{
+  "title": "ASTRA 6 forensic baseline \u2014 research blocked before executable-spec freeze",
+  "date": "2026-10-02",
+  "status": "FORENSIC BASELINE ESTABLISHED; BOTH EXECUTABLE SPECS UNRESOLVED; NO MODEL/CI REPAIR OR NEW PERFORMANCE TEST AUTHORIZED BY THE CURRENT GATES",
+  "scope": "Inspected both repository branches and all 40 reachable commits, tracked workflows/ICC tests/engines, local historical scripts and artifacts, all 31 Actions runs and eight failed-run logs, 18 published-artifact metadata entries, regenerated ICC population, targeted causal reproductions, relevant prior conversations, four Sci source transcripts and Vincent primary-video transcript. This is not a claim that every historical experiment was rerun, every chart frame reviewed, or every external memory database decoded.",
+  "repository": {
+    "feature": "8d1fc872cdae73c9868e9037f5c1942fe63edf6c",
+    "main": "5a703b5792c6a799fc2a192c55e3a499c4f7c8ed",
+    "pr": "https://github.com/theblackfarmer/ai-automations/pull/1",
+    "tracked_files_at_start": 34,
+    "changes": "No existing tracked code, model, test or workflow changed. Evidence and this baseline were added locally only.",
+    "reachable_commits": 40
+  },
+  "decisions": [
+    "[KNOWN] No deployment PASS exists for either method. ICC current implementation fails causality; this does not refute Sci's underlying method. Vincent has no complete executable implementation/spec in this repository.",
+    "[KNOWN] Original method identities are Sci ICC and Vincent Desiano, from direct user turns in Continue Astra 6 Models. Do not substitute the older sweep/reclaim experiment, and do not add ICT/FVG rules.",
+    "[KNOWN] 139 is a reproduced legacy event population, not 139 independently tradable or causally valid opportunities.",
+    "[KNOWN] Six existing ICC pytest tests and the identity script pass despite reproduced causal failures. Green CI is insufficient.",
+    "[UNKNOWN] Exact deterministic interpretation of discretion in both methods. No numerical thresholds or exit rules were invented. Performance testing, code/model fixes and CI repairs remain gated by the user's explicit requirement to establish both exact specs first."
+  ],
+  "lineage": [
+    [
+      "2026-09-10 / 5400a1f \u2192 bc912f1 \u2192 bba2b85",
+      "Initial transition: pivot breach/reclaim \u2192 ATR repricing \u2192 correction \u2192 reconfirmation. Nested future scans decide accepted paths and pivot consumption. MFE/MAE includes signal-bar extremes despite close entry. Not an online-equivalence proof."
+    ],
+    [
+      "2026-09-10 / 9da28d1 \u2192 ca89b29",
+      "Feature audit explores the same population. Missing scipy caused CI failure; dependency repaired. Correlations on this discovery population are not independent edge validation."
+    ],
+    [
+      "2026-09-13 / 405e90e \u2192 5072cea",
+      "Causal state-machine replacement improves sequential processing but also changes lifetime to60 bars from longer nested windows. Not an equivalent bug-only repair. Output next_open_entry is post-confirmation execution information."
+    ],
+    [
+      "Local execution V1/V2",
+      "Next-open grids; no costs. Inclusive horizons add one bar. V2 favorable-first branch treats a bar moving both ways as favorable first; minute OHLC cannot establish that."
+    ],
+    [
+      "Local V3/V4",
+      "Path/structural parquet artifacts survive; matching generators not found in tracked history. Provenance gap."
+    ],
+    [
+      "Local V5",
+      "Compares fractional MFE/MAE returns to purported R thresholds without risk normalization. Saved67,447 observations all timeout in displayed configurations. Zero-assigned ambiguities/timeouts are not conservative bounds."
+    ],
+    [
+      "Local V5.1",
+      "Minute-level stop/target replay excludes ambiguous minutes, without costs. Minute replay does not resolve intraminute order."
+    ],
+    [
+      "Local V5.2",
+      "60 train combinations; selected LONG distance>22.25, stop10,target30. Train pre2025;2025 subsequently repeatedly inspected. Nonoverlap allows next entry at previous exit timestamp, which may precede that intraminute exit. Later structural groupings condition on future swings through eventual exit."
+    ],
+    [
+      "V6 structure expansion",
+      "Historical conversation records expansion killed after23h43m46s, projected221,473,868 context rows. Canonical/range representations reduced memory. Oracle equality on first3 BOS and up to100 BOS proves parity with earlier implementation, not economic truth or full causality. No recovered final PASS for all1,764 BOS."
+    ],
+    [
+      "2026-09-27 / f1bfecc \u2192 49e039f \u2192 505243e",
+      "ICC V2 introduced research substrate; repairs excluded pre-C pivots then their left-context evidence. Current ordering audit still compares mislabeled knowledge times and misses future-dependent path selection."
+    ],
+    [
+      "2026-09-29\u201330 / 84cff88 \u2192 e602c15 \u2192 5d86d62",
+      "Stale/competing pivot diagnostics; semantic source-pivot path deduplication. These diagnostics do not specify authorized exclusions."
+    ],
+    [
+      "75febcb \u2192 3da86ef",
+      "139-vs140 resolved:139 assertion changed before stale140 success text. Later print uses actual length."
+    ],
+    [
+      "5a703b5 \u2192 8d1fc87",
+      "Explicit dependency install replaced by optional absent requirements file; feature PR workflow now fails before tests due missing pandas."
+    ]
+  ],
+  "failure_register": [
+    [
+      "F01",
+      "CRITICAL",
+      "Hourly/15M OHLC left-labeled but used as close-known.",
+      "astra_v6_icc_audit.py:38; astra_v6_icc_event_engine_v2.py:96,124",
+      "Need raw-bar interval/known-time contract, incomplete-bar exclusion and raw-minute truncation tests."
+    ],
+    [
+      "F02",
+      "CRITICAL",
+      "Future pivots replace earlier completed correction/event.",
+      "astra_v6_icc_event_engine_v2.py:164-180",
+      "Full vs prefix synthetic event changes K; real raw-prefix diagnostic misses1 of first10 historical events. Existing timestamp checks cannot detect selection leakage."
+    ],
+    [
+      "F03",
+      "HIGH",
+      "I=C candidate causes entire indication rejection instead of searching strictly post-I.",
+      "astra_v6_icc_event_engine_v2.py:197,205,228",
+      "Freeze correction definition and add builder-positive regression."
+    ],
+    [
+      "F04",
+      "HIGH",
+      "K checks price beyond I, not an actual crossing; original objective absent.",
+      "astra_v6_icc_event_engine_v2.py:239-245",
+      "Do not conflate broken level with indication extreme/target."
+    ],
+    [
+      "F05",
+      "HIGH",
+      "Unbounded stale pivots, competing levels and skipped adverse intermediate pivots.",
+      "astra_v6_icc_event_engine_v2.py:116-132,169",
+      "Source-authorized supersession/invalidation policy needed; do not optimize expiry from results."
+    ],
+    [
+      "F06",
+      "HIGH",
+      "Validator silently removes bad values and fails to validate geometry/completeness/timezone.",
+      "astra_v6_icc_event_engine_v2.py:65-77",
+      "Add explicit schema, OHLC, finite, time and session validation."
+    ],
+    [
+      "F07",
+      "HIGH",
+      "Weak/vacuous tests: conditional None passes; monotonic fixture has no pivots; manual rows bypass builder.",
+      "tests/test_astra_v6_icc_v2.py; tests/test_icc_v2.py",
+      "Nonvacuous long/short event fixtures, mutations, causal positive controls required."
+    ],
+    [
+      "F08",
+      "HIGH",
+      "Audit trusts stored booleans/timestamps, not market-derived structure; overlap only per direction.",
+      "astra_v6_icc_event_quality_audit.py:81-117",
+      "Independent market reconstruction and cross-direction overlap required."
+    ],
+    [
+      "F09",
+      "HIGH",
+      "Missing dependencies breaks clean PR runner.",
+      "8d1fc87; run36801077008",
+      "Pinned dependency manifest/install required after spec gate."
+    ],
+    [
+      "F10",
+      "HIGH",
+      "Primary artifact steps skip on failure; misleading unconditional PR completion summary.",
+      ".github/workflows/astra-icc-v2.yml; astra-icc-v2-pr.yml",
+      "Always preserve diagnostics; explicit stage results; require expected successful outputs."
+    ],
+    [
+      "F11",
+      "HIGH",
+      "Mutable data, repeated independent downloads, floating dependencies and incomplete trigger paths.",
+      "All3 workflows; audit loaders",
+      "One immutable hashed input per run, environment manifest, expanded triggers."
+    ],
+    [
+      "F12",
+      "HIGH",
+      "Most historical code/results local-only; V3/V4 missing generator provenance.",
+      "evidence/inventory.json",
+      "Preserve inventory; do not stage entire research dump."
+    ],
+    [
+      "F13",
+      "HIGH",
+      "Historical execution units, ambiguity, overlap and future-conditioned diagnostics invalidate profitability interpretation.",
+      "astra_v5_trade_test.py:58-101; astra_execution_v2.py:159-165; astra_v5_2_structure_reversal.py:145-238",
+      "Preserve historical failures; new execution research only after faithful specs and causal gates."
+    ],
+    [
+      "F14",
+      "BLOCKER",
+      "Both exact executable specs missing; existing2L/2R explicitly an ASTRA interpretation.",
+      "Source conversations/transcripts below",
+      "Need approval for declared research interpretations or exact mechanical definitions. No performance-selected rules."
+    ]
+  ],
+  "ci": {
+    "runs": 31,
+    "success": 23,
+    "failed": 8,
+    "published_artifacts": 18,
+    "all_listed_artifacts_unexpired": true,
+    "failure_rows": [
+      [
+        34502657952,
+        "2084c718",
+        "astra_nq_bars.py missing"
+      ],
+      [
+        34530697256,
+        "fcc147d2",
+        "scipy missing"
+      ],
+      [
+        36333709250,
+        "1258894b",
+        "astra_v6_icc_audit.py missing"
+      ],
+      [
+        36334025263,
+        "8c355f07",
+        "4062 events;3919 causal violations"
+      ],
+      [
+        36334928729,
+        "a88995c8",
+        "140 events;95 timestamp-only identity duplicate rows"
+      ],
+      [
+        36712975137,
+        "5d86d62",
+        "139 emitted;obsolete140 assertion"
+      ],
+      [
+        36801077008,
+        "8d1fc872",
+        "pandas missing"
+      ],
+      [
+        36801082698,
+        "8d1fc872",
+        "pandas missing"
+      ]
+    ],
+    "propagation": "bash -e propagates failures; combined step stops at first failure. No continue-on-error suppression. Duplicate push/PR runs exist. No scheduled autonomous research loop. Existing CI executes finite validations only.",
+    "artifact_notes": "23 successes but18 artifacts; not every successful run publishes evidence. Successful36713642136 has no artifact. Structural36715310857 artifact11096736014 downloaded and inspected. Historical failure upload fix0f88e6a added filenames but no always condition."
+  },
+  "data": {
+    "sha256": "1577e60a7feab411e49da7a56c7052a64738cd1757cfd60aa11fd783ff43b60b",
+    "rows": 1048575,
+    "first": "2022-12-26 18:01:00",
+    "last": "2025-12-11 20:52:00",
+    "timestamp_header": "timestamp ET",
+    "timezone": "None",
+    "duplicate_timestamps": 0,
+    "backward_steps": 0,
+    "bad_ohlc": 0,
+    "nonfinite_ohlc": 0,
+    "negative_volume": 0,
+    "gaps_gt_1min": 910,
+    "gap_minutes_counts": {
+      "1.0": 1047664,
+      "61.0": 583,
+      "2941.0": 143,
+      "2.0": 127,
+      "301.0": 20,
+      "3.0": 8,
+      "4381.0": 5,
+      "3166.0": 3,
+      "286.0": 3,
+      "4.0": 3,
+      "9.0": 1,
+      "63.0": 1,
+      "3181.0": 1,
+      "511.0": 1,
+      "1501.0": 1
+    },
+    "year_rows": {
+      "2022": 5517,
+      "2023": 353092,
+      "2024": 354965,
+      "2025": 335001
+    },
+    "exact_excel_max_data_rows": true
+  },
+  "data_caveats": [
+    "[KNOWN] Public-source immutable revision a2f9ae2a339e1965842b6d5c6b88aaaf71141c69 exactly matches local SHA256. Source header says ET but stored timestamps are naive.",
+    "[UNKNOWN] Vendor, continuous-contract rolls/adjustment, timestamp open-vs-close convention, session completeness and cross-market alignment.910 gaps are not automatically910 errors; many reflect maintenance/weekends.",
+    "[INFERRED] Exactly1,048,575 data rows (Excel sheet capacity minus header), ending mid-evening Dec11 rather than year end, warrants source-truncation investigation. It is not proof of truncation.",
+    "[KNOWN] 2025 has already been used for model discovery and diagnostics. It cannot be relabeled pristine OOS for newly defined strategies."
+  ],
+  "reproduction": {
+    "rows": 139,
+    "invariants": {
+      "events": 139,
+      "causal_violations": 0,
+      "original_level_violations": 0,
+      "same_bar_correction_structure": 0,
+      "same_bar_correction_continuation": 0
+    },
+    "equals_prior_artifact": false,
+    "versions": {
+      "pandas": "2.3.3"
+    },
+    "equals_after_timestamp_unit_normalization": true
+  },
+  "causal_probe": {
+    "scope": "Diagnostic of unchanged legacy pipeline; prefix includes raw row at recorded K, no trading performance",
+    "events": [
+      {
+        "I": "2023-01-10 19:00:00",
+        "K": "2023-01-11 06:50:00",
+        "direction": "long",
+        "original_level": 13943.75,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 1
+      },
+      {
+        "I": "2023-01-18 01:00:00",
+        "K": "2023-01-18 07:15:00",
+        "direction": "long",
+        "original_level": 14305.0,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 2
+      },
+      {
+        "I": "2023-01-19 02:00:00",
+        "K": "2023-01-19 08:05:00",
+        "direction": "short",
+        "original_level": 14101.5,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 3
+      },
+      {
+        "I": "2023-01-24 04:00:00",
+        "K": "2023-01-24 12:00:00",
+        "direction": "short",
+        "original_level": 14567.25,
+        "reappears_at_raw_prefix": false,
+        "prefix_events": 3
+      },
+      {
+        "I": "2023-01-26 07:00:00",
+        "K": "2023-01-26 10:20:00",
+        "direction": "long",
+        "original_level": 14618.0,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 6
+      },
+      {
+        "I": "2023-01-26 07:00:00",
+        "K": "2023-01-26 10:20:00",
+        "direction": "long",
+        "original_level": 14638.0,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 6
+      },
+      {
+        "I": "2023-03-02 10:00:00",
+        "K": "2023-03-02 15:35:00",
+        "direction": "long",
+        "original_level": 14573.5,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 7
+      },
+      {
+        "I": "2023-05-24 02:00:00",
+        "K": "2023-05-24 08:35:00",
+        "direction": "short",
+        "original_level": 16253.25,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 8
+      },
+      {
+        "I": "2023-06-16 15:00:00",
+        "K": "2023-06-18 21:35:00",
+        "direction": "short",
+        "original_level": 17663.25,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 9
+      },
+      {
+        "I": "2023-06-26 04:00:00",
+        "K": "2023-06-26 14:05:00",
+        "direction": "short",
+        "original_level": 17378.5,
+        "reappears_at_raw_prefix": true,
+        "prefix_events": 10
+      }
+    ]
+  },
+  "causal_probe_limits": "Targeted diagnostic, not a complete139-event positive-controlled audit.9/10 identity reappearances do not establish causality: partial resampled bars, full event fields, stop/target and mutation controls not validated. One failure is enough to reject the prior blanket causal claim. Synthetic future-pivot replacement independently refutes prefix stability.",
+  "legacy_population_diagnostics": {
+    "events": 139,
+    "long": 56,
+    "short": 83,
+    "timestamp_only_duplicate_rows": 93,
+    "semantic_duplicate_paths": 0,
+    "same_direction_overlap_pairs": 177,
+    "same_I_overlap_pairs": 175,
+    "events_newer_active_pivot": 77,
+    "max_pivot_age_hours": 12249
+  },
+  "historical_performance_not_validated": {
+    "source": "astra_v5_2_train_oos_comparison.csv",
+    "train_trades": 3772,
+    "train_mean_R_excluding_ambiguity": 0.1046330763,
+    "train_excluded_ambiguities": 11,
+    "oos_trades": 3326,
+    "oos_mean_R_excluding_ambiguity": 0.0051755448,
+    "oos_excluded_ambiguities": 22,
+    "oos_fixed_target_stop_expectancy_R": -0.0091855481,
+    "interpretation": "Saved output contents only. No costs, unaudited event population, reused OOS. Not a valid profitability estimate for either requested strategy."
+  },
+  "specification_register": [
+    {
+      "id": "ICC_SOURCE_BASELINE",
+      "status": "SOURCE CONSTRAINTS RECOVERED; EXECUTABLE FREEZE BLOCKED",
+      "identity": "Trades by Sci ICC with user BOS/liquidity/consolidation refinements",
+      "known_rules": [
+        "1H day/4H swing indication from structural break; user later requires candle-close strong-momentum BOS.",
+        "Countertrend correction; lower-timeframe consolidation/structure changes toward HTF direction.",
+        "15M execution and optional15M/5M confirmations; later user also explored1M. Keep variants explicit.",
+        "Trade toward original indication extreme; broken I level is distinct from target. Opposite trade needs its own full ICC cycle.",
+        "Existing V2 research contract requires strict I<C<structure-known<K and return beyond original I;2L/2R is explicitly provisional."
+      ],
+      "unresolved": [
+        "Meaningful swing/prominence/ties/competing level/expiry",
+        "Strong-momentum and consolidation definitions",
+        "Required liquidity behavior and exact correction start/end",
+        "Intrabar vs completed-bar entry and actual crossing/retest selector",
+        "Initial stop, objective freeze time, partials, trailing and invalidation execution"
+      ],
+      "sources": [
+        "BOS and Sweep Strategy:9e3a9f52-0136-470d-bd25-2b0ff81caf44;2af04845-ad97-436a-8c55-facbf7b4b630",
+        "Continue Astra Chat:69faa43a-2668-40c7-8a77-64a2d156b811;123c71d9-3193-4f7c-b083-0055b06efef9",
+        "Freeze ICC semantics:99af1f9e-c83e-4561-a573-c4302b9fdb2d",
+        "Sci videos IGIxQD8PBMo,mUNI_MgY1g8,z38sGgvY9XY,KqVnX1Rn77M; existing local raw transcripts"
+      ]
+    },
+    {
+      "id": "VINCENT_SOURCE_BASELINE",
+      "status": "METHOD IDENTIFIED; EXECUTABLE FREEZE BLOCKED",
+      "identity": "Vincent Desiano Break & Retest",
+      "known_rules": [
+        "Prior key level; directional break; return/retest; observed defense then directional confirmation. Do not enter initial breakout.",
+        "Primary video uses2M intraday candles; do not inherit ICC5M/15M settings.",
+        "Initial target is pre-retest breakout extreme; stop beyond retest structure.",
+        "Typical retest duration is explicitly not a fixed timer; runner exits and partial sizing discretionary.",
+        "Primary video discusses ES/NQ/SPY/QQQ alignment; this cannot silently become an arbitrary NQ-only substitute."
+      ],
+      "unresolved": [
+        "Level/session selection and NTZ boundaries",
+        "Retest tolerance/expiry/retests and reclaim handling",
+        "Exact flag/consolidation-break trigger",
+        "Hard-stop vs closing failure, buffer, partial fraction and runner algorithm",
+        "Cross-market alignment definition and synchronized data"
+      ],
+      "sources": [
+        "Continue Astra 6 Models:7cb7e325-ae19-4e3c-91cd-3215606357b1;4a00265c-7574-48d5-8869-b45eedb60a21;5ef1714b-6e0c-47ca-b224-76d76f1c1e2e",
+        "https://www.youtube.com/watch?v=SMSqQTBxjc0 (primary transcript retrieved)",
+        "https://www.tradezella.com/strategies/break-retest"
+      ],
+      "video_offsets": "Transcript character offsets, not timestamps:2M5150\u20135450; no fixed timer5560\u20136100; confirmation12100\u201313050; tolerated reclaim13100\u201313700; TP117954\u201318500; discretionary runner26200\u201327000; big-four44000\u201347400."
+    }
+  ],
+  "governance": "No ASTRA STRATEGY_CONSTITUTION or complete executable freeze is tracked. Local astra_v6_icc_logic_spec.md is untracked conceptual spec. Global RESEARCH_PROTOCOL and Integration Contract reviewed. Commodity constitution governs gold/silver daily mean reversion, not ASTRA semantics. Market-ontology loop failure ledger warns that written freeze is not enforcement; do not import its trading rules. Prior Astra6 staging documents prove memory setup, not a running autonomous research loop.",
+  "tests_and_next_gates": [
+    "Existing6 ICC tests and identity script rerun successfully; no source tests added or altered during forensic phase.",
+    "Required regression coverage: known-time resampling/incomplete bars; prefix replacement; I=C skip; pre-C evidence; strict structure<K; true crossing; mirrored directions; pivot ties; duplicate paths; both-direction overlaps; stale/competing semantics; data/session/DST; stop/target order and gaps; nonoverlap timestamp fills.",
+    "Every causal audit must detect a deliberately planted leak before a pass is trusted.",
+    "After both specs: smallest reproducibility fix, immutable input/environment, explicit stage artifacts, nonvacuous regression tests, then causal populations.",
+    "Only then freeze unused train/validation/OOS datasets/seeds/execution costs, ambiguity bounds, concentration/nulls, drawdown/tails, sensitivity and independent replication. No performance rescue filters."
+  ],
+  "verdicts": {
+    "ICC_current_code": "FAIL \u2014 causal implementation gate. Underlying user strategy remains untested faithfully. Deployment NO-GO.",
+    "Vincent": "BLOCKED \u2014 no exact executable spec or complete source-faithful implementation. Deployment NO-GO.",
+    "profitability": "UNKNOWN for both; no new train/OOS/PF/DD/cost/prop metrics produced. Not zero, not omitted successes.",
+    "completion": "The requested full repair and two-strategy research are NOT complete. Waiting for irreducible definition decision, not a press-Go approval."
+  },
+  "confidence": "High for code/log/source and targeted failure findings. Limited for historical generator provenance and unreviewed chart geometry.",
+  "verification": "Evidence inventory hashes, immutable commits/run links, downloaded population comparison and raw-prefix records accompany this baseline. Rerun after source-faithful freeze; do not interpret legacy green audits as proof of causality."
+}

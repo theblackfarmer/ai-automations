@@ -1,0 +1,52 @@
+[
+  {
+    "id": "ICC_SOURCE_BASELINE",
+    "status": "SOURCE CONSTRAINTS RECOVERED; EXECUTABLE FREEZE BLOCKED",
+    "identity": "Trades by Sci ICC with user BOS/liquidity/consolidation refinements",
+    "known_rules": [
+      "1H day/4H swing indication from structural break; user later requires candle-close strong-momentum BOS.",
+      "Countertrend correction; lower-timeframe consolidation/structure changes toward HTF direction.",
+      "15M execution and optional15M/5M confirmations; later user also explored1M. Keep variants explicit.",
+      "Trade toward original indication extreme; broken I level is distinct from target. Opposite trade needs its own full ICC cycle.",
+      "Existing V2 research contract requires strict I<C<structure-known<K and return beyond original I;2L/2R is explicitly provisional."
+    ],
+    "unresolved": [
+      "Meaningful swing/prominence/ties/competing level/expiry",
+      "Strong-momentum and consolidation definitions",
+      "Required liquidity behavior and exact correction start/end",
+      "Intrabar vs completed-bar entry and actual crossing/retest selector",
+      "Initial stop, objective freeze time, partials, trailing and invalidation execution"
+    ],
+    "sources": [
+      "BOS and Sweep Strategy:9e3a9f52-0136-470d-bd25-2b0ff81caf44;2af04845-ad97-436a-8c55-facbf7b4b630",
+      "Continue Astra Chat:69faa43a-2668-40c7-8a77-64a2d156b811;123c71d9-3193-4f7c-b083-0055b06efef9",
+      "Freeze ICC semantics:99af1f9e-c83e-4561-a573-c4302b9fdb2d",
+      "Sci videos IGIxQD8PBMo,mUNI_MgY1g8,z38sGgvY9XY,KqVnX1Rn77M; existing local raw transcripts"
+    ]
+  },
+  {
+    "id": "VINCENT_SOURCE_BASELINE",
+    "status": "METHOD IDENTIFIED; EXECUTABLE FREEZE BLOCKED",
+    "identity": "Vincent Desiano Break & Retest",
+    "known_rules": [
+      "Prior key level; directional break; return/retest; observed defense then directional confirmation. Do not enter initial breakout.",
+      "Primary video uses2M intraday candles; do not inherit ICC5M/15M settings.",
+      "Initial target is pre-retest breakout extreme; stop beyond retest structure.",
+      "Typical retest duration is explicitly not a fixed timer; runner exits and partial sizing discretionary.",
+      "Primary video discusses ES/NQ/SPY/QQQ alignment; this cannot silently become an arbitrary NQ-only substitute."
+    ],
+    "unresolved": [
+      "Level/session selection and NTZ boundaries",
+      "Retest tolerance/expiry/retests and reclaim handling",
+      "Exact flag/consolidation-break trigger",
+      "Hard-stop vs closing failure, buffer, partial fraction and runner algorithm",
+      "Cross-market alignment definition and synchronized data"
+    ],
+    "sources": [
+      "Continue Astra 6 Models:7cb7e325-ae19-4e3c-91cd-3215606357b1;4a00265c-7574-48d5-8869-b45eedb60a21;5ef1714b-6e0c-47ca-b224-76d76f1c1e2e",
+      "https://www.youtube.com/watch?v=SMSqQTBxjc0 (primary transcript retrieved)",
+      "https://www.tradezella.com/strategies/break-retest"
+    ],
+    "video_offsets": "Transcript character offsets, not timestamps:2M5150\u20135450; no fixed timer5560\u20136100; confirmation12100\u201313050; tolerated reclaim13100\u201313700; TP117954\u201318500; discretionary runner26200\u201327000; big-four44000\u201347400."
+  }
+]
