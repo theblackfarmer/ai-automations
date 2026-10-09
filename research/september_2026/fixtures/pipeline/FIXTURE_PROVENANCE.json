@@ -1,0 +1,11 @@
+{
+  "synthetic_only": true,
+  "origin": "Hand-defined synthetic report/engine integration fixture; no acquired source data.",
+  "reused_for": "Bounded orchestration identity and publication regressions only",
+  "file_sha256": {
+    "SPEC.json": "01fe047d93e2c51fb114199a2093876e0db776f69f54dc18dfecf974fc7a4cd7",
+    "clarification.json": "0e5d60f5190425be86a9ef5f5bdca019dec5386cae5ca75708957caa2ed8a9b7",
+    "acquisition.json": "169b9e1a3af47ea9e45c26566e0e7fe04252d8d7ac2789f263b49281a57405f3",
+    "source.csv": "c1acdd6564a3b6386d33532ca021ca475deb2da9e5f156e397424c5843ba8a41"
+  }
+}

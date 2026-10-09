@@ -1,0 +1,3 @@
+# Hash-bound CSV fixture retains original CRLF bytes.
+fixtures/pipeline/source.csv -text whitespace=cr-at-eol
+fixtures/sep1-native/*.bi5 -text

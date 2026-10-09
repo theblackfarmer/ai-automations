@@ -1,0 +1,1 @@
+{"id": "SEPTEMBER_4H_1H_1M_V1", "execution_allowed": false, "scope": {"symbol": "NAS100 CFD", "provider": "Dukascopy USATECHIDXUSD", "side": "BID", "warmup_start": "2026-08-03T04:00:00+00:00", "study_start": "2026-08-03T04:00:00+00:00", "end_exclusive": "2026-08-05T04:00:00+00:00", "prior_exposure": "SYNTHETIC FIXTURE ONLY. No acquired prices."}, "synthetic_fixture": true}

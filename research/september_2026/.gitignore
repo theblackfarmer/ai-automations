@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+inputs-*/
+runs/
+reports/
+audit/
+acquisition/
+*.png
+*.pdf
+*.csv
+acquisition-*/
+!fixtures/pipeline/source.csv

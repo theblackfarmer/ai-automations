@@ -1,0 +1,12 @@
+{
+  "id": "SEPTEMBER_MONTH_REPORT_V1",
+  "frozen_before_market_read": true,
+  "unit": "unique HTF_LINK context, not a trade or an outcome",
+  "selection": "Earliest ten links recognized during the study, plus links still active at study start, sorted by max(link known_at, study_start), original event order. Retain only the first ten. No condition on tap, child, return, respect, entry review or favorable outcome.",
+  "decision_cutoff": "Earliest CHILD_CANDIDATE in study for this link. If none, earliest HTF_TAP in study. If none, max(link known_at, study_start). Retain every same-cutoff branch. This is a retrospective navigation rule; no stage is labeled prospectively selected by this report.",
+  "decision_chart": "Only source bars completed and events knowable by decision cutoff. Full available warmup-to-cutoff 4H and 1H context. Local 1M detail begins no later than earliest referenced origin/comparator/tap minus 30 minutes. No later outcomes appear in the decision image.",
+  "followthrough": "Separate historical-development panels extend to frozen run end; include a separate local view through first recorded return plus 60 minutes when present, but never replace the full-to-end timeline. No eligibility inferred from absence of a later return event after retirement.",
+  "index": "Every study MAJOR_BOS and M1_TRANSITION_BOS, including no-zone, no-tap, rejected and failed routes. Warmup events remain available as lineage.",
+  "authority": "Research interpretation; teacher fidelity unverified; no fills, orders, profitability or Pepperstone parity claim",
+  "execution_allowed": false
+}

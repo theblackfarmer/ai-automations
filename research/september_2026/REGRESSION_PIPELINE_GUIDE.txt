@@ -1,0 +1,14 @@
+Portable bounded orchestration regression
+
+Source: regression_pipeline.py
+SHA256: 11ff7a431e53b865dcb186c66039d9ddded57c77ecf4f62b5f8d4b8b0baf2b5d
+
+python3 -B regression_pipeline.py --project . --fixture fixtures/pipeline --output runs/pipeline-regression-new
+
+Use a NEW --output directory each run. --project must contain run_study.py, month_replay.py, engine.py, verify_causality.py, cold_runtime_worker.py, report.py and SELECTION_PROTOCOL.json. The harness copies them and substitutes only the explicitly synthetic fixture SPEC/clarifications in its private test checkout. It never modifies project criteria or source.
+
+Bundled fixtures/pipeline/ contains source.csv, acquisition.json, SPEC.json, clarification.json and provenance hashes. These hand-defined prices are not market data. Alternatively supply a compatible explicitly labeled synthetic fixture.
+
+Five actual-tool cases: valid end-to-end run; source/capture race; proof/report replay swap; saved proof mutation; saved capture mutation. Six labeled contract cases: consistent success, REFUTED+zero exit, SURVIVES+nonzero exit, explicit proof failure, wrong capture digest and missing report artifacts. The valid run must succeed first; otherwise the harness stops and refuses to count blanket refusals as correct behavior.
+
+Each case preserves logs, captures and CHECK.json; RESULT.json gives11 test outcomes and held code hashes. Exit0 means these bounded checks passed, not strategy/teacher/live-money clearance. Prior failed reviews remain separately preserved.

@@ -1,0 +1,152 @@
+Recorded-event TradingView exporter — research artifact
+
+This is static recorded-decision playback, NOT a live detector or a Python-to-Pine
+strategy port. It does not calculate setups, orders, fills or returns. The frozen
+Python engine remains the decision source. Exporting a bad event faithfully would
+not make that event causal or teacher-correct; root must validate the event journal.
+
+Inputs and use
+
+  python3 export_tradingview.py export --events EVENTS.jsonl --spec SPEC.json \
+    --provenance PROVENANCE.json --output NEW_DIRECTORY --chart-symbol EXACT:TICKER
+
+PROVENANCE.json requires dataset source_id, source_sha256 and engine_sha256 from the actual
+runner. The exporter hashes exact event/spec bytes and its own source; it does not
+load market candles or independently hash the market source/engine. The runner must
+bind and check those two supplied hashes. Provider/symbol/BID side, scope and the
+UTC-phase-zero rule come from SPEC.json. An empty chart ticker can be exported but
+the generated Pine raises a runtime error until a precise expected ticker is set.
+
+Event contract is the engine owner's schema: id, kind, known_at (integer UTC seconds
+at completed minute), timeframe (240/60/1; explicit null for HTF_LINK and coverage
+bridge/gap records, displayed as CROSS-TF), direction (long/short/null), source_id,
+execution_allowed=false, spec_hash and authority=ASSUMED_RESEARCH_ENCODING.
+Each event's spec_hash must match the engine's canonical JSON digest of the supplied
+SPEC; spec_sha256 separately binds the original file bytes. Event source_id is a
+native bar ID, not the dataset ID. Derived events may explicitly use null; candle-
+backed records with bar_start require a native ID. No missing ID is invented.
+Optional geometry:
+zone_low, zone_high, zone_id, member_times, origin_start/end, selected_known_at;
+reference/pullback objects preserve their id/kind/time/known_at/price/label. Context
+IDs and every other field remain intact in raw_event_json and events.original.jsonl.
+The exporter rejects duplicate IDs, reversed journal order, known future references,
+future members, changed bounds under one zone ID, nonfinite/reversed bounds and
+inconsistent spec identity. Native IDs are preserved, not validated against candles
+by this exporter. These checks are not a complete engine-causality audit.
+
+Outputs
+
+* events.csv: every input row, original raw event JSON and known-time CT/ET display.
+* events.original.jsonl and SPEC.original.json: exact original bytes.
+* manifest.json: source/spec/engine/event/exporter hashes, disclosure flags, all
+  chronological Pine chunk hashes and optional explicit case selections.
+* recorded_NNNN.pine: <=150 events, <=150 labels and <=150 zone snapshot boxes per
+  script. Default chunks retain the entire supplied journal in order. Chart object
+  limits therefore do not silently select only the newest part of this export.
+* Optional --cases CASES.json maps case names to explicit ordered event-ID lists.
+  Each selection must contain 1..150 distinct existing records in journal order.
+  case_NNNN.pine retains its explicit selection in manifest; it does not replace
+  the full CSV or full chronological chunks. Caller owns selection rationale.
+  Each case also has draw_bridge_case_NNNN.jsonl for bounded snapshot transfer.
+* draw_bridge.jsonl: hash-bindable metadata plus canonical known-time operations.
+
+physical_origin_id is preserved as a CSV column and in raw records. The exporter
+does not combine separate event/context bindings into a new synthetic event. Case
+selection can choose a representative for display while the full journal remains.
+
+Pine visibility and limits
+
+The Pine requires a standard 1-minute chart and exact configured TradingView ticker.
+It reveals each stored record only on the closed bar whose time_close equals that
+record's known_at*1000. Missing chart bars do NOT cause a late backfilled label.
+Origins/members remain provenance; labels and vertical zone snapshots start at the
+known timestamp. A zero-width box marks the stored price range at recognition time.
+It deliberately makes no claim about a zone remaining valid into subsequent bars.
+Records without a supplied level use an above-bar label; bridge operations omit
+them because the exporter will not invent a price. Supplied references take label
+precedence over a zone midpoint; neither is an entry or fill.
+
+Both Central and Eastern times come from zoneinfo, not manual offset arithmetic.
+Pine contains static future records in source text, so this is not a blinded study.
+Visual gating avoids showing those records before their recorded known times; it
+does not conceal the source code. Future outcomes do not recolor earlier records.
+Neither compiler acceptance nor actual source-feed/TradingView candle parity has
+been demonstrated here. A different broker feed can misalign candles and prices;
+the source table labels the recorded Dukascopy data and does not imply equivalence.
+
+Dry run and optional execution
+
+  python3 export_tradingview.py transfer --package draw_bridge.jsonl \
+    --receipts NEW_RECEIPTS.jsonl --cutoff UTC_EPOCH_SECONDS
+
+Default dry run never calls an adapter and records intended points only. Readback
+is null, status DRY_RUN, chart_transfer_proven=false. Only records known by cutoff
+are eligible. The package's canonical point times are seconds; Pine uses milliseconds.
+
+Actual execution is intentionally uninvoked. Once root has validated the events,
+it can supply --execute, --validated-package-sha256 HASH, --chart-id ID,
+--chart-symbol EXACT:TICKER, --time-unit seconds|milliseconds and
+--adapter-command 'python3 /absolute/path/to/a_trusted_shim.py'. There is no bundled
+network connector or fabricated transport. The shim receives one JSON request on
+stdin and returns one JSON response on stdout; subprocess uses no shell. Unit
+confirmation and the requested hash are caller attestations, not authentication.
+
+Adapter contract:
+  chart_state({}) -> {chart_id, symbol, timeframe_minutes:1, bar_type:'ordinary',
+                     cutoff:INTEGER_UTC_SECONDS}
+  draw_shape(args) -> {entity_id:ACTUAL_NONEMPTY_ID, ...optional raw fields}
+  get_properties({entity_id}) -> {entity_id, shape, points:[{time,price},...],
+                                  time_unit:'seconds'|'milliseconds', text?}
+
+The chart cutoff means the last completed bar visible to the snapshot/replay, not
+wall-clock time. The shim must extract actual values from tool results; missing
+identity/cutoff/units/coordinates must fail rather than be filled from assumptions.
+Existing MCP draw_shape/draw_get_properties/chart_get_state are candidate transports,
+but their raw result schemas and unit contract need a real connection inspection.
+See TOOL_CONTRACTS.json. Do not turn a dry run into a claimed real receipt.
+
+Executor checks chart identity/cutoff before mutation and after each readback. It
+records fsynced INTENT, then actual CREATED ID, then READBACK_MATCH or a preserved
+failure/UNCERTAIN record. Raw adapter response and readback are retained. A lost
+response or mismatch halts and blocks automatic retry; reconcile actual owned
+entities first. Success means the adapter reported the requested geometry/text,
+not a screenshot, authentic identity attestation or deployment clearance. Even a
+READBACK_MATCH keeps chart_transfer_proven=false pending visible chart evidence.
+
+Reuse the same persistent receipt journal for that chart. Repeating exact package
+operations reads existing entities and avoids duplicate creation. Repacked bytes
+containing already-owned operations are blocked for reconciliation. File locking
+serializes callers sharing that journal; it cannot protect against a separate or
+deleted ledger, tampering, a lying shim or users editing the chart outside the tool.
+
+The bridge is a STATIC cutoff snapshot, not automatic replay visibility. It permits
+advancing a cutoff on the same package but rejects a rewind that would expose
+existing future markers. It does not silently remove those markers. Use a fresh
+chart (and ledger) or explicitly reconcile/clear the owned snapshot before rewind.
+Changing the chart after transfer is outside this function's control. Pine playback
+is the appropriate generated view for replay gating. No unrelated drawings are
+deleted by this code, and no deletion or order endpoint exists here.
+
+Tests and remaining evidence
+
+  PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_export_tradingview
+
+Tests use synthetic records and a class explicitly named FakeAdapter. They cover
+hash binding, full row retention, chunk/case limits, known-time anchors, seconds to
+milliseconds, missing hashes/identity, shifted readbacks, crashes after create,
+duplicate retry prevention and package/receipt path aliases. They are not a Pine
+compiler, complete causal engine audit, actual TradingView connection or screenshot.
+check_engine_export_contract.py --engine ENGINE.py --fixture test_engine.py
+--output NEW_REPORT.json also feeds the actual engine's synthetic fixture through
+this exporter and checks exact row retention. It imports no market file.
+Root should independently attack the staging code before installation, validate
+real engine events, compile one chronological case, compare actual chart coordinates
+and timestamps, then capture visible evidence. Preserve any failures. No teacher,
+profitability, fill or execution claim follows from an export.
+
+Official technical references already inspected:
+https://www.tradingview.com/pine-script-docs/concepts/time/
+https://www.tradingview.com/pine-script-docs/concepts/bar-states/
+https://www.tradingview.com/pine-script-docs/concepts/chart-information/
+https://www.tradingview.com/pine-script-docs/visuals/lines-and-boxes/
+https://www.tradingview.com/pine-script-docs/writing/limitations/
