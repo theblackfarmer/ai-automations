@@ -1,0 +1,32 @@
+{
+  "authorized_by": "Parent /root: repair ordinary transient transport retry/continuation only; preserve all errors and 429 shared stop",
+  "changes_planned": [
+    "Two attempts maximum per hour per invocation for explicitly classified transient connection closures/resets/refusals, temporary DNS errors and selected transient socket errno; then preserve unresolved state and continue next hour.",
+    "Preserve old V2 target identity and receipts; append V3 identity binding old identity, pinned V2 code and current code.",
+    "Carry forward preexisting unresolved receipts into manifests when budget/cooldown prevents retry, instead of relabeling them unattempted.",
+    "Preserve every prior receipt by content hash and every run manifest.",
+    "Keep shared 429 Retry-After stop, authentication failures and source/codec integrity failures blocking."
+  ],
+  "created_at": "2026-10-09T17:30:56.761053+00:00",
+  "does_not_retroactively_clear_v2": true,
+  "frozen_market_scope_sha256": "6c00c80649bfdff559e43b1ca698f7cb9874668223fe535b2498bed9ad3eab74",
+  "network_status": "NOT_STARTED_BY_THIS_AGENT",
+  "no_market_prices_inspected": true,
+  "prior_amendment_sha256": "ccdb231068d442a1ab235f6207d1697ae0654b16343e1ca0a487314be456235c",
+  "reproduced_failure": {
+    "attempt_number_this_run": 1,
+    "error_type": "RemoteDisconnected",
+    "receipt": "acquisition-v2/hours/20260805T110000Z.json",
+    "state": "TRANSPORT_ERROR",
+    "stop_reason": "SOURCE_OR_TRANSPORT_ERROR"
+  },
+  "schema": "data-transport-amendment-v3",
+  "superseded_driver_sha256": "fcb062902aee5c45f1e6e7438b96f3a7e0fdab1c2152470f088ee1cbaacb4e49",
+  "unchanged": [
+    "Feed/symbol/scale and market scope",
+    "Codec bytes and all source validation",
+    "BID/ASK raw retention",
+    "Request spacing and retry backoff",
+    "No filled minutes or price outputs"
+  ]
+}

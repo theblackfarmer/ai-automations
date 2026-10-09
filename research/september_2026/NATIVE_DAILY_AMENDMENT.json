@@ -1,0 +1,32 @@
+{
+  "id": "NATIVE_DAILY_BID_TRANSPORT_2026_10_09",
+  "frozen_at": "2026-10-09T19:44:02.056892+00:00",
+  "reason": "Hourly raw-tick acquisition persistently times out; independent native BID minute route matches all1335 observed Sep1 tick-built candles exactly before this amendment.",
+  "engine_rules_changed": false,
+  "engine_sha256": "01751ab50dec9cde9f85850bbddbd84fa69456e37d5531f99801b04ffa1c6694",
+  "spec_sha256": "89f9ab6fb4f842426e238ef5554274be175211610d02c85086e2fc792139af36",
+  "source": "Dukascopy USATECHIDXUSD",
+  "side": "BID",
+  "start_utc": "2026-08-01T00:00:00Z",
+  "end_exclusive_utc": "2026-10-01T00:00:00Z",
+  "endpoint": "https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/{year}/{zero_based_month:02d}/{day:02d}/BID_candles_min_1.bi5",
+  "record_format": ">IIIIIf = seconds/open/close/low/high/volume; prices integer/1000",
+  "excluded_source_placeholders": "Volume0 and allOHLCequal; preserved raw, excluded from native observed input. Zero-volume nonflat bars are unresolved and prevent source adoption.",
+  "positive_volume_flat_candles": "Preserved as observed.",
+  "quote_sides": "NativeBIDonly; existing rawBID/ASKticks preserved; no fills/PnL permitted.",
+  "parity_gate": "Every overlapping timestamp in captured raw-tick reference must match integer OHLC exactly; every held observed tick minute must occur in the native source. Any mismatch blocks adoption. Missing positive-volume minutes outside reference retain normal coverage handling.",
+  "read_window": "All61UTCdays, no outcome-based day selection",
+  "network": {
+    "parallel_requests": 1,
+    "minimum_spacing_seconds": 2,
+    "ordinary_attempts_per_day": 2,
+    "maximum_network_requests": 122,
+    "respect_shared_429": true
+  },
+  "calendar": "Unchanged; no extra synthetic candles or altered holiday assumptions.",
+  "independent_review_required": true,
+  "initial_probe_receipt": "audit/native-daily-probe-02/RECEIPT.json",
+  "performance_claim": null,
+  "teacher_fidelity": false,
+  "execution_allowed": false
+}

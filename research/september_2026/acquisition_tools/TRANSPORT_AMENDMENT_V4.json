@@ -1,0 +1,29 @@
+{
+  "authorized_by": "Parent /root: stage direct documented HTTPS routing option while preserving canonical identity; no network by staging agent",
+  "canonical_origin": "https://www.dukascopy.com/datafeed/",
+  "changes_planned": [
+    "Optional --route direct-https replaces only initial wire host, preserving HTTPS and exact canonical path.",
+    "Record actual wire_requested_url and explicit same-path override; do not invent HTTP301 redirect history.",
+    "Append V4 identity lineage; preserve V2/V3 source, identity and receipt hashes.",
+    "Graceful CLI SIGINT requests stop after in-flight attempt persistence and publishes final partial manifest."
+  ],
+  "created_at": "2026-10-09T19:30:08.074534+00:00",
+  "direct_wire_origin": "https://datafeed.dukascopy.com/datafeed/",
+  "does_not_retroactively_clear_prior_runs": true,
+  "frozen_market_scope_sha256": "6c00c80649bfdff559e43b1ca698f7cb9874668223fe535b2498bed9ad3eab74",
+  "network_requests_by_staging_agent": 0,
+  "parent_direct_probe_status_at_freeze": "PENDING_SEPARATE_PROBE_RECEIPT",
+  "prior_amendment_sha256": "7fd134173499cd1240f3b14a8e1fa9ac683daa15d191a226c9ed6a42356fa339",
+  "prior_driver_sha256": "20d896e32e669ee1ed5f6537468b59717db9b3fb25b77526a5685819866194cc",
+  "routing_evidence": "Existing saved provider redirect receipts identify datafeed.dukascopy.com with unchanged /datafeed/USATECHIDXUSD/... path. Parent independently probing direct HTTPS body parity.",
+  "schema": "data-transport-amendment-v4",
+  "unchanged": [
+    "Pinned codec bytes",
+    "Feed/symbol/price scale and dates",
+    "BID/ASK raw storage and BID aggregation",
+    "No filled minutes",
+    "Single worker and at least2seconds request spacing",
+    "At most2 ordinary attempts per hour per run",
+    "Shared429 cooldown and auth/source integrity stop"
+  ]
+}

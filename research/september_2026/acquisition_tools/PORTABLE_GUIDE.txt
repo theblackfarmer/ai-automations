@@ -1,0 +1,65 @@
+Hourly tick acquisition V4 — portable source-only package
+
+[KNOWN] Fresh-run runtime consists of four unchanged files:
+  acquire_month_v4.py
+  legacy_acquire.py
+  FROZEN_MONTH_PROTOCOL.json
+  TRANSPORT_AMENDMENT_V4.json
+
+The V4 driver SHA is 34cb44cc3c370138a07b21b01d72a8fb039212c76365ac172cc2a570d585054c.
+The pinned tick codec SHA is 3f19fb017d267691cfc98e26874152a642bd59486d43f642bb6036f3f8acb5ed.
+Both match the saved project evidence and original acquisition directory exactly.
+
+For compatible V2/V3 target resumes, retain preserved-v2/acquire_month_v2.py
+and preserved-v3/acquire_month_v3.py at those exact relative locations. V4
+hash-checks them. Their amendment copies are source-provenance/test fixtures;
+the resumed target must itself retain its original identity, amendments,
+lineage, receipts and blobs. This package includes none of those target data.
+
+Requirements: POSIX Python 3.9+ with standard-library fcntl, lzma and zoneinfo,
+and installed IANA timezone data including America/Chicago and America/New_York.
+Windows is not supported unchanged because the driver imports fcntl.
+No pip dependencies, account credentials or API keys are required by this code.
+
+Offline proof, callable from any current directory:
+  python3 -I -S -B /path/to/package/verify_offline.py
+
+This checks pinned source hashes, a dry-run that creates no target, and 31
+synthetic tests with ordinary socket network access denied. Twelve unchanged
+codec tests plus sixteen retained V4 tests cover decode/receipt integrity,
+redirect and direct HTTPS route evidence, 429, retries, spacing, checkpoints,
+graceful interrupt and cache reuse. Three source-only lineage tests exercise
+V2/V3 migration without requiring old acquisition datasets. The two original
+V4 cross-version tests were replaced with synthetic identity/receipt setup;
+no production code or acquisition threshold was modified.
+
+Dry-run the frozen August 1–October 1, 2026 UTC request plan:
+  python3 -B /path/to/package/acquire_month_v4.py --protocol /path/to/package/FROZEN_MONTH_PROTOCOL.json --target /path/to/output --route direct-https --max-requests 24
+
+Network acquisition requires adding --execute explicitly. It was not invoked
+while assembling or testing this package. --max-requests bounds one invocation;
+reruns may perform further bounded requests. Default route remains canonical
+unless --route direct-https is supplied. Use the V4 entry point, not the legacy
+codec's historical standalone CLI with its earlier frozen study scope.
+
+Preserved behavior: one request worker, >=2 seconds request spacing, at most
+two ordinary attempts per hour per invocation, shared Retry-After handling,
+source/authentication stops, unchanged source path and tick decoder, no filled
+minutes, raw BID/ASK retention, BID-derived CSV, and immutable prior evidence.
+The package directory must be writable during real acquisition because shared
+429 state is stored next to the driver. Keep a common package directory for
+same-feed processes: copying this package does not synchronize cooldown state
+between distinct machines or directories. Target locking is per output target.
+
+No market data, captured receipts, response bodies, source snapshots or secrets
+are distributed here. Tests generate their tiny synthetic ticks in temporary
+directories. SOURCE_MANIFEST.json identifies unchanged source provenance and
+test adaptations; VALIDATION.json records offline and relocation proof.
+
+Limits: source portability is not successful reacquisition or source fidelity.
+The separately established native-daily versus raw-tick discrepancy remains
+unresolved. HTTP200 hour coverage does not prove every intraminute tick exists.
+The historical canonical route can follow the provider's documented HTTP
+redirect; saved hashes prove local consistency, not provider authenticity.
+No data adoption, patched prices, teacher fidelity, fills, trading performance
+or deployment readiness is asserted by this package.

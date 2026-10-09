@@ -1,0 +1,37 @@
+test_cli_probe_emits_metadata_and_cache_without_csv (test_legacy_codec.ResumeAndProtocolTests) ... ok
+test_fixed_protocol_and_dry_run_make_no_writes (test_legacy_codec.ResumeAndProtocolTests) ... ok
+test_manifest_counts_unresolved_hour_and_all_gaps (test_legacy_codec.ResumeAndProtocolTests) ... ok
+test_receipt_claim_cannot_make_partial_body_reusable (test_legacy_codec.ResumeAndProtocolTests) ... ok
+test_retry_limit_and_persist_each_failure (test_legacy_codec.ResumeAndProtocolTests) ... ok
+test_verified_resume_and_hash_corruption_refetch (test_legacy_codec.ResumeAndProtocolTests) ... ok
+test_decompression_and_empty_are_distinct (test_legacy_codec.TickTests) ... ok
+test_equal_tick_times_ohlc_and_absent_minutes (test_legacy_codec.TickTests) ... ok
+test_reject_entire_hour_for_bad_record (test_legacy_codec.TickTests) ... ok
+test_documented_redirect_only (test_legacy_codec.TransportTests) ... ok
+test_statuses_never_become_silent_empty (test_legacy_codec.TransportTests) ... ok
+test_success_receipt_no_prices (test_legacy_codec.TransportTests) ... ok
+test_503_attempts_bounded_then_later_hours (test_portable_v4.V4) ... ok
+test_actual_direct_wire_and_canonical_receipt_without_fake_redirect (test_portable_v4.V4) ... ok
+test_auth_failure_still_stops (test_portable_v4.V4) ... ok
+test_canonical_option_reports_actual_original_wire (test_portable_v4.V4) ... ok
+test_changed_v4_route_is_not_silent (test_portable_v4.V4) ... ok
+test_changed_wire_request_rejected_before_inner_open (test_portable_v4.V4) ... ok
+test_checkpoint_publishes_during_run_and_final_manifest_clears_in_progress (test_portable_v4.V4) ... ok
+test_codec_bytes_stay_pinned (test_portable_v4.V4) ... ok
+test_direct_429_records_real_wire_and_global_stop (test_portable_v4.V4) ... ok
+test_false_final_host_and_path_never_accepted (test_portable_v4.V4) ... ok
+test_false_final_path_503_is_not_transient (test_portable_v4.V4) ... ok
+test_main_sigint_handler_stops_cleanly_and_restores_previous (test_portable_v4.V4) ... ok
+test_no_wire_evidence_cannot_be_invented_on_resume (test_portable_v4.V4) ... ok
+test_requested_stop_persists_inflight_then_final_manifest (test_portable_v4.V4) ... ok
+test_shared_cooldown_blocks_direct_network (test_portable_v4.V4) ... ok
+test_spacing_not_lowered (test_portable_v4.V4) ... ok
+test_altered_v3_lineage_rejects_before_fetch (test_portable_lineage.PortableLineage) ... ok
+test_pinned_historical_sources_are_present (test_portable_lineage.PortableLineage) ... ok
+test_v2_v3_receipts_migrate_and_resume_without_rewriting_prior_identity (test_portable_lineage.PortableLineage) ... ok
+
+----------------------------------------------------------------------
+Ran 31 tests in 0.383s
+
+OK
+{"tests_run": 31, "failures": 0, "errors": 0, "dry_run_no_target_created": true, "network_access_denied": true, "production_bytes_unchanged": true}

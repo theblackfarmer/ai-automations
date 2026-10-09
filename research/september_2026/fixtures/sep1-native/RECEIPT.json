@@ -1,0 +1,44 @@
+{
+  "body_bytes": 16103,
+  "body_sha256": "71ea00380a86189ecc392227aa1cfe9e917ad16683ffb6c1615007c0eec4b100",
+  "content_length": "16103",
+  "day": {
+    "CT": "2026-08-31T19:00:00-05:00",
+    "ET": "2026-08-31T20:00:00-04:00",
+    "utc": "2026-09-01T00:00:00Z"
+  },
+  "final_url": "https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2026/08/01/BID_candles_min_1.bi5",
+  "finished_at": "2026-10-09T19:42:36.851305+00:00",
+  "format_reference": "https://github.com/Nosvemos/dukascopy-go/blob/main/pkg/dukascopy/bi5.go",
+  "format_reference_status": "Independent decoder source, not official provider specification; parity required",
+  "maximum_requests": 1,
+  "metadata": {
+    "positive_volume_records": 1335,
+    "records": 1440,
+    "zero_volume_records": 105
+  },
+  "official_endpoint_evidence": "https://www.dukascopy.com/swiss/english/forex/jforex/forum/viewtopic.php?p=64144",
+  "parity": {
+    "common_minutes": 1335,
+    "comparison": "native daily BID against independently aggregated original tick BID; integer prices compared privately",
+    "daily_minutes_absent_ticks": 105,
+    "daily_promoted": false,
+    "daily_records": 1440,
+    "ohlc_exact_matches": 1335,
+    "ohlc_mismatches": 0,
+    "positive_volume_daily_extra_minutes": 0,
+    "prices_printed": false,
+    "tick_minutes_absent_daily": 0,
+    "tick_minutes_absent_positive_volume_daily": 0,
+    "tick_observed_minutes": 1335,
+    "verified_tick_hours": 24
+  },
+  "prices_printed": false,
+  "probe_only": true,
+  "redirects": [],
+  "requested_url": "https://datafeed.dukascopy.com/datafeed/USATECHIDXUSD/2026/08/01/BID_candles_min_1.bi5",
+  "script_sha256": "9a4a539657652a21406c7c24191e4a16ddcd02c26e7ce6c431e13a650d5b903d",
+  "started_at": "2026-10-09T19:42:35.391538+00:00",
+  "state": "DECODED",
+  "status": 200
+}

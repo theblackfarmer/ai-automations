@@ -1,0 +1,26 @@
+{
+  "copied_files": [
+    "FROZEN_MONTH_PROTOCOL.json",
+    "PORTABLE_GUIDE.txt",
+    "SOURCE_MANIFEST.json",
+    "TRANSPORT_AMENDMENT_V4.json",
+    "acquire_month_v4.py",
+    "legacy_acquire.py",
+    "preserved-v2/TRANSPORT_AMENDMENT_V2.json",
+    "preserved-v2/acquire_month_v2.py",
+    "preserved-v3/TRANSPORT_AMENDMENT_V3.json",
+    "preserved-v3/acquire_month_v3.py",
+    "synthetic_helpers.py",
+    "test_legacy_codec.py",
+    "test_portable_lineage.py",
+    "test_portable_v4.py",
+    "verify_offline.py"
+  ],
+  "exit_code": 0,
+  "market_data_files_copied": 0,
+  "ordinary_socket_network_denied": true,
+  "output_sha256": "b3373307a5dd34c130ae349b6d46e64630d9c47324bb78b82d8ff2c5c815161b",
+  "proof_scope": "Actual relocated copy, unrelated CWD, isolated Python process, denied original-workspace open paths.",
+  "source_workspace_read_denied": true,
+  "successful": true
+}

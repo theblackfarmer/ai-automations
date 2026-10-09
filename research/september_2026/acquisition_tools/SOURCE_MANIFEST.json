@@ -1,0 +1,106 @@
+{
+  "data_or_body_blobs_included": false,
+  "files": {
+    "FROZEN_MONTH_PROTOCOL.json": {
+      "byte_identical": true,
+      "bytes": 1184,
+      "sha256": "6c00c80649bfdff559e43b1ca698f7cb9874668223fe535b2498bed9ad3eab74",
+      "source": "Preserved local audit; public copy omits workstation paths.",
+      "source_project_bytes_equal": true
+    },
+    "PORTABLE_GUIDE.txt": {
+      "byte_identical": false,
+      "bytes": 3947,
+      "production_code": false,
+      "sha256": "68987fb1a715caf0f7d086cf6f0f2a9687c784a587aa37c014412aaaf53438c4",
+      "source": "Created for the portable source-only package"
+    },
+    "TRANSPORT_AMENDMENT_V4.json": {
+      "byte_identical": true,
+      "bytes": 1815,
+      "sha256": "fed4c0ade1009e7a06af55dda4c4b30b0b17060b0f450ca0a30843215a4448c9",
+      "source": "Preserved local audit; public copy omits workstation paths.",
+      "source_project_bytes_equal": true
+    },
+    "acquire_month_v4.py": {
+      "byte_identical": true,
+      "bytes": 25657,
+      "sha256": "34cb44cc3c370138a07b21b01d72a8fb039212c76365ac172cc2a570d585054c",
+      "source": "Preserved local audit; public copy omits workstation paths.",
+      "source_project_bytes_equal": true
+    },
+    "legacy_acquire.py": {
+      "byte_identical": true,
+      "bytes": 24471,
+      "sha256": "3f19fb017d267691cfc98e26874152a642bd59486d43f642bb6036f3f8acb5ed",
+      "source": "Preserved local audit; public copy omits workstation paths.",
+      "source_project_bytes_equal": true
+    },
+    "preserved-v2/TRANSPORT_AMENDMENT_V2.json": {
+      "byte_identical": true,
+      "bytes": 1437,
+      "sha256": "ccdb231068d442a1ab235f6207d1697ae0654b16343e1ca0a487314be456235c",
+      "source": "Preserved local audit; public copy omits workstation paths."
+    },
+    "preserved-v2/acquire_month_v2.py": {
+      "byte_identical": true,
+      "bytes": 14148,
+      "sha256": "fcb062902aee5c45f1e6e7438b96f3a7e0fdab1c2152470f088ee1cbaacb4e49",
+      "source": "Preserved local audit; public copy omits workstation paths.",
+      "source_project_bytes_equal": true
+    },
+    "preserved-v3/TRANSPORT_AMENDMENT_V3.json": {
+      "byte_identical": true,
+      "bytes": 1848,
+      "sha256": "7fd134173499cd1240f3b14a8e1fa9ac683daa15d191a226c9ed6a42356fa339",
+      "source": "Preserved local audit; public copy omits workstation paths."
+    },
+    "preserved-v3/acquire_month_v3.py": {
+      "byte_identical": true,
+      "bytes": 19944,
+      "sha256": "20d896e32e669ee1ed5f6537468b59717db9b3fb25b77526a5685819866194cc",
+      "source": "Preserved local audit; public copy omits workstation paths.",
+      "source_project_bytes_equal": true
+    },
+    "synthetic_helpers.py": {
+      "byte_identical": false,
+      "bytes": 670,
+      "production_code": false,
+      "sha256": "0c5f9269ded7d3d9f0d95fcbc9b7165fac4a27b7acc7abbb7fa42e48d3122454",
+      "source": "Created for the portable source-only package"
+    },
+    "test_legacy_codec.py": {
+      "byte_identical": true,
+      "bytes": 12324,
+      "sha256": "4f6bc0823450f94c9494b87c27371521f1218ddb611c3c51d5ba781ac614e6eb",
+      "source": "Preserved local audit; public copy omits workstation paths.",
+      "source_project_bytes_equal": true
+    },
+    "test_portable_lineage.py": {
+      "byte_identical": false,
+      "bytes": 4720,
+      "production_code": false,
+      "sha256": "aa595e06354f6d9813a27a989faf7988a58388cea9bc299786e4ef610650f232",
+      "source": "Created for the portable source-only package"
+    },
+    "test_portable_v4.py": {
+      "adaptation": "Retained 16 V4 tests; replaced fixture-only historical module imports with local synthetic packet helper, and separated two V2/V3 tests into test_portable_lineage.py.",
+      "byte_identical": false,
+      "sha256": "efbdf032623d669bb5f830f75542509677abc52b4ce014c50445fd2713b22ff2",
+      "source": "Preserved local audit; public copy omits workstation paths.",
+      "source_sha256": "ab4306634bd9e8a8178f1a53e16694377ce0b3b94e00e6a26ddc01c0ffef995f"
+    },
+    "verify_offline.py": {
+      "byte_identical": false,
+      "bytes": 1987,
+      "production_code": false,
+      "sha256": "13fe2b9c140d43c128ef566a90c82d1efde59b74ffd364a8eef360daa78be6d3",
+      "source": "Created for the portable source-only package"
+    }
+  },
+  "network_calls": 0,
+  "original_local_manifest_sha256": "e6bdba43697826e4b626aca2a08fa0f7f11066af03500e02cf0e59fcf7ae4c73",
+  "production_behavior_changed": false,
+  "public_metadata_redaction_only": true,
+  "schema": "portable-hourly-v4-source-inventory-v1"
+}

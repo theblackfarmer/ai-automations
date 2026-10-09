@@ -1,0 +1,22 @@
+{
+  "end_exclusive_utc": "2026-10-01T00:00:00Z",
+  "execution_allowed": false,
+  "feed": "Dukascopy",
+  "fill_missing": false,
+  "minimum_request_spacing_seconds": 2,
+  "native_input": "raw_bid_ask_ticks",
+  "parallel_requests": 1,
+  "performance": false,
+  "price_scale": 1000,
+  "quote_sides": "Both ask and bid retained in raw >IIIff ticks. Derived CSV is bid only; ask reconstruction is separately possible from preserved raw ticks.",
+  "resampling_assumption": "UTC epoch-aligned closed 1M/1H/4H. Require 60/240 consecutive observed minutes for 1H/4H. No partial bars or synthetic minutes. Not Pepperstone native candles.",
+  "review_end_exclusive_utc": "2026-10-01T00:00:00Z",
+  "review_start_utc": "2026-09-01T00:00:00Z",
+  "schema": "dukascopy-month-data-v1",
+  "session_assumption": "No market calendar assumed. Every UTC hourly response is classified independently. Missing tick minutes remain unclassified.",
+  "start_utc": "2026-08-01T00:00:00Z",
+  "status": "FROZEN_BY_PARENT_2026_10_09",
+  "study_month_coordinate": "UTC; September 1 inclusive to October 1 exclusive",
+  "symbol": "USATECHIDXUSD",
+  "warmup": "Full August 2026; frozen by parent for major 4H context"
+}
