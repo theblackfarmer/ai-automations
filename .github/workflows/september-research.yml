@@ -24,7 +24,7 @@ jobs:
         working-directory: research/september_2026
     env:
       MPLBACKEND: Agg
-      MPLCONFIGDIR: ${{ runner.temp }}/september-matplotlib
+      MPLCONFIGDIR: /tmp/september-matplotlib-${{ matrix.python }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
