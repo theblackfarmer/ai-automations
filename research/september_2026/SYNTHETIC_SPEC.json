@@ -1,0 +1,43 @@
+{
+  "id": "SEPTEMBER_4H_1H_1M_V1",
+  "kind": "SYNTHETIC_FIXTURE_ONLY",
+  "execution_allowed": false,
+  "mechanics": {
+    "authority": "All precise algorithms below are ASSUMED research encodings. No match or profit promotes teacher fidelity.",
+    "swing": "Alternating directional extreme confirmed by completed close across preceding candle range, as causal_swings_r5; outside reversal extending old extreme is ambiguous and resets local structure. Preserve actual pivot time and later known_at.",
+    "major": "For 4H and 1H bootstrap only after two confirmed highs and lows both progress one direction, plus subsequent completed close across prior confirmed reference. Protected opposite pivot is associated with that BOS. Continuation breaks only the external trend extreme; internal counter-breaks cannot reverse major direction. A close through protected pivot revokes authority; an opposite sequence and BOS is needed to establish opposite authority. Structural BOS recorded even if formation cannot be resolved.",
+    "confirmation": "1H direction must have its own major BOS known no later than tap and agree with active 4H major direction. Existing closed1H context may be linked at4H recognition; no retroactive touch. Both contexts must remain valid.",
+    "parent_route": "Track each 4H and agreeing1H supply/demand separately. Only linked active zones eligible. An1H zone need not be contained inside4H zone; it is labeled same-direction child context, never exact geometric refinement. Preserve simultaneous origins; no outcome-based winner.",
+    "formation": "Compare TWO preregistered candidates per responsible pivot: (A) historical opposite-color run ending at pivot or preceding opposite candle (existing origin_for_pivot), (B) whole local base around responsible pivot: seed pivot candle; walk backwards only through contiguous overlapping opposite-color or inside candles strictly after broken reference; then forwards through candles intersecting seed envelope until first completed close exits in BOS direction. Include all accepted candle wicks; exclude departure/BOS candle. Reject far-edge breach between origin end and BOS. Both are hypotheses, neither is chosen from returns. Equal member sets deduplicated, different members retained even if same bounds.",
+    "tap": "First1M high/low overlap AFTER zone and both context known-times; bar_start>=recognition. Samebar recognition/tap prohibited. A far-edge breach invalidates zone rather than tap-triggering it.",
+    "m1_transition": "Keep pre-tap confirmed swing chain. Require two successive HH and two HL labels for long, or two LL and two LH labels for short (three pivots of each kind with strict comparisons). Last two of each kind must occur after tap bar. Latest reference and intervening pullback both known strictly before BOS bar start. BOS completed close crosses latest directional pivot; K never same bar as structure-known. Before-tap pivot only comparator, never post-tap evidence.",
+    "entry_review": "Local candidate frozen at1M BOS known-time. First later bar overlapping local zone is return; do not expire solely for delay or replace with newer origin. Later separate completed1M close beyond near edge in intended direction without far-edge breach is assumed respect. Record ENTRY_REVIEW only, not order/fill. Retain all no-return/rejected/failed cases to month end.",
+    "invalidation": "Parent zone far-edge wick breach recorded separately from owner-timeframe protected close and direction. Child far-edge wick breach kills child only. Opposite1M CHoCH does not reverse1H/4H. Boundary equality is contact, not strict BOS; stop at exact far edge is recorded but execution modeling absent.",
+    "targets": "Record original indication endpoint only when causal opposite swing confirms post-BOS, never running future extremum. Also record opposing known zones, never invent priority. Target already touched by decision blocks new original-target entry review; no target/reached reset after gaps. Trailing and PnL not authorized by unresolved target/exit selection.",
+    "same_cutoff": "Process closed4H then1H then1M; no1M candle may use HTF context that closed after that1M candle began. New context applies beginning next1M bar. Every record carries source clocks and stable identities.",
+    "coverage": "No synthetic candles. Frozen UTC-phase0 aggregation. Preserve incomplete/unknown-session buckets, reset active authority across unclassified gaps. Official regular summer break may be bridged only with explicit schedule evidence and no contradictory quotes. September7 holiday schedule unresolved: flag separately, never silently claim complete eligible coverage.",
+    "output": "AllSeptember major BOS, linked contexts, zone candidates, taps, transition evidence, returns/respect/failures, exclusions; sequential event journal; chart examples chosen chronological, not outcome; no performance claims."
+  },
+  "sequence": [
+    "4H major BOS and protected structure",
+    "1H same-direction BOS confirmation while 4H authority remains valid",
+    "later observed touch of a linked 4H or 1H responsible zone",
+    "post-touch 1M directional structure change retaining pre-touch correction history",
+    "1M BOS-linked origin frozen before its return",
+    "later return then separate respect observation"
+  ],
+  "scope": {
+    "symbol": "NAS100 CFD",
+    "provider": "Dukascopy USATECHIDXUSD",
+    "side": "BID",
+    "warmup_start": "1970-01-01T00:00:00Z",
+    "study_start": "1970-01-01T00:00:00Z",
+    "end_exclusive": "1970-01-04T00:00:00Z",
+    "timeframes_minutes": [
+      240,
+      60,
+      1
+    ],
+    "prior_exposure": "HAND-DEFINED SYNTHETIC PUBLIC-FEED FIXTURES ONLY"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "IMPLEMENTATION_CLARIFICATIONS_V1",
+  "recorded_at": "2026-10-09T16:13:35.373805+00:00",
+  "before_market_scan": true,
+  "spec_sha256": "89f9ab6fb4f842426e238ef5554274be175211610d02c85086e2fc792139af36",
+  "authority": "ASSUMED_RESEARCH_MECHANICS_NOT_NEW_TEACHER_APPROVAL",
+  "clarifications": {
+    "base_backward_inside": "Inside immediate later accepted candle, overlap inclusive; strictly after broken reference.",
+    "base_forward": "Use fixed pivot candle seed envelope; first directional completed close outside seed ends members, excluding departure.",
+    "whole_zone_departure": "If seed-envelope departure did not close beyond whole-base near edge, keep immutable candidate AWAIT_DEPARTURE; record full near-edge close separately. Return bar starts after that close-known time; no continuous overlap mistaken as retest.",
+    "major_references": "Reference and pullback confirmation known strictly before BOS bar start. Structural BOS independent of zone-selector availability.",
+    "indication": "First post-BOS directional endpoint pivot confirmed by opposite swing. Historical formation touch is not target exhaustion; record new touch only on1M bars beginning at/after target_known_at. Unknown/reached target blocks ENTRY_REVIEW, but preserves RESPECT_OBSERVED.",
+    "target_scope": "Child binds target belonging to actual tapped parent; other known opposing zones stay separate, no inferred targetpriority."
+  }
+}

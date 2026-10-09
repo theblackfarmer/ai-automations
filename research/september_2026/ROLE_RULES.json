@@ -1,0 +1,63 @@
+{
+  "id": "PUBLIC_ROLE_RULES_SEPTEMBER_V1",
+  "mechanics_sha256": "cf8ac0bb75b96b3d432353dde4a0c9b0b33e6a36e3676e698258fccb1db2f8a5",
+  "spec_sha256": "89f9ab6fb4f842426e238ef5554274be175211610d02c85086e2fc792139af36",
+  "instrument": {
+    "symbol": "NAS100 CFD",
+    "provider": "Dukascopy USATECHIDXUSD",
+    "side": "BID",
+    "timeframes_minutes": [
+      240,
+      60,
+      1
+    ]
+  },
+  "sequence": [
+    "4H major BOS and protected structure",
+    "1H same-direction BOS confirmation while 4H authority remains valid",
+    "later observed touch of a linked 4H or 1H responsible zone",
+    "post-touch 1M directional structure change retaining pre-touch correction history",
+    "1M BOS-linked origin frozen before its return",
+    "later return then separate respect observation"
+  ],
+  "map": [
+    {
+      "role": "4H",
+      "spec_rule": "major",
+      "ownership": "Original major authority; internal1M change cannot substitute."
+    },
+    {
+      "role": "1H",
+      "spec_rule": "confirmation",
+      "ownership": "Independent same-direction major authority; no containment or invented new4H-after1H chronology."
+    },
+    {
+      "role": "Market Structure",
+      "spec_rule": "m1_transition",
+      "ownership": "Explicit pivot/comparator IDs, scope, strict comparisons and preserved pre-tap history."
+    },
+    {
+      "role": "B.O.B",
+      "spec_rule": "major / m1_transition",
+      "ownership": "Named reference and scoped wick/close observations; no zone selection."
+    },
+    {
+      "role": "Supply / Demand",
+      "spec_rule": "formation",
+      "ownership": "Responsible BOS binding, complete wick bounds/members, both hypotheses retained and equal members deduplicated. Exact teacher membership remains unresolved."
+    },
+    {
+      "role": "Weave /1M",
+      "spec_rule": "entry_review",
+      "ownership": "Freeze then departure/return/separate respect. No time expiry or inferred fill."
+    },
+    {
+      "role": "Sequence Coordinator",
+      "spec_rule": "parent_route / invalidation",
+      "ownership": "Common identities/cutoff, physical-origin grouping, independent parent and child lifecycle; no majority approval."
+    }
+  ],
+  "role_source_catalog_sha256": "382840e5304e18bc2d10b71a3ee977462f046f6cdf28f0ce2bed39f26124baaf",
+  "source_snapshot_scope": "Role sources were read and held locally; raw teaching documents are not distributed or reverified by this public bundle.",
+  "authority": "Automated frozen-spec accounting only; no specialist votes or teacher-fidelity approval."
+}

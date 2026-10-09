@@ -1,0 +1,33 @@
+# Frozen sequence role accounting
+
+This tool reviews a saved 4H → 1H → 1M research event journal. It maps checks to the timeframe owners, Market Structure, B.O.B, Supply/Demand, Weave and the coordinator. It does not invoke those agents, create specialist approvals, claim teacher fidelity, or calculate performance.
+
+The hierarchy requires 4H and agreeing 1H major authorities before an eligible tap. An already-known 1H context may link when 4H becomes known; no additional chronological or containment rule is imposed. A tap must refer to a linked responsible parent. Local comparison chains retain predecessor identities and known clocks, require the frozen two post-tap progressing pairs, and preserve earlier correction evidence. Missing countertrend interpretation remains unresolved rather than becoming a new filter.
+
+Formations keep their specific BOS, complete native membership and wick bounds. Equal member sets on the same route must be deduplicated; shared physical origins across parent routes are grouped once. Different members remain different hypotheses even with equal bounds. The tool checks those recorded handoffs, not the full automatic formation-selector implementation. A return, a later separate assumed respect, child failure and parent invalidation stay distinct.
+
+## Run
+
+Requires Python 3.9 or newer with zoneinfo timezone data. Runtime uses only the standard library. Put ROLE_RULES.json beside role_review.py:
+
+```sh
+python3 -B role_review.py --run /path/to/sealed-run --output /path/to/new-review
+```
+
+The run must contain its reconciliation receipt, captured inputs, sealed plan, journal, input audit, result and snapshot. Paths are supplied explicitly; no private filesystem location is hardcoded. Captured source bytes are hashed, but the runtime does not parse a live CSV or execute captured code. Independent source/resampling and causal verification remain separate gates.
+
+Output is exclusive: REVIEW.json, chronology.jsonl, chronology.csv, SUMMARY.txt, and a hash receipt. Every row keeps event IDs, parent relationships, known clocks in CT and ET, named checks, failures and unresolved teaching. Earlier/warmup rows remain labeled. Source run status and its incomplete-month flag are preserved. Exit code 2 means recorded conflicts; exit code 0 means only the bounded checks completed without a conflict.
+
+## Synthetic checks
+
+Put the engine under test beside the files, or provide its path through MONTH_ENGINE_SOURCE:
+
+```sh
+python3 -B -m unittest test_role_review
+```
+
+The 23 tests use hand-defined synthetic public Engine inputs. They deliberately break parent ancestry, timing, comparator identity, whole-zone bounds, return/respect ordering and source hashes. Positive controls preserve an already-known hourly context, valid entry chronology, parent/child failure separation and prefix-stable rows. The tiny sealed-envelope fixture checks artifact bindings only; it does not represent a native market dataset.
+
+## Distribution boundary
+
+Public files are code, deterministic rule metadata and synthetic examples. Raw teaching documents, direct transcript quotations, source images, personal paths, acquired market CSVs and actual run outputs are excluded. The local role-source catalog is represented only by its hash; this public bundle does not claim to reverify unavailable private documents. Exact teacher membership, discretionary structure recognition, full market coverage and execution remain unproven. No extra 5M/15M agreement, indicator filter or target priority is introduced.
