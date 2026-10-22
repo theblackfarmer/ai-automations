@@ -1,0 +1,137 @@
+name: ASTRA 6 full frozen market study
+
+on:
+  push:
+    branches: [fix/astra6-engine-tests-20261022]
+    paths:
+      - '.github/workflows/astra6-full-market-study.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: astra6-full-market-study-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  frozen-study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      ROOT: research/september_2026
+      ACQ: ${{ runner.temp }}/astra6-full-acquisition
+      STUDY: ${{ runner.temp }}/astra6-full-study
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify acquisition package
+        working-directory: research/september_2026/acquisition_tools
+        run: |
+          python -I -S -B verify_offline.py
+          python -B -m unittest -v test_daily_codec_v5.py
+
+      - name: Acquire frozen August-September USATECHIDXUSD ticks
+        id: acquire
+        working-directory: research/september_2026/acquisition_tools
+        shell: bash
+        run: |
+          set +e
+          python -B acquire_month_v4.py \
+            --protocol FROZEN_MONTH_PROTOCOL.json \
+            --target "${ACQ}" \
+            --route direct-https \
+            --max-requests 3000 \
+            --execute | tee "${RUNNER_TEMP}/full-acquisition.log"
+          rc=${PIPESTATUS[0]}
+          echo "exit_code=${rc}" >> "${GITHUB_OUTPUT}"
+          if [ "${rc}" -ne 0 ] && [ "${rc}" -ne 2 ]; then
+            exit "${rc}"
+          fi
+
+      - name: Validate full acquisition gate
+        id: gate
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = Path(os.environ['ACQ']) / 'MANIFEST.json'
+          if not manifest.is_file():
+              raise SystemExit('No acquisition MANIFEST.json')
+          m = json.loads(manifest.read_text())
+          complete = m.get('all_hours_validated_or_explicit_empty_200') is True
+          expected = m.get('expected_hours')
+          processed = m.get('processed_hours')
+          states = m.get('hour_states', {})
+          unresolved = m.get('unresolved_hours', [])
+          unattempted = m.get('unattempted_hours', [])
+          if complete:
+              if processed != expected or unresolved or unattempted:
+                  raise SystemExit('Contradictory complete acquisition manifest')
+          out = os.environ['GITHUB_OUTPUT']
+          with open(out, 'a') as f:
+              f.write('complete=' + ('true' if complete else 'false') + '\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('### ASTRA 6 full acquisition\n\n')
+              f.write('Complete: **' + str(complete) + '**\n\n')
+              f.write('Expected hours: **' + str(expected) + '**  \\n')
+              f.write('Processed hours: **' + str(processed) + '**  \\n')
+              f.write('Minute count: **' + str(m.get('minute_count')) + '**\n\n')
+              f.write('```json\n' + json.dumps({
+                  'hour_states': states,
+                  'missing_minutes': m.get('missing_minutes'),
+                  'stop_reason': m.get('stop_reason'),
+                  'network_requests_this_run': m.get('network_requests_this_run'),
+                  'unresolved_hours_count': len(unresolved),
+                  'unattempted_hours_count': len(unattempted),
+              }, indent=2) + '\n```\n')
+          PY
+
+      - name: Run frozen ASTRA causal study
+        if: steps.gate.outputs.complete == 'true'
+        working-directory: research/september_2026
+        run: |
+          python -B run_study.py \
+            --acquisition "${ACQ}/MANIFEST.json" \
+            --output "${STUDY}"
+
+      - name: Summarize ASTRA study
+        if: steps.gate.outputs.complete == 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          study = Path(os.environ['STUDY'])
+          pipeline = json.loads((study/'PIPELINE.json').read_text())
+          result = json.loads((study/'replay'/'RESULT.json').read_text())
+          report = json.loads((study/'report'/'REPORT.json').read_text())
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('\n### ASTRA 6 frozen causal study\n\n')
+              f.write('Pipeline: **' + str(pipeline.get('status')) + '**\n\n')
+              f.write('September events: **' + str(result.get('september_events')) + '**\n\n')
+              f.write('```json\n' + json.dumps({
+                  'event_counts': result.get('event_counts'),
+                  'causal_scope': pipeline.get('causal_scope'),
+                  'execution_allowed': pipeline.get('execution_allowed'),
+                  'performance': result.get('performance'),
+                  'report_status': report.get('status'),
+              }, indent=2) + '\n```\n')
+          PY
+
+      - name: Preserve full acquisition and study
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra6-full-market-study-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/astra6-full-acquisition/
+            ${{ runner.temp }}/astra6-full-study/
+            ${{ runner.temp }}/full-acquisition.log
