@@ -275,6 +275,7 @@ class Engine:
         self._authorities = {}
         self._active = {240: None, 60: None}
         self._bos = {}
+        self._target_continuity_lost = set()
         self._zones = {}
         self._links = {}
         self._taps = {}
@@ -360,6 +361,14 @@ class Engine:
                 self._coverage_through[tf] = max(self._coverage_through[tf], known_at)
             else:
                 self._track[tf].reset()
+                # An unresolved original endpoint cannot be established from a
+                # disconnected owner-timeframe swing after unknown coverage.
+                # Keep already-known targets/reached history; a scheduled bridge
+                # or fully observed ambiguous turn does not take this path.
+                if tf in (240, 60):
+                    self._target_continuity_lost.update(
+                        bos['id'] for bos in self._bos.values()
+                        if bos['timeframe'] == tf and bos['target'] is None)
                 self._revoke(tf, known_at, 'UNCLASSIFIED_COVERAGE_GAP')
                 if tf == 1:
                     for tap in self._taps.values():
@@ -435,6 +444,8 @@ class Engine:
                 continue
             p = event['pivot']
             for bos in self._bos.values():
+                if bos['id'] in self._target_continuity_lost:
+                    continue
                 endpoint_kind = 'high' if bos['direction'] == 'long' else 'low'
                 if bos['timeframe'] == tf and bos['target'] is None and p['kind'] == endpoint_kind and p['known_at'] > bos['known_at'] and p['time'] >= bos['bar_start']:
                     bos['target'] = dict(price=p['price'], pivot=deepcopy(p), known_at=p['known_at'], reached=False, reached_at=None)

@@ -57,6 +57,16 @@ entire child zone, or permit a later respect/review after retirement. Mirrored
 long and short regressions cover these boundaries and shared-cutoff owner
 revocation.
 
+### Original targets across unknown coverage
+
+An original BOS target that is still unknown when its owner timeframe encounters
+an unclassified coverage gap stays unresolved. A pivot confirmed in the new
+observed sequence cannot supply the missing endpoint of the old indication.
+Previously known targets and their reached flags are retained. Evidence-backed
+scheduled bridges preserve target continuity, and a fresh post-gap BOS can
+resolve its own target normally. This does not change the separate legacy
+ambiguous-turn interpretation or introduce a fill or exit model.
+
 ## Current research limit
 
 The actual captured September input is incomplete. A wider provider acquisition also disagrees with the raw-tick reference on two Sep2 candles and is quarantined. No full-month, OOS, expectancy, profit factor, drawdown, teacher-fidelity, paper-trading or deployment verdict has passed. Partial diagnostics never become full-month evidence. The saved native transport amendment binds the pre-repair engine hash and remains historical; it must not be silently retargeted to bypass adoption checks.
