@@ -25,9 +25,10 @@ jobs:
     env:
       MPLBACKEND: Agg
       MPLCONFIGDIR: /tmp/september-matplotlib-${{ matrix.python }}
-      ASTRA_CHECK_OUTPUT: ${{ runner.temp }}/astra6-engine-checks-${{ matrix.python }}
     steps:
       - uses: actions/checkout@v4
+      - name: Select isolated result directory
+        run: echo "ASTRA_CHECK_OUTPUT=${RUNNER_TEMP}/astra6-engine-checks-${{ matrix.python }}" >> "$GITHUB_ENV"
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
