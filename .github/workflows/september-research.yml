@@ -1,7 +1,7 @@
 name: ASTRA 6 engine checks
 on:
   push:
-    branches: [research/september-4h-1h-1m-20261009]
+    branches: [research/september-4h-1h-1m-20261009, fix/astra6-engine-tests-20261022]
     paths: ['research/september_2026/**', 'tests/test_logic.py', 'automations/**', '.github/workflows/september-research.yml']
   pull_request:
     paths: ['research/september_2026/**', 'tests/test_logic.py', 'automations/**', '.github/workflows/september-research.yml']
