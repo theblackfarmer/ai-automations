@@ -82,3 +82,5 @@ jobs:
           path: |
             ${{ runner.temp }}/astra6-dukascopy-probe/
             ${{ runner.temp }}/acquisition.log
+
+# trigger hosted acquisition probe
