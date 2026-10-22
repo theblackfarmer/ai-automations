@@ -18,12 +18,14 @@ jobs:
   frozen-study:
     runs-on: ubuntu-latest
     timeout-minutes: 240
-    env:
-      ROOT: research/september_2026
-      ACQ: ${{ runner.temp }}/astra6-full-acquisition
-      STUDY: ${{ runner.temp }}/astra6-full-study
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set output paths
+        shell: bash
+        run: |
+          echo "ACQ=${RUNNER_TEMP}/astra6-full-acquisition" >> "${GITHUB_ENV}"
+          echo "STUDY=${RUNNER_TEMP}/astra6-full-study" >> "${GITHUB_ENV}"
 
       - uses: actions/setup-python@v5
         with:
