@@ -31,17 +31,29 @@ jobs:
       - name: Verify frozen acquisition package offline
         run: python -I -S -B verify_offline.py
 
-      - name: Acquire bounded direct-HTTPS sample
+      - name: Build active-session probe protocol
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('FROZEN_MONTH_PROTOCOL.json').read_text())
+          p['start_utc'] = '2026-08-03T14:00:00Z'
+          p['end_exclusive_utc'] = '2026-08-03T18:00:00Z'
+          Path('ACTIVE_SESSION_PROTOCOL.json').write_text(json.dumps(p, indent=2) + '\n')
+          PY
+
+      - name: Acquire bounded direct-HTTPS active-session sample
         id: acquire
         shell: bash
         run: |
           set +e
           TARGET="${RUNNER_TEMP}/astra6-dukascopy-probe"
           python -B acquire_month_v4.py \
-            --protocol FROZEN_MONTH_PROTOCOL.json \
+            --protocol ACTIVE_SESSION_PROTOCOL.json \
             --target "${TARGET}" \
             --route direct-https \
-            --max-requests 6 \
+            --max-requests 8 \
             --execute | tee "${RUNNER_TEMP}/acquisition.log"
           rc=${PIPESTATUS[0]}
           echo "exit_code=${rc}" >> "${GITHUB_OUTPUT}"
@@ -83,4 +95,4 @@ jobs:
             ${{ runner.temp }}/astra6-dukascopy-probe/
             ${{ runner.temp }}/acquisition.log
 
-# trigger hosted acquisition probe
+# active-session probe
