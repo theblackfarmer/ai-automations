@@ -6,6 +6,24 @@ stack.
 
 By **Isaac McFarland** — github.com/theblackfarmer
 
+## ASTRA 6 engine checks
+
+The 4H → 1H → 1M research engine and its complete test command are in
+[`research/september_2026/`](research/september_2026/README.md). With Python 3.9 or
+3.11, install its pinned report dependency once and run all engine, pipeline,
+offline collector, and repository logic checks:
+
+```sh
+python -m pip install -r research/september_2026/requirements-report.txt
+python -B research/september_2026/verify_all.py --output "${TMPDIR:-/tmp}/astra6-check-$(date -u +%Y%m%dT%H%M%SZ)"
+```
+
+Each run retains a source-bound result receipt and logs. These software checks
+use synthetic fixtures and a small source-decoding fixture; they do not establish
+live trading or profitability results.
+
+## Automation toolkit
+
 | Automation | What it does |
 |---|---|
 | **Trading News Monitor** | Scans market news and flags only what's likely to move **NAS100 & Gold** — direction, impact, why |

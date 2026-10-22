@@ -1,10 +1,10 @@
-name: September causal research checks
+name: ASTRA 6 engine checks
 on:
   push:
     branches: [research/september-4h-1h-1m-20261009]
-    paths: ['research/september_2026/**', '.github/workflows/september-research.yml']
+    paths: ['research/september_2026/**', 'tests/test_logic.py', 'automations/**', '.github/workflows/september-research.yml']
   pull_request:
-    paths: ['research/september_2026/**', '.github/workflows/september-research.yml']
+    paths: ['research/september_2026/**', 'tests/test_logic.py', 'automations/**', '.github/workflows/september-research.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -25,6 +25,7 @@ jobs:
     env:
       MPLBACKEND: Agg
       MPLCONFIGDIR: /tmp/september-matplotlib-${{ matrix.python }}
+      ASTRA_CHECK_OUTPUT: ${{ runner.temp }}/astra6-engine-checks-${{ matrix.python }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -32,19 +33,9 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install report dependencies
         run: python -m pip install --disable-pip-version-check -r requirements-report.txt
-      - name: Verify frozen research contracts
-        run: |
-          mkdir -p ci-artifacts
-          set -o pipefail
-          python -B -m unittest test_engine test_month_replay test_export_tradingview test_verify_causality test_report test_native_daily test_independent_boundaries test_role_review 2>&1 | tee ci-artifacts/unit-tests.log
-      - name: Attack pipeline handoffs with explicit synthetic data
-        run: |
-          set -o pipefail
-          python -B regression_pipeline.py --project . --fixture fixtures/pipeline --output ci-artifacts/pipeline 2>&1 | tee ci-artifacts/pipeline.log
-      - name: Verify source collector with offline synthetic transport
-        run: |
-          set -o pipefail
-          python -B acquisition_tools/verify_offline.py 2>&1 | tee ci-artifacts/acquisition-tests.log
+      - name: Run all engine and offline pipeline checks
+        if: ${{ !cancelled() }}
+        run: python -B verify_all.py --output "$ASTRA_CHECK_OUTPUT"
       - name: Publish checks and failures
         if: always()
         uses: actions/upload-artifact@v4
@@ -52,12 +43,22 @@ jobs:
           name: september-research-python-${{ matrix.python }}
           if-no-files-found: error
           retention-days: 30
-          path: research/september_2026/ci-artifacts/
+          path: ${{ env.ASTRA_CHECK_OUTPUT }}/
       - name: State verification scope
         if: always()
         run: |
           python - <<'PYCODE'
+          import json
           import os
+          from pathlib import Path
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              path = Path(os.environ['ASTRA_CHECK_OUTPUT']) / 'RESULT.json'
+              if path.is_file():
+                  result = json.loads(path.read_text())
+                  f.write('### ASTRA 6 engine checks\n\n')
+                  f.write('All required checks passed: **' + str(result.get('all_pass') is True) + '**\n\n')
+                  f.write('```json\n' + json.dumps(result.get('counts', {}), indent=2) + '\n```\n\n')
+              else:
+                  f.write('### ASTRA 6 engine checks\n\nNo complete result receipt was produced. Inspect the failed steps.\n\n')
               f.write('Synthetic contract checks and a small source-decoding fixture only. No full-month market backtest, teacher-fidelity, performance, TradingView delivery, or trading clearance is implied. Inspect step conclusions and preserved artifacts.\n')
           PYCODE
