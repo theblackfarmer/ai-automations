@@ -540,7 +540,10 @@ def simulate_many(quotes: Iterable[Quote], candidates: Iterable[Candidate],
                 state.receive_pivot(pivots[pivot_index])
             pivot_index += 1
         for state in states:
-            state.on_quote(quote, index, previous)
+            # Idle policies have no quote-driven state to advance. Every quote
+            # still passes validation and updates the global previous record.
+            if state.position is not None or state.pending is not None:
+                state.on_quote(quote, index, previous)
         quote_count += 1
         previous = last_quote = quote
     # A missing quote is not an entry. Retain every unprocessed review instead

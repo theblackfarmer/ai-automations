@@ -1,0 +1,32 @@
+{
+  "all_pass": true,
+  "counts": {
+    "errors": 0,
+    "expected_failures": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests_passed": 89,
+    "tests_run": 89,
+    "unexpected_successes": 0
+  },
+  "execution_allowed": false,
+  "profitability_established": false,
+  "python": "3.9.6 (default, Apr  7 2026, 02:38:40) \n[Clang 21.0.0 (clang-2100.0.123.102)]",
+  "real_market_backtest_completed": false,
+  "schema": "ASTRA6_QUOTE_SOFTWARE_VERIFICATION_V1",
+  "scope": "Synthetic software and data-admission tests only; no market return.",
+  "seconds": 0.24237554199999997,
+  "source_sha256": {
+    "data_source.py": "74c0b8f113330621b7f1795ce6efb553bff27b9aa90d1382c9d337c86191e4bb",
+    "profit_study.py": "81b18c22d1b8a996d00ee6f04f128c8eae13a15fa95048e31247da881ab8c397",
+    "quote_execution.py": "94a33bea7251b51af113cebaddf966b056a2253f5878a2828f3d8477f8843d75",
+    "test_data_source.py": "e1292b8a778ef3bd9c3295a60fa75fa900d931aa7851f6313c5ce58110cc4961",
+    "test_execution_boundaries.py": "5820647d23301809316f1f65b1c6aec4b3f1696b19089d570295bbea313e37bf",
+    "test_profit_integration.py": "00f87ef458b892e5ed63e49ebec0e853ec81da4e26b732d061441c4a3d664bda",
+    "test_profit_study.py": "544081fa8fa8d305ca1992bf683af969589c9360623f294f007f69c66ff4e245",
+    "test_quote_execution.py": "fc19d1bffda1fb1cf4d63e9dfda61dbdb121515d6b26c79e8f54d3fe1164bb95",
+    "test_quote_performance.py": "01ceb7c34c9508dbb51eadcc20161e3a5465afb226308645d74561dfb1113d0c",
+    "verify_profit.py": "844295d3905833bb636458d04e6f6f4011d0f869d3f53db6abbe5934a866575e"
+  },
+  "sources_unchanged": true
+}

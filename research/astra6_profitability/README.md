@@ -17,7 +17,7 @@ From the repository root:
 ```sh
 python -B research/astra6_profitability/verify_profit.py --output /new/path/quote-checks
 python -B research/september_2026/verify_all.py --output /new/path/engine-checks
-python -B research/astra6_profitability/profit_study.py --acquisition /path/to/MANIFEST.json --output /new/path/profit-study
+python -B research/astra6_profitability/profit_study.py --acquisition /path/to/MANIFEST.json --output /new/path/profit-study --causal-workers=2
 ```
 
 Output directories must be new. The last command exits **2** with `BLOCKED_NO_PROFIT_RESULT` when the required acquisition is incomplete. It does not emit a market PnL file for that case. A completed development simulation still sets `profitability_established:false`.
@@ -63,3 +63,9 @@ September is previously exposed **development data**, not untouched out-of-sampl
 The current separate Mac-native installation is not supplied or updated by this research layer. The older NQ/MNQ CSVs, synthetic September journals, small decoder fixture, quarantined native-daily collector, and historical ICC results cannot substitute for this study's required market input.
 
 Acquisition/causal verification and network downloads are separate from quote simulation timing. A fast synthetic test run is not a claim that a full market backtest, complete acquisition, or causal audit finishes in seconds.
+
+## Pre-outcome performance continuation (2026-10-22)
+
+The earlier uncommitted ChatGPT workspace changes were unavailable in the published branch. With explicit user authorization, equivalent narrow improvements were rebuilt: at most two independent causal-cutoff jobs, merged in chronological order, and omission of no-op quote dispatch to policies with no position or pending candidate. Every quote remains validated and counted. Every required cutoff still performs fresh-process replay and native reaggregation; source bindings and deliberately future-reading positive controls remain mandatory. `--causal-workers` accepts 1 or 2, defaulting to 1. Frozen engine, replay, specification, collector, protocol, and all seven trading policies remain unchanged.
+
+These changes precede any market PnL run in this continuation. Synthetic equivalence and software verification do not establish full-market speedup or profitability. On macOS, use a canonical temporary path such as `TMPDIR=/private/tmp` when running the complete verifier; the initial run retained two temporary-directory spelling failures before the canonical-path rerun.

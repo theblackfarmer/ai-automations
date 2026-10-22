@@ -17,6 +17,7 @@ def main():
     parser.add_argument('--acquisition',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--allow-partial',action='store_true')
+    parser.add_argument('--causal-workers',type=int,choices=(1,2),default=1)
     args=parser.parse_args()
     receipt=args.acquisition.resolve();meta=json.loads(receipt.read_bytes())
     source=receipt.parent/meta['csv']['path'];output=args.output.resolve()
@@ -67,7 +68,7 @@ def main():
         spec=json.loads((runpath/'captures/SPEC.json').read_text())
         capture=output/'CAUSAL_CAPTURE.json';capture.write_text(json.dumps({'schema':'CAUSAL_AUDIT_CAPTURE_V1','files':files,'start':epoch(spec['scope']['warmup_start']),'end':epoch(spec['scope']['end_exclusive'])},indent=2)+'\n')
         capture_sha=sha(capture)
-        run('causality',[sys.executable,'-B',str(ROOT/'verify_causality.py'),'--capture',str(capture),'--out',str(output/'causality')])
+        run('causality',[sys.executable,'-B',str(ROOT/'verify_causality.py'),'--capture',str(capture),'--out',str(output/'causality'),'--causal-workers',str(args.causal_workers)])
         # A failed causal proof does not become a visually approved setup.
         proof_path=output/'causality/RESULT.json'
         proof_bytes=proof_path.read_bytes()

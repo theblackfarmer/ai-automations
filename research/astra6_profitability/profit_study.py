@@ -248,7 +248,9 @@ def add_cost_sensitivity(result, protocol):
             'chronology_basis': 'UTC day of entry; realized results are the closed subset only.'}
 
 
-def run(acquisition, output, protocol_path=HERE / 'PROFIT_PROTOCOL.json'):
+def run(acquisition, output, protocol_path=HERE / 'PROFIT_PROTOCOL.json', *, causal_workers=1):
+    if type(causal_workers) is not int or causal_workers not in (1, 2):
+        raise ValueError('causal_workers must be 1 or 2')
     started = time.perf_counter(); output = Path(output).resolve()
     output.mkdir(parents=True, exist_ok=False)
     result = {'schema': 'ASTRA6_PROFIT_STUDY_V1', 'status': 'STARTED',
@@ -272,7 +274,8 @@ def run(acquisition, output, protocol_path=HERE / 'PROFIT_PROTOCOL.json'):
             acquisition = acquisition / 'MANIFEST.json'
         # Reuse the already verified signal replay and every-cutoff causal gate.
         command = [sys.executable, '-B', str(SIGNALS / 'run_study.py'),
-                   '--acquisition', str(acquisition), '--output', str(output / 'structure')]
+                   '--acquisition', str(acquisition), '--output', str(output / 'structure'),
+                   '--causal-workers', str(causal_workers)]
         with (output / 'structure.log').open('w') as log:
             check = subprocess.run(command, cwd=REPOSITORY, stdout=log, stderr=subprocess.STDOUT)
         if check.returncode:
@@ -338,8 +341,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--acquisition', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--causal-workers', type=int, choices=(1, 2), default=1)
     args = parser.parse_args()
-    result, code = run(args.acquisition, args.output)
+    result, code = run(args.acquisition, args.output, causal_workers=args.causal_workers)
     print(json.dumps({'status': result['status'], 'reason': result.get('reason'),
                       'profitability_established': False,
                       'result': str(args.output.resolve() / 'RESULT.json')}))
