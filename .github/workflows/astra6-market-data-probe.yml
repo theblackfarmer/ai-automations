@@ -5,6 +5,8 @@ on:
     branches: [fix/astra6-engine-tests-20261022]
     paths:
       - '.github/workflows/astra6-market-data-probe.yml'
+      - 'research/september_2026/acquisition_tools/daily_codec_v5.py'
+      - 'research/september_2026/acquisition_tools/test_daily_codec_v5.py'
   workflow_dispatch:
 
 permissions:
@@ -30,6 +32,9 @@ jobs:
 
       - name: Verify frozen acquisition package offline
         run: python -I -S -B verify_offline.py
+
+      - name: Verify daily BI5 V5 decoder
+        run: python -B -m unittest -v test_daily_codec_v5.py
 
       - name: Build active-session probe protocol
         shell: bash
