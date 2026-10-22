@@ -11,6 +11,17 @@ from pathlib import Path
 
 MULTIPLES=(1.0,1.5,2.0,3.0)
 
+def validate_bar(bar):
+    if len(bar) != 4:
+        raise ValueError('invalid bar')
+    if not all(type(v) in (int, float) and math.isfinite(v) and v > 0 for v in bar):
+        raise ValueError('invalid bar')
+    o, h, l, c = bar
+    if l > min(o, c) or h < max(o, c):
+        raise ValueError('invalid bar')
+    return o, h, l, c
+
+
 def load_bars(path):
     bars={}
     with open(path,newline='') as f:
@@ -18,33 +29,51 @@ def load_bars(path):
             t=int(row['epoch'])
             if t%60 or t in bars:raise ValueError('off-grid or duplicate bar')
             o,h,l,c=(float(row[k]) for k in ('open','high','low','close'))
-            if not all(math.isfinite(v) and v>0 for v in (o,h,l,c)) or l>min(o,c) or h<max(o,c):
-                raise ValueError('invalid bar')
+            validate_bar((o,h,l,c))
             bars[t]=(o,h,l,c)
     return bars
 
 def evaluate(bars,signals,multiples=MULTIPLES,max_hold=60,cost_points=0.0):
-    if max_hold<1 or not math.isfinite(cost_points) or cost_points<0:raise ValueError('invalid parameters')
+    if type(max_hold) is not int or max_hold<1 or not math.isfinite(cost_points) or cost_points<0:raise ValueError('invalid parameters')
+    multiples=tuple(multiples)
+    if not multiples or any(not math.isfinite(m) or m<=0 for m in multiples):
+        raise ValueError('invalid multiple')
     results=[]
     for s in signals:
-        ident=str(s['id']); t=int(s['entry_epoch']); direction=str(s['side']).upper()
+        ident=str(s['id']); raw_t=s['entry_epoch']; t=int(raw_t); direction=str(s['side']).upper()
+        if isinstance(raw_t, bool) or (not isinstance(raw_t, str) and raw_t != t):
+            raise ValueError('invalid entry clock')
         entry=float(s['entry']);stop=float(s['stop'])
         if direction not in ('LONG','SHORT') or t%60 or not all(math.isfinite(x) and x>0 for x in (entry,stop)):
             raise ValueError('invalid signal')
         sign=1 if direction=='LONG' else -1
         risk=sign*(entry-stop)
-        if risk<=0:raise ValueError('stop must be adverse to entry')
+        if risk<=0 or not math.isfinite(risk):raise ValueError('stop must be adverse to entry')
+        if t in bars and validate_bar(bars[t])[0] != entry:
+            raise ValueError('entry must equal observed entry-minute open')
         for multiple in multiples:
             if not math.isfinite(multiple) or multiple<=0:raise ValueError('invalid multiple')
             target=entry+sign*risk*multiple
+            if not math.isfinite(target) or target<=0:raise ValueError('invalid target')
             result={'id':ident,'entry_epoch':t,'side':direction,'exit_r_multiple':multiple,
                     'status':'UNRESOLVED','realized_r':None,'exit_epoch':None,
                     'reason':'MISSING_OBSERVED_MINUTE','research_only':True}
-            for i in range(1,max_hold+1):
+            # Candidate entry is the open at t; include this minute's range.
+            for i in range(max_hold):
                 bt=t+i*60
                 bar=bars.get(bt)
                 if bar is None:break
-                o,h,l,c=bar
+                o,h,l,c=validate_bar(bar)
+                # A crossed stop cannot fill at its stale level after a gap.
+                if (o<=stop if sign==1 else o>=stop):
+                    result.update(status='RESOLVED',realized_r=(sign*(o-entry)-cost_points)/risk,
+                                  exit_epoch=bt,reason='STOP_GAP')
+                    break
+                # Limit target assumes no favorable gap improvement. Open is first.
+                if (o>=target if sign==1 else o<=target):
+                    result.update(status='RESOLVED',realized_r=(sign*(target-entry)-cost_points)/risk,
+                                  exit_epoch=bt,reason='TARGET')
+                    break
                 stop_hit=l<=stop if sign==1 else h>=stop
                 target_hit=h>=target if sign==1 else l<=target
                 if stop_hit and target_hit:
@@ -57,7 +86,7 @@ def evaluate(bars,signals,multiples=MULTIPLES,max_hold=60,cost_points=0.0):
                     result.update(status='RESOLVED',realized_r=realized,exit_epoch=bt,
                                   reason='STOP' if stop_hit else 'TARGET')
                     break
-                if i==max_hold:
+                if i==max_hold-1:
                     realized=(sign*(c-entry)-cost_points)/risk
                     result.update(status='RESOLVED',realized_r=realized,exit_epoch=bt,reason='TIME_STOP')
             results.append(result)
@@ -91,7 +120,7 @@ def main():
         for row in rows:f.write(json.dumps(row,sort_keys=True)+'\n')
     (a.output/'summary.json').write_text(json.dumps({
         'status':'RESEARCH_ONLY_NOT_VALIDATED_PERFORMANCE',
-        'source_kind':'observed_bid_1m','fill_assumption':'stop/target at level; no gaps modeled',
+        'source_kind':'observed_bid_1m','fill_assumption':'entry-minute open; adverse stop gaps at observed open; targets at level; dual touches unresolved',
         'cost_points':a.cost_points,'max_hold_minutes':a.max_hold,
         'signal_count':len(signals),'results':summarize(rows),
         'execution_allowed':False},indent=2)+'\n')

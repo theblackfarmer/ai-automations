@@ -1,0 +1,118 @@
+{
+  "status": "SOFTWARE_INTEGRATION_CHECKS_PASSED_NOT_MARKET_VALIDATION",
+  "base_commit": "e7e0da961ba2d5f57fb4392f9b97a7de3159b406",
+  "baseline_ci": {
+    "url": "https://github.com/theblackfarmer/ai-automations/actions/runs/39870052348",
+    "python_versions": [
+      "3.9",
+      "3.11"
+    ],
+    "tests_per_version": 292,
+    "suites_per_version": 17,
+    "conclusion": "success"
+  },
+  "acquisition_inspection": {
+    "run_id": 39860216186,
+    "head_sha": "1701db250594be3b0f9ea44fde8b80cb20400908",
+    "status_at_inspection": "in_progress",
+    "step": "Acquire frozen August-September USATECHIDXUSD ticks",
+    "artifacts_at_inspection": 0,
+    "unfinished_log_fetch": "404 BlobNotFound"
+  },
+  "fixes": [
+    "Normalize actual lowercase engine directions. Join geometry from preceding RESPECT_OBSERVED for same child, direction and known_at; reject future facts.",
+    "Reject nonfinite zone/open and invalid minute clocks; missing exact next open remains blocked.",
+    "Evaluate entry minute, count holding duration from entry, price adverse stop gaps at observed open. Keep dual-touch OHLC unresolved.",
+    "Reject malformed exit inputs and entry/open mismatches.",
+    "Compare canonical resolved paths in verification tests for Mac symlinked temporary directories."
+  ],
+  "local_verification": {
+    "python": "3.9.6",
+    "matplotlib": "3.9.4",
+    "all_pass": true,
+    "counts": {
+      "collector_tests": 31,
+      "engine_passed": 271,
+      "engine_tests": 271,
+      "errors": 0,
+      "expected_failures": 0,
+      "failures": 0,
+      "pipeline_actual_cases": 5,
+      "pipeline_cases": 11,
+      "pipeline_passed": 11,
+      "pipeline_stubbed_cases": 6,
+      "skipped": 0,
+      "suites": 18,
+      "suites_passed": 18,
+      "supplemental_logic_tests": 10,
+      "unexpected_successes": 0,
+      "unittest_passed": 318,
+      "unittest_tests": 318
+    },
+    "command": "python -B verify_all.py --output <new-output-directory>",
+    "receipt": "runs/adapter-integration-final-20261022/RESULT.json"
+  },
+  "earlier_attempts": [
+    "System Python failed isolated dependency checks: matplotlib was installed only in user site. Reran in existing virtual environment with pinned dependency.",
+    "First virtual-environment run found two Mac path assertion failures, now fixed; all later checks rerun."
+  ],
+  "integration_tests": {
+    "count": 10,
+    "positive_scope": "Synthetic public engine feeds, long and short; no state injection; journal -> adapter -> CSV -> exit CLI.",
+    "causal_checks": "Prefix comparison with subsequent engine inputs and open-only entry data; injected future-data dependency rejected; independent reviewer also injected future-event dependency and observed rejection.",
+    "entry_bar_stop_regression": true,
+    "missing_data_remains_blocked": true,
+    "no_execution_receipts": true
+  },
+  "real_probe": {
+    "source": "GitHub run 39859721831 artifact 12461651039",
+    "csv_sha256": "1f982b079c685a07042703d01e562cd5399343d5e5ed55d49d30d8e2ee9c5fd7",
+    "bars": 240,
+    "source_manifest_sha_matches": true,
+    "replay_scope": "UTC 4H enclosing boundaries; missing minutes stay missing, no fabricated warmup",
+    "event_count": 55,
+    "event_kinds": {
+      "UNCLASSIFIED_COVERAGE_GAP": 2,
+      "PIVOT_CONFIRMED": 43,
+      "AMBIGUOUS_TURN": 5,
+      "LOCAL_STRUCTURE_RESET": 5
+    },
+    "entry_candidates": 0,
+    "blocked_reviews": 0,
+    "exit_rows": 0,
+    "execution_allowed": false,
+    "profitability_established": false,
+    "local_event_search": "No exact ENTRY_REVIEW kind found in *.jsonl/*.ndjson under screen-observation/pilot/research; run-002 is orchestration status journal, older topdown journals use different schema",
+    "module_hashes": {
+      "engine.py": "b8536b432436b0a994eed9e9f24bffb141b42b6914703d4e35771ad85154e2fb",
+      "entry_review_adapter_v1.py": "8220e5d4ab5b09963dd29f7d82ca8fd3a78899bff7acd8be25576fc19ccc1720",
+      "exit_comparison_v1.py": "d1b5ce2d3d025651fc4a01b97874f1362b472c05c18781313097fa6e512f8bc8"
+    }
+  },
+  "saved_september_source": {
+    "body_sha256": "71ea00380a86189ecc392227aa1cfe9e917ad16683ffb6c1615007c0eec4b100",
+    "observed_bid_minutes": 1335,
+    "excluded_zero_volume_placeholders": 105,
+    "engine_events": 278,
+    "entry_reviews": 0,
+    "candidates": 0,
+    "exit_rows": 0,
+    "scope": "One saved September day without full August warm-up. Negative integration only."
+  },
+  "limitations": [
+    "No compatible eligible real-market ENTRY_REVIEW capture found.",
+    "Full acquisition artifacts unavailable at inspection.",
+    "Positive real-market entry/exit path and actual fills remain unproven.",
+    "BID-only hypothetical exits do not model executable bid/ask spread or establish profitability.",
+    "Declared harness CLI path was absent; no harness-CLI audit claimed."
+  ],
+  "execution_allowed": false,
+  "fill_verified": false,
+  "profitability_established": false,
+  "source_sha256": {
+    "engine.py": "b8536b432436b0a994eed9e9f24bffb141b42b6914703d4e35771ad85154e2fb",
+    "entry_review_adapter_v1.py": "8220e5d4ab5b09963dd29f7d82ca8fd3a78899bff7acd8be25576fc19ccc1720",
+    "exit_comparison_v1.py": "d1b5ce2d3d025651fc4a01b97874f1362b472c05c18781313097fa6e512f8bc8",
+    "test_entry_exit_integration.py": "f5126a6198751ef53774e81dafe27f3fa14ea4e11d4597b43ee66542a28f7fa6"
+  }
+}

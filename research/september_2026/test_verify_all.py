@@ -163,8 +163,8 @@ class EnvironmentTests(unittest.TestCase):
                 self.assertEqual(os.environ['MONTH_ENGINE_SOURCE'], '/foreign/engine.py')
             for name in ('PYTHONOPTIMIZE', 'PYTHONPATH', 'PYTHONHOME', 'PYTHONSTARTUP', 'PYTHONUSERBASE'):
                 self.assertNotIn(name, environment)
-            self.assertEqual(environment['MONTH_ENGINE_SOURCE'], str(project / 'engine.py'))
-            self.assertEqual(environment['MONTH_RUNNER_SOURCE'], str(project / 'month_replay.py'))
+            self.assertEqual(environment['MONTH_ENGINE_SOURCE'], str(project.resolve() / 'engine.py'))
+            self.assertEqual(environment['MONTH_RUNNER_SOURCE'], str(project.resolve() / 'month_replay.py'))
             self.assertEqual(environment['PYTHONNOUSERSITE'], '1')
             self.assertEqual(environment['MPLBACKEND'], 'Agg')
             self.assertTrue(Path(environment['MPLCONFIGDIR']).is_dir())
@@ -280,7 +280,7 @@ class ExecuteContractTests(unittest.TestCase):
             self.assertEqual(result['counts']['supplemental_logic_tests'], 1)
             self.assertEqual(result['counts']['pipeline_cases'], len(verification.PIPELINE_CASES))
             self.assertTrue(result['source_unchanged'])
-            self.assertTrue(all(call['env']['MONTH_ENGINE_SOURCE'] == str(project / 'engine.py') for call in calls))
+            self.assertTrue(all(call['env']['MONTH_ENGINE_SOURCE'] == str(project.resolve() / 'engine.py') for call in calls))
 
     def test_failure_does_not_suppress_later_suites_or_the_failed_receipt(self):
         with tempfile.TemporaryDirectory() as folder:
