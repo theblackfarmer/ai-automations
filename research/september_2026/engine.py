@@ -275,6 +275,7 @@ class Engine:
         self._authorities = {}
         self._active = {240: None, 60: None}
         self._bos = {}
+        self._target_continuity_lost = set()
         self._zones = {}
         self._links = {}
         self._taps = {}
@@ -360,6 +361,14 @@ class Engine:
                 self._coverage_through[tf] = max(self._coverage_through[tf], known_at)
             else:
                 self._track[tf].reset()
+                # An unresolved original endpoint cannot be established from a
+                # disconnected owner-timeframe swing after unknown coverage.
+                # Keep already-known targets/reached history; a scheduled bridge
+                # or fully observed ambiguous turn does not take this path.
+                if tf in (240, 60):
+                    self._target_continuity_lost.update(
+                        bos['id'] for bos in self._bos.values()
+                        if bos['timeframe'] == tf and bos['target'] is None)
                 self._revoke(tf, known_at, 'UNCLASSIFIED_COVERAGE_GAP')
                 if tf == 1:
                     for tap in self._taps.values():
@@ -435,6 +444,8 @@ class Engine:
                 continue
             p = event['pivot']
             for bos in self._bos.values():
+                if bos['id'] in self._target_continuity_lost:
+                    continue
                 endpoint_kind = 'high' if bos['direction'] == 'long' else 'low'
                 if bos['timeframe'] == tf and bos['target'] is None and p['kind'] == endpoint_kind and p['known_at'] > bos['known_at'] and p['time'] >= bos['bar_start']:
                     bos['target'] = dict(price=p['price'], pivot=deepcopy(p), known_at=p['known_at'], reached=False, reached_at=None)
@@ -561,6 +572,9 @@ class Engine:
                     target['reached_at'] = b['known_at']
                     self._emit('ORIGINAL_TARGET_REACHED', b['known_at'], 1, bos_id=bos['id'], authority_id=bos['authority_id'], direction=bos['direction'], target=target, source_id=b['source_id'], bar_start=b['time'])
         # Far-edge zone wick events are distinct from owner-timeframe authority.
+        # A parent's failure on this minute must not erase the child's own
+        # observed failure. This local set grants no continuing permission.
+        children_retired_this_minute = set()
         for z in self._zones.values():
             if not self._zone_at(z,b['time']) or b['time'] < z['selected_known_at']:
                 continue
@@ -573,6 +587,7 @@ class Engine:
                     if tap['zone_id']==z['id']:tap['active']=False
                 for c in self._children.values():
                     if c['active'] and c['parent_zone_id']==z['id']:
+                        children_retired_this_minute.add(c['id'])
                         c['active']=False;c['status']='PARENT_ZONE_RETIRED'
                         self._emit('CHILD_PERMISSION_REVOKED',b['known_at'],1,child_id=c['id'],zone_id=c['id'],direction=c['direction'],reason='PARENT_ZONE_FAR_EDGE_WICK_BREACH')
             elif far_contact(b,z):
@@ -581,7 +596,11 @@ class Engine:
                 z['departed_at']=b['known_at']
         # Older children are observed before new candidates are created.
         for c in self._children.values():
-            if not self._child_at(c,b['time']) or b['time'] < c['selected_known_at']:
+            # Preserve only the far-breach path for a child just retired by its
+            # parent. The selection clock and inherited HTF permission checks
+            # still apply; respect/review and later-minute reactivation do not.
+            parent_and_child_failed = c['id'] in children_retired_this_minute and far_breach(b,c)
+            if (not self._child_at(c,b['time']) and not parent_and_child_failed) or b['time'] < c['selected_known_at']:
                 continue
             if not self._eligible(self._links[c['link_id']],b):
                 self._emit('CHILD_CONTEXT_UNAVAILABLE',b['known_at'],1,child_id=c['id'],zone_id=c['id'],direction=c['direction'],source_id=b['source_id'],bar_start=b['time'])
