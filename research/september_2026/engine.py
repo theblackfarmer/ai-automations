@@ -75,6 +75,8 @@ def validate_bar(tf, bar):
         raise ValueError('Scheduled bridge requires explicit evidence')
     b['gap_before'] = gap
     b['schedule_evidence'] = deepcopy(bar.get('schedule_evidence'))
+    if 'gap_evidence' in bar:
+        b['gap_evidence'] = deepcopy(bar['gap_evidence'])
     return b
 
 
@@ -270,6 +272,10 @@ class Engine:
         self._ids = set()
         self._last_order = None
         self._last = {}
+        self._observed_minutes = set()
+        self._observed_native_coverage = set()
+        self._gap_resets = {}
+        self._scheduled_intervals = []
         self._coverage_through = {tf: 0 for tf in STEPS}
         self._track = {tf: SwingTracker(step) for tf, step in STEPS.items()}
         self._authorities = {}
@@ -354,6 +360,12 @@ class Engine:
         if scheduled and not schedule_evidence:
             raise ValueError('Scheduled bridge requires source evidence')
         start = len(self._events)
+        if not scheduled and reason != 'NATIVE_TIMESTAMP_DISCONTINUITY':
+            self._gap_resets[(known_at, reason)] = set(timeframes)
+        elif scheduled and isinstance(schedule_evidence, dict):
+            a, z = schedule_evidence.get('start'), schedule_evidence.get('end_exclusive')
+            if type(a) is int and type(z) is int and 0 <= a < z <= known_at:
+                self._scheduled_intervals.append((a, z))
         self._emit('SCHEDULED_COVERAGE_BRIDGE' if scheduled else 'UNCLASSIFIED_COVERAGE_GAP', known_at, None,
                    reason=reason, timeframes=list(timeframes), schedule_evidence=deepcopy(schedule_evidence))
         for tf in timeframes:
@@ -399,6 +411,61 @@ class Engine:
             self.feed(tf, b)
         return deepcopy(self._events[start:])
 
+    def _validate_gap_evidence(self, tf, previous, bar):
+        """Acknowledge already-invalidated missing coverage; never bridge it.
+
+        Every omitted minute must be either actually observed, a prior evidenced
+        closure, or an unobserved interval tied to an already-emitted reset.
+        An unknown interval cannot swallow observed recovery between two holes.
+        """
+        proof = bar.get('gap_evidence')
+        start, end = previous['known_at'], bar['time']
+        if (bar['gap_before'] != 'unclassified' or not isinstance(proof, dict) or proof.get('start') != start or
+                proof.get('end_exclusive') != end or start >= end):
+            raise ValueError('Invalid accounted gap bounds')
+        covered = set()
+        def add(a, z):
+            if (type(a) is not int or type(z) is not int or a % 60 or z % 60 or
+                    not start <= a < z <= end):
+                raise ValueError('Invalid accounted gap interval')
+            points = set(range(a, z, 60))
+            if covered & points:
+                raise ValueError('Overlapping accounted gap evidence')
+            covered.update(points)
+            return points
+        observed = proof.get('observed_minutes')
+        unknown = proof.get('unknown_intervals')
+        scheduled = proof.get('scheduled_intervals')
+        if not all(isinstance(x, list) for x in (observed, unknown, scheduled)):
+            raise ValueError('Missing accounted gap evidence')
+        for t in observed:
+            if type(t) is not int or t not in self._observed_minutes:
+                raise ValueError('Unobserved minute in accounted gap')
+            add(t, t+60)
+        for interval in unknown:
+            if not isinstance(interval, dict):
+                raise ValueError('Invalid unknown interval evidence')
+            a, z = interval.get('start'), interval.get('end_exclusive')
+            reset = interval.get('reset_known_at')
+            reason = interval.get('reason')
+            if (type(a) is not int or type(reset) is not int or reset != a+60 or
+                    not isinstance(reason, str) or
+                    tf not in self._gap_resets.get((reset, reason), set())):
+                raise ValueError('Unknown interval lacks prior reset')
+            if add(a, z) & self._observed_native_coverage:
+                raise ValueError('Unknown interval erases observed recovery')
+            if any(a < y and x < z for x,y in self._scheduled_intervals):
+                raise ValueError('Unknown interval erases evidenced closure')
+        for interval in scheduled:
+            if not isinstance(interval, dict):
+                raise ValueError('Invalid scheduled interval evidence')
+            a, z = interval.get('start'), interval.get('end_exclusive')
+            points = add(a, z)
+            if points & self._observed_minutes or not any(x <= a < z <= y for x,y in self._scheduled_intervals):
+                raise ValueError('Unproved closure in accounted gap')
+        if covered != set(range(start, end, 60)) or not unknown:
+            raise ValueError('Accounted gap coverage is incomplete')
+
     def feed(self, timeframe_minutes, bar):
         tf = timeframe_minutes
         b = validate_bar(tf, bar)
@@ -406,16 +473,29 @@ class Engine:
         if self._last_order is not None and key <= self._last_order:
             raise ValueError('Bars must advance known-time; common cutoff order is 4H, 1H, 1M')
         previous = self._last.get(tf)
+        for (reset, reason), frames in self._gap_resets.items():
+            if (tf in frames and reason in ('MISSING_ACTIVE_MINUTE', 'UNRESOLVED_HOLIDAY_SCHEDULE',
+                                            'QUOTE_DURING_DECLARED_CLOSURE') and
+                    b['time'] <= reset-60 < b['known_at']):
+                raise ValueError('Completed bar spans known unavailable minute')
         if previous and b['time'] <= previous['time']:
             raise ValueError('Duplicate native candle')
         start = len(self._events)
         if previous and b['time'] != previous['known_at']:
-            scheduled = b['gap_before'] == 'scheduled'
-            self.gap(b['known_at'], 'NATIVE_TIMESTAMP_DISCONTINUITY',
-                     timeframes=(tf,) if scheduled else (240, 60, 1),
-                     scheduled=scheduled, schedule_evidence=b['schedule_evidence'])
+            if 'gap_evidence' in b:
+                self._validate_gap_evidence(tf, previous, b)
+            else:
+                scheduled = b['gap_before'] == 'scheduled'
+                self.gap(b['known_at'], 'NATIVE_TIMESTAMP_DISCONTINUITY',
+                         timeframes=(tf,) if scheduled else (240, 60, 1),
+                         scheduled=scheduled, schedule_evidence=b['schedule_evidence'])
+        elif 'gap_evidence' in b:
+            raise ValueError('Accounted gap evidence without discontinuity')
         self._last_order = key
         self._last[tf] = deepcopy(b)
+        self._observed_native_coverage.update(range(b['time'], b['known_at'], 60))
+        if tf == 1:
+            self._observed_minutes.add(b['time'])
         self._coverage_through[tf] = max(self._coverage_through[tf], b['known_at'])
         se = self._track[tf].push(b)
         for event in se:

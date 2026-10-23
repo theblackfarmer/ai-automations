@@ -75,6 +75,37 @@ def parse_csv(data):
     return rows
 
 
+def accounted_gap(start, end, native, resets, closures):
+    """Construct a past-only partition from already delivered plan facts.
+
+    Unknown minutes stay unknown. This evidence only prevents reapplying a
+    prior reset when a delayed aggregate resumes after the same missing data.
+    Return None unless every omitted minute has evidence.
+    """
+    proof = dict(start=start, end_exclusive=end, observed_minutes=[],
+                 unknown_intervals=[], scheduled_intervals=[])
+    t = start
+    while t < end:
+        if t in native:
+            proof['observed_minutes'].append(t); t += 60; continue
+        closure = next(((a,z) for a,z in closures if a <= t < z), None)
+        if closure:
+            stop = min(end, closure[1])
+            proof['scheduled_intervals'].append(dict(start=t, end_exclusive=stop))
+            t = stop; continue
+        reason = resets.get(t+60)
+        if reason is None:
+            return None
+        stop = t+60
+        while (stop < end and stop not in native and stop+60 not in resets and
+               not any(a <= stop < z for a,z in closures)):
+            stop += 60
+        proof['unknown_intervals'].append(dict(start=t,end_exclusive=stop,
+            reason=reason,reset_known_at=t+60))
+        t = stop
+    return proof if proof['unknown_intervals'] else None
+
+
 def assemble(rows, start, end, source_hash):
     """Materialized causal input plan. Each aggregate only reads its own closed interval.
 
@@ -133,9 +164,23 @@ def assemble(rows, start, end, source_hash):
             previous_end = t + step
             actions[t+step].append(('bar', tf, bar))
     ordered = []
+    native, resets, closures, prior = {}, {}, [], {}
     for known in sorted(actions):
         gaps = [a[1] for a in actions[known] if a[0] == 'gap']
         bars = [(a[1], a[2]) for a in actions[known] if a[0] == 'bar']
+        for gap in gaps:
+            if isinstance(gap, dict):
+                closures.append((gap['start'], gap['end_exclusive']))
+            else:
+                resets[known] = gap
+        for tf, bar in sorted(bars, key=lambda pair: TF.index(pair[0])):
+            if tf in prior and bar['time'] > prior[tf] and bar.get('gap_before') == 'unclassified':
+                proof = accounted_gap(prior[tf], bar['time'], native, resets, closures)
+                if proof is not None:
+                    bar['gap_evidence'] = proof
+            prior[tf] = known
+            if tf == 1:
+                native[bar['time']] = bar
         ordered.append((known, gaps, sorted(bars, key=lambda pair: TF.index(pair[0]))))
     return ordered, coverage
 
@@ -155,6 +200,7 @@ def validate_plan(plan):
     earlier in this same plan. Validation reads no future prices into decisions.
     """
     native, previous, identities = {}, None, set()
+    resets, closures, prior = {}, [], {}
     for known, gaps, bars in plan:
         if type(known) is not int or known % 60 or (previous is not None and known <= previous):
             raise ValueError('Plan cutoffs must strictly increase on minute grid')
@@ -167,8 +213,11 @@ def validate_plan(plan):
                     or end != known or end <= start
                     or any(session(t) is not False for t in range(start, end, 60))):
                     raise ValueError('Unproved scheduled bridge')
+                closures.append((start, end))
             elif gap not in ('MISSING_ACTIVE_MINUTE','UNRESOLVED_HOLIDAY_SCHEDULE','QUOTE_DURING_DECLARED_CLOSURE'):
                 raise ValueError('Unknown gap classification')
+            else:
+                resets[known] = gap
         if [tf for tf, _ in bars] != sorted(set(tf for tf, _ in bars), key=TF.index):
             raise ValueError('Nonunique or reversed timeframe order')
         # Same-cutoff M1 is available for aggregate verification, not decisions.
@@ -177,6 +226,13 @@ def validate_plan(plan):
                 native[b['time']] = b
         for tf, b in bars:
             t, members = b['time'], b.get('member_times')
+            if 'gap_evidence' in b:
+                if b.get('gap_before') != 'unclassified' or tf not in prior or type(t) is not int or t <= prior[tf]:
+                    raise ValueError('Accounted gap lacks prior discontinuity')
+                expected_proof = accounted_gap(prior[tf], t, native, resets, closures)
+                if expected_proof is None or b['gap_evidence'] != expected_proof:
+                    raise ValueError('Accounted gap does not match prior plan evidence')
+            prior[tf] = known
             if (type(t) is not int or t % (tf*60) or b.get('known_at') != known
                 or known != t+tf*60 or b.get('complete') is not True
                 or not isinstance(members, list) or not members

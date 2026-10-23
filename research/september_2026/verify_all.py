@@ -25,7 +25,7 @@ REQUIRED_MODULES = (
     'test_engine', 'test_month_replay', 'test_export_tradingview',
     'test_verify_causality', 'test_report', 'test_native_daily',
     'test_independent_boundaries', 'test_role_review',
-    'test_parent_failure_observation', 'test_verify_all',
+    'test_parent_failure_observation', 'test_gap_recovery', 'test_verify_all',
 )
 COLLECTOR_MODULES = ('test_legacy_codec', 'test_portable_v4', 'test_portable_lineage')
 PIPELINE_CASES = {
