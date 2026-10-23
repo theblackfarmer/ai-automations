@@ -1,0 +1,41 @@
+SOURCED_CORRECTION_OBSERVER_V1 — explicit research observation mode
+
+The historical engine and frozen SPEC remain the default and are unchanged.
+This separate observer reproduces the exposed Jan20 local correction using
+actual raw minutes and explicitly supplied, retrospectively selected HTF
+context. It does not discover or independently validate the selected parent.
+It does not authorize ENTRY_REVIEW, orders, fills, or profitability claims.
+
+Python API:
+    observer = SourcedCorrectionObserver(context, source_sha256, entry_minutes=5)
+    for completed_minute in chronological_minutes:
+        observer.feed_minute(completed_minute)
+    events = observer.events
+
+The replay harness supplies context, not the end user. Required context keys:
+direction (long/short), four_hour, one_hour, opposing_zone, parent.
+Each contextual fact includes source_id and known_at. Parent also includes
+id, timeframe (60/240), zone_low and zone_high. All context must have been
+known before the first supplied minute opens. Source IDs are declarative;
+callers must separately verify source bytes and selected context provenance.
+No local reference or origin answer is supplied: those come from raw pivots.
+
+Each minute has time, known_at=time+60, open/high/low/close, complete=True,
+and source_id matching SOURCE_SHA256:1:TIME. Feed complete raw minutes in
+strict chronological order. A missing minute permanently invalidates this
+observer's supplied context; it does not silently resume stale authority.
+For externally discovered invalidation call:
+    observer.invalidate_context(known_at, reason)
+This must be causal and cannot backdate already ingested evidence. A fresh
+observer and newly justified context are needed after invalidation.
+
+A flip candidate is separate from its later same-origin return and response;
+a second return is not required to emit the flip. Events are observations,
+not eligible trades. Full-origin footprint and child far-edge termination
+are research conventions, not claims of universal teacher zone selection
+or invalidation. SOURCED_CORRECTION_V1.json contains sources and boundaries.
+
+The accepted fixture test derives context only from context_reference_bars;
+expected labels are assertions only and are never passed to the observer.
+Run test_sourced_correction_v1 for the exposed real example, prefix checks,
+future-dependency failing control, gap controls, and context mutation tests.

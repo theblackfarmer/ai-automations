@@ -1,0 +1,75 @@
+{
+  "mode": "SOURCED_CORRECTION_OBSERVER_V1",
+  "legacy_engine_changed": false,
+  "execution_allowed": false,
+  "scope": "Supplied prior HTF candidate context; automatically derived local reference/origin only. No autonomous parent discovery, teacher mastery, ENTRY_REVIEW eligibility, fills or profitability.",
+  "assumptions": [
+    "Full correction-origin candle footprint is a research convention, not universal teacher zone selection.",
+    "Separate later close beyond near edge is a response convention, not execution permission.",
+    "1M outside ordering remains unresolved without subminute evidence.",
+    "Completed-close crossing and exact swing confirmations are sourced research encodings, not universal discretionary selection proof.",
+    "Wick through child origin far edge ends this child observation as a research convention only; it neither revokes supplied parent nor asserts universal teacher invalidation.",
+    "Source identities on supplied HTF context are declarative provenance, not independent source authentication; context validity remains unverified."
+  ],
+  "sources": [
+    {
+      "path": "/Users/isaacmcfarland/ISAACTERMINAL/trading/screen-observation/pilot/research/SPEC_RECOGNITION_REPAIR_V6_20261015.json",
+      "sha256": "eea1124562e4d126d643b95fa9d909717495ee99c18a986b59cac71d075f2059"
+    },
+    {
+      "path": "/Users/isaacmcfarland/ISAACTERMINAL/trading/screen-observation/pilot/research/outside_reversal_order_v6.py",
+      "sha256": "3063de9e3b9fcc4967d07cec0593b63a081d7e6f4e77070929e1698d0d1725cb"
+    },
+    {
+      "path": "/Users/isaacmcfarland/ISAACTERMINAL/trading/screen-observation/pilot/research/september-month-2026-10-09/CORRECTION_TURN_SPEC_2026-10-10.json",
+      "sha256": "326bd12722a196bcde7d32746eb9950e5882d1599c11bce838d6d174481a4a22"
+    },
+    {
+      "path": "/Users/isaacmcfarland/ISAACTERMINAL/trading/screen-observation/pilot/research/september-month-2026-10-09/CORRECTION_ORIGIN_PERSISTENCE_2026-10-10.json",
+      "sha256": "5d6444a7fd15c63fa570dc1711469a623c5595bd1a8f3da9100015fff0e40faa"
+    },
+    {
+      "path": "/Users/isaacmcfarland/ISAACTERMINAL/trading/screen-observation/pilot/research/september-month-2026-10-09/engine.py",
+      "sha256": "f0af26f7f6c35c3aaf1bd9ffee61683d8451f1f0872c7fc202f450af6a34a0d6"
+    },
+    {
+      "path": "/Users/isaacmcfarland/ISAACTERMINAL/trading/screen-observation/pilot/research/ACCEPTED_DEMAND_SEQUENCE_2026-10-14.json",
+      "sha256": "9212ed1b4808bc33e83f2ab5efba52de8d5a1cbc8c7ed6eec14431c101d28271"
+    },
+    {
+      "path": "/Users/isaacmcfarland/ISAACTERMINAL/trading/screen-observation/pilot/research/HTF_CONTEXT_FIRST_2026-10-10.json",
+      "sha256": "8ad01b0c9c5895a7e6f615b39bd2e07934955330b1bbd52ed0858df854fbcbe8"
+    },
+    {
+      "path": "/Users/isaacmcfarland/ISAACTERMINAL/trading/screen-observation/pilot/research/SPEC_FLIP_CONFIRMATION_20261015.json",
+      "sha256": "eda649e1f393d24f0bb9511af74e58de37063df36557a30c5db50ef98e4a8c69"
+    }
+  ],
+  "copied_functions": {
+    "resolve_outside_reversal": "b0d4fbfc4931b651fce0da64f3d7e999844c50859027d126234f19722c42ceeb",
+    "correction_turn": "9440f269e153f6bd7ad5fd9d46395d00100c98f03a0c0594187ded6d72be6236"
+  },
+  "tracker_change": "On an otherwise ambiguous5M turn only, complete underlying1M members must prove final extreme strictly before first reversal-reference crossing. Retain confirmed history and confirm actual extended origin at5M close. Otherwise original reset remains.",
+  "behavior_sources": [
+    {
+      "behavior": "Prior4H and1H context, both-sided zones, no forced direction agreement",
+      "source": "HTF_CONTEXT_FIRST_2026-10-10.json",
+      "quote": "Mandatory 4H context review is newer teaching. It does not add mandatory bullish/bearish agreement between 4H and 1H, nor between 5M and 1M, nor change the selected zone owner."
+    },
+    {
+      "behavior": "Correction LL/HH and responsible reaction reference from confirmed chronological pivots",
+      "source": "september-month-2026-10-09/CORRECTION_TURN_SPEC_2026-10-10.json",
+      "quote": "yes buy correction is going to make lower lows make sure you unher stand we are waitingfor that to make higher highs invalidating the lower low sequence we get entry on the lower low demand and supply and the mirror for the sell exacrlt"
+    },
+    {
+      "behavior": "Resolve5M outside-turn order only through full native1M membership",
+      "source": "SPEC_RECOGNITION_REPAIR_V6_20261015.json",
+      "quote": "Where 5M outside reversal is ambiguous, actual complete 1M members can prove final extreme occurred strictly before first reversal-reference crossing. Same-minute ambiguity, absent members, gaps or reversed ordering remain unresolved."
+    },
+    {
+      "behavior": "Flip candidate exists independently of later return/response",
+      "source": "SPEC_FLIP_CONFIRMATION_20261015.json",
+      "quote": "it might but it doesnt have to the flip is just the confirmation that time to get in because correctin is over 1 minute helps alot with entry"
+    }
+  ]
+}
