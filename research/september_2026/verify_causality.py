@@ -5,6 +5,8 @@ When native inputs are supplied, each prefix is regenerated from truncated M1 ro
 The capture manifest is a local byte-binding receipt, not authenticated provenance.
 """
 import argparse
+from collections import deque
+from concurrent.futures import ThreadPoolExecutor
 import bisect
 import copy
 import csv
@@ -310,7 +312,7 @@ def decision_clock_report(events):
 
 
 def audit(engine_type, replay_fn, spec, plan, recorded_events, *, input_audit=None,
-          source_rows=None, assemble_fn=None, source_hash=None, start=None, end=None, progress=None):
+          source_rows=None, assemble_fn=None, source_hash=None, start=None, end=None, progress=None, causal_workers=1):
     """Never resumes state: full replay and each unique decision cutoff start empty.
 
     Passing both source_rows and assemble_fn enables cold native reaggregation at
@@ -318,6 +320,12 @@ def audit(engine_type, replay_fn, spec, plan, recorded_events, *, input_audit=No
     not source resampling. All comparisons include every prior event, not only the
     decision row. No state cache or per-minute engine.events/snapshot access.
     """
+    if type(causal_workers) is not int or causal_workers not in (1, 2):
+        raise ValueError('causal_workers must be 1 or 2')
+    runtime = getattr(replay_fn, '__self__', None)
+    if causal_workers > 1 and (not isinstance(runtime, FreshCapturedRuntime) or
+            (assemble_fn is not None and getattr(assemble_fn, '__self__', None) is not runtime)):
+        raise ValueError('parallel cutoffs require the same fresh captured runtime')
     began = time.monotonic(); failures = []
     original_plan_hash = digest(plan)
     errors = validate_plan(plan, source_hash)
@@ -351,7 +359,8 @@ def audit(engine_type, replay_fn, spec, plan, recorded_events, *, input_audit=No
         return dict(status="REFUTED", failures=[dict(gate="INPUT_MUTATED_DURING_REPLAY")], required_decisions=len(decisions), audited_cutoffs=0, teacher_fidelity=False, execution_allowed=False, performance=None)
     event_clocks = [e["known_at"] for e in recorded_events]
     results = []
-    for index, cutoff in enumerate(cutoffs):
+    def check_cutoff(cutoff):
+        cutoff_failures = []
         before = time.monotonic()
         sealed_prefix = plan[:bisect.bisect_right(knowns, cutoff)]
         regenerated = None
@@ -363,18 +372,25 @@ def audit(engine_type, replay_fn, spec, plan, recorded_events, *, input_audit=No
             regenerated, _ = assemble_fn(raw_prefix, start, enclosing_end, source_hash)
             regenerated = [row for row in regenerated if row[0] <= cutoff]
             if canonical(regenerated) != canonical(sealed_prefix):
-                failures.append(dict(gate="NATIVE_PREFIX_REAGGREGATION", cutoff=cutoff,
+                cutoff_failures.append(dict(gate="NATIVE_PREFIX_REAGGREGATION", cutoff=cutoff,
                                      expected_plan_sha256=digest(sealed_prefix), actual_plan_sha256=digest(regenerated)))
         prefix_plan = regenerated if native_mode else sealed_prefix
         actual, _, _ = replay_fn(engine_type, spec, prefix_plan, out=None)
         expected = recorded_events[:bisect.bisect_right(event_clocks, cutoff)]
         difference = first_difference(expected, actual)
-        if difference: failures.append(dict(gate="COLD_PREFIX", cutoff=cutoff, difference=difference))
+        if difference: cutoff_failures.append(dict(gate="COLD_PREFIX", cutoff=cutoff, difference=difference))
         row = dict(cutoff=cutoff, decision_ids=[e["id"] for e in decisions if e["known_at"] == cutoff],
                    input_actions=len(prefix_plan), compared_prior_events=len(expected),
                    exact_event_match=difference is None, expected_event_sha256=digest(expected),
                    actual_event_sha256=digest(actual), native_reaggregated=native_mode,
                    elapsed_seconds=round(time.monotonic()-before,6))
+        return row, cutoff_failures
+
+    # Only the trusted coordinator is threaded. Each assembly/replay still
+    # executes in a new isolated subprocess with prefix-only inputs. At most
+    # causal_workers jobs/results are retained, and merge order is chronological.
+    for index, (row, cutoff_failures) in enumerate(ordered_cutoffs(check_cutoff, cutoffs, causal_workers)):
+        failures.extend(cutoff_failures)
         results.append(row)
         if progress: progress(index+1,len(cutoffs),row)
     if digest(plan) != original_plan_hash: failures.append(dict(gate="INPUT_MUTATED_DURING_REPLAY"))
@@ -391,6 +407,26 @@ def audit(engine_type, replay_fn, spec, plan, recorded_events, *, input_audit=No
                 full_native_reaggregation_checked=native_mode,
                 elapsed_seconds=round(time.monotonic()-began,6), teacher_fidelity=False,
                 execution_allowed=False, performance=None)
+
+
+def ordered_cutoffs(check, cutoffs, workers):
+    if workers == 1:
+        for cutoff in cutoffs:
+            yield check(cutoff)
+        return
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        remaining = iter(cutoffs)
+        pending = deque()
+        for _ in range(workers):
+            cutoff = next(remaining, None)
+            if cutoff is not None:
+                pending.append(pool.submit(check, cutoff))
+        while pending:
+            # result() propagates worker failures; no failed job becomes a pass.
+            yield pending.popleft().result()
+            cutoff = next(remaining, None)
+            if cutoff is not None:
+                pending.append(pool.submit(check, cutoff))
 
 
 def no_op_replay(replay_fn):
@@ -537,7 +573,7 @@ def load_capture(path):
     return capture
 
 
-def audit_capture(path, progress=None):
+def audit_capture(path, progress=None, causal_workers=1):
     capture_hash=byte_hash(path)
     capture = load_capture(path); files = capture["files"]
     runtime=FreshCapturedRuntime(files)
@@ -552,7 +588,7 @@ def audit_capture(path, progress=None):
         kwargs = dict(source_rows=parse_native_csv(source_data),
                       assemble_fn=runtime.assemble, source_hash=files["source"]["sha256"],
                       start=capture["start"],end=capture.get('end'))
-    result = audit(None,runtime.replay,spec,plan,events,input_audit=inputs,progress=progress,**kwargs)
+    result = audit(None,runtime.replay,spec,plan,events,input_audit=inputs,progress=progress,causal_workers=causal_workers,**kwargs)
     if not result['failures']:
         result['controls'] = bounded_controls(None,runtime.replay,spec,plan,events)
         if not result['controls']['valid']:
@@ -572,12 +608,13 @@ def audit_capture(path, progress=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--capture",required=True); parser.add_argument("--out",required=True)
+    parser.add_argument('--causal-workers', type=int, choices=(1, 2), default=1)
     args = parser.parse_args()
     out = Path(args.out); out.mkdir(parents=True,exist_ok=False)
     def progress(n,total,row):
         print(canonical(dict(completed=n,total=total,cutoff=row["cutoff"],exact_event_match=row["exact_event_match"])),flush=True)
     try:
-        result = audit_capture(args.capture,progress)
+        result = audit_capture(args.capture,progress,causal_workers=args.causal_workers)
     except Exception as exc:
         result = dict(status="REFUTED",failures=[dict(gate="CAPTURE_OR_AUDIT_EXCEPTION",type=type(exc).__name__,detail=str(exc))],teacher_fidelity=False,execution_allowed=False,performance=None)
     (out/"RESULT.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n")

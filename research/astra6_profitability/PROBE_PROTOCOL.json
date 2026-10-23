@@ -1,0 +1,31 @@
+{
+  "schema": "dukascopy-month-data-v1",
+  "status": "DERIVED_SINGLE_HOUR_ACQUISITION_PROBE_NOT_FULL_MONTH",
+  "symbol": "USATECHIDXUSD",
+  "feed": "Dukascopy",
+  "native_input": "raw_bid_ask_ticks",
+  "price_scale": 1000,
+  "quote_sides": "Both ask and bid retained in raw >IIIff ticks. Derived CSV is bid only; ask reconstruction is separately possible from preserved raw ticks.",
+  "start_utc": "2026-09-01T13:00:00Z",
+  "end_exclusive_utc": "2026-09-01T14:00:00Z",
+  "review_start_utc": "2026-09-01T13:00:00Z",
+  "review_end_exclusive_utc": "2026-09-01T14:00:00Z",
+  "study_month_coordinate": "One UTC hour for provider availability and source decoding only; not a September study.",
+  "warmup": "Not supplied by this one-hour probe.",
+  "resampling_assumption": "UTC epoch-aligned closed 1M/1H/4H. Require 60/240 consecutive observed minutes for 1H/4H. No partial bars or synthetic minutes. Not Pepperstone native candles.",
+  "session_assumption": "No market calendar assumed. Every UTC hourly response is classified independently. Missing tick minutes remain unclassified.",
+  "minimum_request_spacing_seconds": 2,
+  "parallel_requests": 1,
+  "fill_missing": false,
+  "performance": false,
+  "execution_allowed": false,
+  "probe_only": true,
+  "full_month_claim": false,
+  "purpose": "Determine whether a GitHub-hosted runner can obtain and validate one public source hour with the unchanged V4 raw-tick collector. Local-runtime probes timed out; no source or access checks are bypassed.",
+  "derived_from": {
+    "repository_path": "research/september_2026/acquisition_tools/FROZEN_MONTH_PROTOCOL.json",
+    "commit": "e12aa1385b3bb29e0c89f0870aee042321e1e059",
+    "sha256": "6c00c80649bfdff559e43b1ca698f7cb9874668223fe535b2498bed9ad3eab74",
+    "changes": "Narrow acquisition and review boundaries to September 1, 2026, 13:00-14:00 UTC; label the result as a one-hour availability probe. Feed identity, codec, raw quote sides, scale, spacing, missing-data policy and execution prohibitions remain unchanged."
+  }
+}

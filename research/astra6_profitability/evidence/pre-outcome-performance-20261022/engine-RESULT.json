@@ -1,0 +1,1029 @@
+{
+  "all_pass": true,
+  "counts": {
+    "collector_tests": 31,
+    "engine_passed": 240,
+    "engine_tests": 240,
+    "errors": 0,
+    "expected_failures": 0,
+    "failures": 0,
+    "pipeline_actual_cases": 5,
+    "pipeline_cases": 11,
+    "pipeline_passed": 11,
+    "pipeline_stubbed_cases": 6,
+    "skipped": 0,
+    "suites": 15,
+    "suites_passed": 15,
+    "supplemental_logic_tests": 10,
+    "unexpected_successes": 0,
+    "unittest_passed": 281,
+    "unittest_tests": 281
+  },
+  "environment": {
+    "distributions": [
+      [
+        "Farama-Notifications",
+        "0.0.6"
+      ],
+      [
+        "Jinja2",
+        "3.1.6"
+      ],
+      [
+        "MarkupSafe",
+        "3.0.3"
+      ],
+      [
+        "cloudpickle",
+        "3.1.2"
+      ],
+      [
+        "contourpy",
+        "1.3.0"
+      ],
+      [
+        "cycler",
+        "0.12.1"
+      ],
+      [
+        "filelock",
+        "3.19.1"
+      ],
+      [
+        "fonttools",
+        "4.60.2"
+      ],
+      [
+        "fsspec",
+        "2025.10.0"
+      ],
+      [
+        "gymnasium",
+        "1.1.1"
+      ],
+      [
+        "importlib_metadata",
+        "8.7.1"
+      ],
+      [
+        "importlib_resources",
+        "6.5.2"
+      ],
+      [
+        "kiwisolver",
+        "1.4.7"
+      ],
+      [
+        "matplotlib",
+        "3.9.4"
+      ],
+      [
+        "mpmath",
+        "1.3.0"
+      ],
+      [
+        "networkx",
+        "3.2.1"
+      ],
+      [
+        "numpy",
+        "2.0.2"
+      ],
+      [
+        "packaging",
+        "26.2"
+      ],
+      [
+        "pandas",
+        "2.3.3"
+      ],
+      [
+        "pillow",
+        "11.3.0"
+      ],
+      [
+        "pip",
+        "26.0.1"
+      ],
+      [
+        "pyparsing",
+        "3.3.2"
+      ],
+      [
+        "python-dateutil",
+        "2.9.0.post0"
+      ],
+      [
+        "pytz",
+        "2026.2"
+      ],
+      [
+        "setuptools",
+        "58.0.4"
+      ],
+      [
+        "six",
+        "1.17.0"
+      ],
+      [
+        "stable_baselines3",
+        "2.7.1"
+      ],
+      [
+        "sympy",
+        "1.14.0"
+      ],
+      [
+        "torch",
+        "2.8.0"
+      ],
+      [
+        "typing_extensions",
+        "4.15.0"
+      ],
+      [
+        "tzdata",
+        "2026.2"
+      ],
+      [
+        "zipp",
+        "3.23.1"
+      ]
+    ],
+    "executable": "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+    "matplotlib_version": "3.9.4",
+    "overrides": {
+      "MONTH_ENGINE_SOURCE": "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/engine.py",
+      "MONTH_RUNNER_SOURCE": "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/month_replay.py",
+      "MPLBACKEND": "Agg",
+      "MPLCONFIGDIR": "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/matplotlib-cache",
+      "PYTHONNOUSERSITE": "1"
+    },
+    "python": "3.9.6 (default, Apr  7 2026, 02:38:40) \n[Clang 21.0.0 (clang-2100.0.123.102)]",
+    "removed_import_or_optimization_overrides": [
+      "PYTHONOPTIMIZE",
+      "PYTHONPATH",
+      "PYTHONHOME",
+      "PYTHONSTARTUP",
+      "PYTHONUSERBASE"
+    ]
+  },
+  "errors": [],
+  "execution_allowed": false,
+  "plan": [
+    {
+      "kind": "unit",
+      "module": "test_engine",
+      "name": "test_engine"
+    },
+    {
+      "kind": "unit",
+      "module": "test_export_tradingview",
+      "name": "test_export_tradingview"
+    },
+    {
+      "kind": "unit",
+      "module": "test_independent_boundaries",
+      "name": "test_independent_boundaries"
+    },
+    {
+      "kind": "unit",
+      "module": "test_month_replay",
+      "name": "test_month_replay"
+    },
+    {
+      "kind": "unit",
+      "module": "test_native_daily",
+      "name": "test_native_daily"
+    },
+    {
+      "kind": "unit",
+      "module": "test_parallel_causality",
+      "name": "test_parallel_causality"
+    },
+    {
+      "kind": "unit",
+      "module": "test_parent_failure_observation",
+      "name": "test_parent_failure_observation"
+    },
+    {
+      "kind": "unit",
+      "module": "test_report",
+      "name": "test_report"
+    },
+    {
+      "kind": "unit",
+      "module": "test_role_review",
+      "name": "test_role_review"
+    },
+    {
+      "kind": "unit",
+      "module": "test_target_continuity",
+      "name": "test_target_continuity"
+    },
+    {
+      "kind": "unit",
+      "module": "test_verify_all",
+      "name": "test_verify_all"
+    },
+    {
+      "kind": "unit",
+      "module": "test_verify_causality",
+      "name": "test_verify_causality"
+    },
+    {
+      "kind": "pipeline",
+      "name": "pipeline"
+    },
+    {
+      "kind": "collector",
+      "name": "offline_collector"
+    },
+    {
+      "kind": "logic",
+      "name": "repository_logic"
+    }
+  ],
+  "scope": "September 4H\u21921H\u21921M research engine software contracts; synthetic pipeline fixtures, a small native decoder fixture, offline collector checks, and supplemental repository logic. No full-month market, performance, teacher fidelity, TradingView delivery, current-native or execution approval.",
+  "seconds": 126.141478,
+  "source_sha256": {
+    "automations/__init__.py": "0abede36439ef1d1db62e9b1ba229e883ae976cfe4f9e7df851fdf4e6dc57c29",
+    "automations/claude.py": "24d742483826d6a6b8bf64c84c9250c9a5177be5dfc6c3d433a5e64ed9ebcb0d",
+    "automations/cli.py": "1fbebd4c42e8f71ca8398b5da30944f4d895bee2ec84c29f5f8ec6df4b3aa72f",
+    "automations/config.py": "8a8b9841b9b7fd266615d0af0ab81631347e83dbf6e534ad3ac4f92d53400791",
+    "automations/daily_briefing.py": "09f5c4ec45377cde3be1337453e7eaf90bcfbac9b7e6564f04799261810ab466",
+    "automations/lead_response.py": "2424ce970405e24ef5945ffd3316432ae52d64d5260a35c20885bb2c167d89c9",
+    "automations/news_monitor.py": "56b4e4aec9df94638d418cc988d84ca92415ad9724809197febdcc741a36b440",
+    "automations/notify.py": "8d3259a1b2ee28e0b4b3251bbc393f357755e94b77c0a8475a31df09a50a6e67",
+    "automations/trading_signal.py": "2a776d79a8587060db65d1d8622d2a73c3016d9bc7e30b5b5b0c37d9bb9ed033",
+    "research/september_2026/.gitattributes": "5477a3134942b04e5a0ce388eea8c580f911a3b37d15f3e1839b285ee6304faa",
+    "research/september_2026/.gitignore": "0d2bcbf931d21e9622243bf975f9dfdc45c0b3c67686867baddc54f5e1afcaa0",
+    "research/september_2026/DATA_PROTOCOL.json": "6c00c80649bfdff559e43b1ca698f7cb9874668223fe535b2498bed9ad3eab74",
+    "research/september_2026/EXPORT_GUIDE.txt": "c43bcdc9db0e290debfd811b58060fc520374c6b1fb97f1b5e1af484a2c95df7",
+    "research/september_2026/IMPLEMENTATION_CLARIFICATIONS.json": "c11d3648a8e4edb9dddf87a2c001c3725c8375eed934f43484d360725fa36cef",
+    "research/september_2026/NATIVE_DAILY_AMENDMENT.json": "89260872bd365e34eb3492dfa514eab6660c99f1d02f226e4d249f15f4c67265",
+    "research/september_2026/README.md": "a404fb36db52b2c9bdd4be2411458d8481cc37a3e4e3287733670744fe7e7012",
+    "research/september_2026/REGRESSION_PIPELINE_GUIDE.txt": "7fbb8e0d9a2b129a85b66644e8287d5c0c8666e1a9512a9427eaf47925d7c90f",
+    "research/september_2026/ROLE_REVIEW_GUIDE.txt": "c51ea79180cf118933297bbcee7a5f8a033fcf02b3397640ea11c468e8260e0c",
+    "research/september_2026/ROLE_RULES.json": "e26ad1ea766151105e22d2763dd3cd11a1989607216c4457808cfbf1c911bdf9",
+    "research/september_2026/SELECTION_PROTOCOL.json": "11f5a0fc489a7101da53271e83424432d115558f3271d14865cd9df7620bd32f",
+    "research/september_2026/SPEC.json": "89f9ab6fb4f842426e238ef5554274be175211610d02c85086e2fc792139af36",
+    "research/september_2026/SYNTHETIC_SPEC.json": "3ddd290c3195938c43b383975ea3fa8e40049de4c4cf524b41690c60c0760f72",
+    "research/september_2026/_native_daily_test_support.py": "740aa044580d48e13c0b32299db5cfb1ea6eb22cdf920782022a2505c0bfc3a6",
+    "research/september_2026/acquire_native_daily_v2.py": "72a9e84482233f85e909aa95cf456f6478fa043977b7d000ca2c97de38877bc9",
+    "research/september_2026/acquisition_tools/FROZEN_MONTH_PROTOCOL.json": "6c00c80649bfdff559e43b1ca698f7cb9874668223fe535b2498bed9ad3eab74",
+    "research/september_2026/acquisition_tools/OFFLINE_TESTS.txt": "d47021c73ee9c47617673cacb657d9f0ed6a0eaa41744ae3774ef29061e387a1",
+    "research/september_2026/acquisition_tools/PORTABLE_GUIDE.txt": "68987fb1a715caf0f7d086cf6f0f2a9687c784a587aa37c014412aaaf53438c4",
+    "research/september_2026/acquisition_tools/RELOCATION_PROOF.json": "23d36a60ceb498db51e39ebfd33d923e8e5eeda2346664c75adc6b926283c951",
+    "research/september_2026/acquisition_tools/RELOCATION_TESTS.txt": "b3373307a5dd34c130ae349b6d46e64630d9c47324bb78b82d8ff2c5c815161b",
+    "research/september_2026/acquisition_tools/SOURCE_MANIFEST.json": "82dce041f731e40a6af4fba376df545404d0d70072957d808db17143e1e64e89",
+    "research/september_2026/acquisition_tools/TRANSPORT_AMENDMENT_V4.json": "fed4c0ade1009e7a06af55dda4c4b30b0b17060b0f450ca0a30843215a4448c9",
+    "research/september_2026/acquisition_tools/VALIDATION.json": "730bb725de701475ebc9d564b13955e9cd75b69f6d0c2a490b980bd1d0a8e6c4",
+    "research/september_2026/acquisition_tools/acquire_month_v4.py": "34cb44cc3c370138a07b21b01d72a8fb039212c76365ac172cc2a570d585054c",
+    "research/september_2026/acquisition_tools/legacy_acquire.py": "3f19fb017d267691cfc98e26874152a642bd59486d43f642bb6036f3f8acb5ed",
+    "research/september_2026/acquisition_tools/preserved-v2/TRANSPORT_AMENDMENT_V2.json": "ccdb231068d442a1ab235f6207d1697ae0654b16343e1ca0a487314be456235c",
+    "research/september_2026/acquisition_tools/preserved-v2/acquire_month_v2.py": "fcb062902aee5c45f1e6e7438b96f3a7e0fdab1c2152470f088ee1cbaacb4e49",
+    "research/september_2026/acquisition_tools/preserved-v3/TRANSPORT_AMENDMENT_V3.json": "7fd134173499cd1240f3b14a8e1fa9ac683daa15d191a226c9ed6a42356fa339",
+    "research/september_2026/acquisition_tools/preserved-v3/acquire_month_v3.py": "20d896e32e669ee1ed5f6537468b59717db9b3fb25b77526a5685819866194cc",
+    "research/september_2026/acquisition_tools/synthetic_helpers.py": "0c5f9269ded7d3d9f0d95fcbc9b7165fac4a27b7acc7abbb7fa42e48d3122454",
+    "research/september_2026/acquisition_tools/test_legacy_codec.py": "4f6bc0823450f94c9494b87c27371521f1218ddb611c3c51d5ba781ac614e6eb",
+    "research/september_2026/acquisition_tools/test_portable_lineage.py": "aa595e06354f6d9813a27a989faf7988a58388cea9bc299786e4ef610650f232",
+    "research/september_2026/acquisition_tools/test_portable_v4.py": "efbdf032623d669bb5f830f75542509677abc52b4ce014c50445fd2713b22ff2",
+    "research/september_2026/acquisition_tools/verify_offline.py": "13fe2b9c140d43c128ef566a90c82d1efde59b74ffd364a8eef360daa78be6d3",
+    "research/september_2026/cold_runtime_worker.py": "9323bf11accd2b081db4b28d00355340380d246d594fca6866949a6ee93a7866",
+    "research/september_2026/engine.py": "b8536b432436b0a994eed9e9f24bffb141b42b6914703d4e35771ad85154e2fb",
+    "research/september_2026/export_tradingview.py": "0e6139a58bb3c70f9390c4981be625a975ecd46aec9deeb9c86db9669b2dd84f",
+    "research/september_2026/fixtures/pipeline/FIXTURE_PROVENANCE.json": "e4ba164f2666a7f091b3dad356616ba78507bf4d47da8f2fbeb178fa190ad7b8",
+    "research/september_2026/fixtures/pipeline/SPEC.json": "01fe047d93e2c51fb114199a2093876e0db776f69f54dc18dfecf974fc7a4cd7",
+    "research/september_2026/fixtures/pipeline/acquisition.json": "169b9e1a3af47ea9e45c26566e0e7fe04252d8d7ac2789f263b49281a57405f3",
+    "research/september_2026/fixtures/pipeline/clarification.json": "0e5d60f5190425be86a9ef5f5bdca019dec5386cae5ca75708957caa2ed8a9b7",
+    "research/september_2026/fixtures/pipeline/source.csv": "c1acdd6564a3b6386d33532ca021ca475deb2da9e5f156e397424c5843ba8a41",
+    "research/september_2026/fixtures/sep1-native/71ea00380a86189ecc392227aa1cfe9e917ad16683ffb6c1615007c0eec4b100.bi5": "71ea00380a86189ecc392227aa1cfe9e917ad16683ffb6c1615007c0eec4b100",
+    "research/september_2026/fixtures/sep1-native/RECEIPT.json": "86c7f588113d7e5d804f0bdf4f905713f9641253056b3911d0a5d28318be3329",
+    "research/september_2026/month_replay.py": "1c6f51d96bccca3584533d790770303fe244824532f3ec39084f9a3751f2022f",
+    "research/september_2026/regression_pipeline.py": "11ff7a431e53b865dcb186c66039d9ddded57c77ecf4f62b5f8d4b8b0baf2b5d",
+    "research/september_2026/report.py": "b859f127bd9ef15f898621033827c0c825632101c8f1530d6f06e3f6d3a941c6",
+    "research/september_2026/requirements-report.txt": "fd70c5b60168fd91d504345ec04061037fb9de084f7ec8fa53255486c9c94ab1",
+    "research/september_2026/role_review.py": "938fc2c12ac80a453132c4325f9a4958f10c268aac30223251ed81cc77560996",
+    "research/september_2026/run_study.py": "6878a97f4dc46a18e38c54e80103e02b7d5a526f5d6c2fed3cffa936abe80063",
+    "research/september_2026/test_engine.py": "839c0538cd23dd30460c9e10200073e8e5d92a934e5232c97bafaa897db122fb",
+    "research/september_2026/test_export_tradingview.py": "4d59a579d76b65da541d1ac676f91bdab59f6cc978a49ea429a6058f5e2c3c90",
+    "research/september_2026/test_independent_boundaries.py": "9b2131ab5ff1e794e5776be4ce0dc5ff938e7d07d36ea9896762480f24dee2d4",
+    "research/september_2026/test_month_replay.py": "4582bc72999b069a0e252ee8c5362c9f10b65af6c03be5726b6dc5cf8cd89cd7",
+    "research/september_2026/test_native_daily.py": "e1621cf27f7a386b03c06146c91e31138f135df20e5f8c5a3b5645fd4ff0cd35",
+    "research/september_2026/test_parallel_causality.py": "5f113c52a0f3a0cca2b022bc98074e215c7dffd99f97cdaee6a1e30e9309658c",
+    "research/september_2026/test_parent_failure_observation.py": "d019d0cd58829c80e8bea01acacaf5dc790e2af5f19f245150299939e7813470",
+    "research/september_2026/test_report.py": "bcdd664dfb306d74858880a2fd04f249128453a7e9a0d37925e37a4fd1554f43",
+    "research/september_2026/test_role_review.py": "f001ecf920e7f42352e1095559aff59320cc04e6fd551d7c8839805570dcbc8e",
+    "research/september_2026/test_target_continuity.py": "b30675d0a8965a7f604510d968150a7f8fbfc94108a5fd08f545cdfe2f6bdb8d",
+    "research/september_2026/test_verify_all.py": "34a8dafb7004cc330804fe244a116939d6dc1766f7f7e28ebfb9dae2e1252b4f",
+    "research/september_2026/test_verify_causality.py": "62ae135b8e4cb0fb0d3e40c317b90996fb5d0fccfce25994d7d4861172bb66ca",
+    "research/september_2026/verify_all.py": "ed6eb7a9a5d6563becd461f95f7144df5c5a5bc12e4abd29bfe8285ac0ce5cf7",
+    "research/september_2026/verify_causality.py": "a00fedeee9285eb243cc5e59e3d85f54ee946e85b287a4d796357dfaf7f25636",
+    "tests/test_logic.py": "132d5da161e1afa5161ad4b53c4dd8521af030b747d706ea2585f35fb17117f9"
+  },
+  "source_unchanged": true,
+  "status": "ALL_SOFTWARE_CHECKS_PASSED",
+  "suites": [
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_engine/RESULT.json",
+        "--_module",
+        "test_engine"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_engine/output.log",
+      "module": "test_engine",
+      "name": "test_engine",
+      "receipt": "suites/test_engine/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 46,
+        "tests_run": 46,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.512582,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_export_tradingview/RESULT.json",
+        "--_module",
+        "test_export_tradingview"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_export_tradingview/output.log",
+      "module": "test_export_tradingview",
+      "name": "test_export_tradingview",
+      "receipt": "suites/test_export_tradingview/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 35,
+        "tests_run": 35,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.238012,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_independent_boundaries/RESULT.json",
+        "--_module",
+        "test_independent_boundaries"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_independent_boundaries/output.log",
+      "module": "test_independent_boundaries",
+      "name": "test_independent_boundaries",
+      "receipt": "suites/test_independent_boundaries/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 7,
+        "tests_run": 7,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.233943,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_month_replay/RESULT.json",
+        "--_module",
+        "test_month_replay"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_month_replay/output.log",
+      "module": "test_month_replay",
+      "name": "test_month_replay",
+      "receipt": "suites/test_month_replay/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 17,
+        "tests_run": 17,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.296796,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_native_daily/RESULT.json",
+        "--_module",
+        "test_native_daily"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_native_daily/output.log",
+      "module": "test_native_daily",
+      "name": "test_native_daily",
+      "receipt": "suites/test_native_daily/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 31,
+        "tests_run": 31,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 1.095108,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_parallel_causality/RESULT.json",
+        "--_module",
+        "test_parallel_causality"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_parallel_causality/output.log",
+      "module": "test_parallel_causality",
+      "name": "test_parallel_causality",
+      "receipt": "suites/test_parallel_causality/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 5,
+        "tests_run": 5,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 7.544909,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_parent_failure_observation/RESULT.json",
+        "--_module",
+        "test_parent_failure_observation"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_parent_failure_observation/output.log",
+      "module": "test_parent_failure_observation",
+      "name": "test_parent_failure_observation",
+      "receipt": "suites/test_parent_failure_observation/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 6,
+        "tests_run": 6,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.238885,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_report/RESULT.json",
+        "--_module",
+        "test_report"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_report/output.log",
+      "module": "test_report",
+      "name": "test_report",
+      "receipt": "suites/test_report/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 22,
+        "tests_run": 22,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 21.040866,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_role_review/RESULT.json",
+        "--_module",
+        "test_role_review"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_role_review/output.log",
+      "module": "test_role_review",
+      "name": "test_role_review",
+      "receipt": "suites/test_role_review/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 23,
+        "tests_run": 23,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.240494,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_target_continuity/RESULT.json",
+        "--_module",
+        "test_target_continuity"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_target_continuity/output.log",
+      "module": "test_target_continuity",
+      "name": "test_target_continuity",
+      "receipt": "suites/test_target_continuity/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 6,
+        "tests_run": 6,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.187666,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_verify_all/RESULT.json",
+        "--_module",
+        "test_verify_all"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_verify_all/output.log",
+      "module": "test_verify_all",
+      "name": "test_verify_all",
+      "receipt": "suites/test_verify_all/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 21,
+        "tests_run": 21,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.560625,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "unit",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/test_verify_causality/RESULT.json",
+        "--_module",
+        "test_verify_causality"
+      ],
+      "errors": [],
+      "kind": "unit",
+      "log": "suites/test_verify_causality/output.log",
+      "module": "test_verify_causality",
+      "name": "test_verify_causality",
+      "receipt": "suites/test_verify_causality/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 21,
+        "tests_run": 21,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 7.916837,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/regression_pipeline.py",
+        "--project",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026",
+        "--fixture",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/fixtures/pipeline",
+        "--output",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/pipeline"
+      ],
+      "errors": [],
+      "kind": "pipeline",
+      "log": "suites/pipeline/output.log",
+      "name": "pipeline",
+      "receipt": "pipeline/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "harness_sha256": "11ff7a431e53b865dcb186c66039d9ddded57c77ecf4f62b5f8d4b8b0baf2b5d",
+        "limits": "Bounded handoff regression only; not whole-month, teacher, execution or profitability clearance.",
+        "network_requests": 0,
+        "passed": 11,
+        "pipeline_sha256": "6878a97f4dc46a18e38c54e80103e02b7d5a526f5d6c2fed3cffa936abe80063",
+        "project_edits": false,
+        "real_actual_tool_cases": 5,
+        "stubbed_contract_cases": 6,
+        "synthetic_only": true,
+        "tests": [
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py",
+              "report.py"
+            ],
+            "complete_month_claim": false,
+            "error": null,
+            "expected_status": "RESEARCH_PIPELINE_FINISHED_NOT_DEPLOYMENT",
+            "name": "honest-actual",
+            "passed": true,
+            "pipeline_status": "RESEARCH_PIPELINE_FINISHED_NOT_DEPLOYMENT",
+            "report_index_exists": true,
+            "stubbed_contract": false
+          },
+          {
+            "calls": [
+              "month_replay.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "Initial input and captured replay differ; publication withheld",
+              "type": "RuntimeError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "initial-source-race",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": false,
+            "stubbed_contract": false
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py",
+              "report.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "Sealed replay changed across stage handoff",
+              "type": "RuntimeError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "replay-report-swap",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": true,
+            "stubbed_contract": false
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py",
+              "report.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "Saved causal proof or capture changed across stage handoff",
+              "type": "RuntimeError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "saved-proof-during-report",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": true,
+            "stubbed_contract": false
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py",
+              "report.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "Saved causal proof or capture changed across stage handoff",
+              "type": "RuntimeError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "saved-capture-during-report",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": true,
+            "stubbed_contract": false
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py",
+              "report.py"
+            ],
+            "complete_month_claim": false,
+            "error": null,
+            "expected_status": "RESEARCH_PIPELINE_FINISHED_NOT_DEPLOYMENT",
+            "name": "contract-consistent",
+            "passed": true,
+            "pipeline_status": "RESEARCH_PIPELINE_FINISHED_NOT_DEPLOYMENT",
+            "report_index_exists": true,
+            "stubbed_contract": true
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "Causal proof/capture contract failed; report publication withheld",
+              "type": "RuntimeError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "contract-refuted-zero",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": false,
+            "stubbed_contract": true
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "causality failed; inspect preserved log",
+              "type": "RuntimeError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "contract-survives-one",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": false,
+            "stubbed_contract": true
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "Causal proof/capture contract failed; report publication withheld",
+              "type": "RuntimeError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "contract-explicit-failure",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": false,
+            "stubbed_contract": true
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "Causal proof/capture contract failed; report publication withheld",
+              "type": "RuntimeError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "contract-wrong-capture",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": false,
+            "stubbed_contract": true
+          },
+          {
+            "calls": [
+              "month_replay.py",
+              "verify_causality.py",
+              "report.py"
+            ],
+            "complete_month_claim": null,
+            "error": {
+              "reason": "[Errno 2] No such file or directory: '/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/pipeline/cases/contract-missing-report/output/report/REPORT_COMPLETION.json'",
+              "type": "FileNotFoundError"
+            },
+            "expected_status": "BLOCKED_OR_FAILED",
+            "name": "contract-missing-report",
+            "passed": true,
+            "pipeline_status": "BLOCKED_OR_FAILED",
+            "report_index_exists": false,
+            "stubbed_contract": true
+          }
+        ],
+        "total": 11
+      },
+      "returncode": 0,
+      "seconds": 85.434428,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "collector",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/offline_collector/RESULT.json"
+      ],
+      "errors": [],
+      "kind": "collector",
+      "log": "suites/offline_collector/output.log",
+      "name": "offline_collector",
+      "receipt": "suites/offline_collector/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "collector_exit_code": 0,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "modules": [
+          "test_legacy_codec",
+          "test_portable_v4",
+          "test_portable_lineage"
+        ],
+        "original_verifier_completed": true,
+        "skipped": 0,
+        "tests_passed": 31,
+        "tests_run": 31,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.362259,
+      "timed_out": false
+    },
+    {
+      "all_pass": true,
+      "command": [
+        "/Users/isaacmcfarland/ISAACTERMINAL/trading/nas100-bot/.venv/bin/python",
+        "-B",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/september_2026/verify_all.py",
+        "--_worker",
+        "logic",
+        "--_receipt",
+        "/Users/isaacmcfarland/ISAACTERMINAL/github/astra6-profit-validation-20261022/research/astra6_profitability/runs/continuation-20261022-tests/final-engine-01/suites/repository_logic/RESULT.json"
+      ],
+      "errors": [],
+      "kind": "logic",
+      "log": "suites/repository_logic/output.log",
+      "name": "repository_logic",
+      "receipt": "suites/repository_logic/RESULT.json",
+      "result": {
+        "all_pass": true,
+        "errors": 0,
+        "expected_failures": 0,
+        "failures": 0,
+        "matplotlib_version": "3.9.4",
+        "skipped": 0,
+        "tests_passed": 10,
+        "tests_run": 10,
+        "unexpected_successes": 0
+      },
+      "returncode": 0,
+      "seconds": 0.144879,
+      "timed_out": false
+    }
+  ]
+}

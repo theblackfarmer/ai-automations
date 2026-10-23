@@ -1,0 +1,149 @@
+{
+  "id": "ASTRA6_QUOTE_PROFIT_RESEARCH_V1",
+  "registered_at_utc": "2026-10-22T19:42:56.494384+00:00",
+  "status": "PREREGISTERED_BEFORE_MATCHING_MARKET_OUTCOME_RUN",
+  "authority": "Explicit research execution hypotheses under the user request to establish ASTRA6 profits; not teacher-verified and not broker execution permission.",
+  "execution_allowed": false,
+  "live_orders_enabled": false,
+  "historical_quote_simulation": true,
+  "engine_base_commit": "e12aa1385b3bb29e0c89f0870aee042321e1e059",
+  "source_sha256": {
+    "research/september_2026/engine.py": "b8536b432436b0a994eed9e9f24bffb141b42b6914703d4e35771ad85154e2fb",
+    "research/september_2026/SPEC.json": "89f9ab6fb4f842426e238ef5554274be175211610d02c85086e2fc792139af36",
+    "research/september_2026/IMPLEMENTATION_CLARIFICATIONS.json": "c11d3648a8e4edb9dddf87a2c001c3725c8375eed934f43484d360725fa36cef",
+    "research/september_2026/month_replay.py": "1c6f51d96bccca3584533d790770303fe244824532f3ec39084f9a3751f2022f",
+    "research/september_2026/acquisition_tools/acquire_month_v4.py": "34cb44cc3c370138a07b21b01d72a8fb039212c76365ac172cc2a570d585054c",
+    "research/september_2026/acquisition_tools/legacy_acquire.py": "3f19fb017d267691cfc98e26874152a642bd59486d43f642bb6036f3f8acb5ed",
+    "research/september_2026/acquisition_tools/FROZEN_MONTH_PROTOCOL.json": "6c00c80649bfdff559e43b1ca698f7cb9874668223fe535b2498bed9ad3eab74"
+  },
+  "market": {
+    "symbol": "NAS100 CFD",
+    "provider": "Dukascopy USATECHIDXUSD",
+    "raw_sides": [
+      "BID",
+      "ASK"
+    ],
+    "structure_side": "BID",
+    "raw_scale": 1000,
+    "warmup_start_utc": "2026-08-01T00:00:00Z",
+    "study_start_utc": "2026-09-01T00:00:00Z",
+    "end_exclusive_utc": "2026-10-01T00:00:00Z",
+    "period_role": "EXPOSED_DEVELOPMENT_NOT_OOS"
+  },
+  "candidate_contract": {
+    "source": "Every chronological ENTRY_REVIEW from the pinned engine after full cutoff processing; never chart-selected examples or old ICC/Vincent decisions.",
+    "required": "Original target known by deciding bar start and not already reached; child, parent zone, HTF link and both authorities still active after the decision cutoff.",
+    "stop": "Tapped local child zone far edge, frozen at decision: zone_low for long, zone_high for short.",
+    "target": "Exact original target in the ENTRY_REVIEW event; never a running or retrospectively revised endpoint.",
+    "tie_break": "Ascending decision_time_ms, then stable child_id; one position per policy; no exit-minute reentry.",
+    "pending_cancellation": "Cancel after observed original target exhaustion, stop crossing, parent/link/child/authority invalidation, unknown coverage, or expiry before fill; no later revival."
+  },
+  "execution_hypotheses": {
+    "latency_ms": 1000,
+    "pending_window_ms": 60000,
+    "max_quote_gap_ms": 60000,
+    "entry": "First observed executable-side quote strictly after decision_time_ms+latency_ms, before pending expiry. Long buys ASK; short sells BID.",
+    "exit": "MARKET_IF_TOUCHED hypothesis using actual crossing quote: long sells BID, short buys ASK. These are quote-priced simulations, not proven broker fills or linked limit-order execution.",
+    "new_stop_activation": "Strictly later quote timestamp than the observation or pivot confirmation that authorizes an update; equal-millisecond provider records retain original order.",
+    "breakeven": "After observed +1R, move stop to observed entry price on a later quote; fees mean price breakeven is not net breakeven.",
+    "pivot_trail": "After +1R, use only post-entry confirmed 1M lows for long or highs for short; activate strictly after known_at and never loosen. This confirmed M1 swing trail is a new hypothesis, not the native BOS-protecting-pivot exit contract.",
+    "session_flatten_trigger_utc": "19:59",
+    "session_flatten_deadline_utc": "20:00",
+    "session_resume_utc": "22:00",
+    "session_flatten": "No entries from 19:59 through 21:59 UTC. First later observed quote before 20:00 executes a predeclared flatten. If missing, censor; never use the retrospective last quote.",
+    "study_end": "Flatten trigger at end_exclusive minus 60 seconds; execute only a subsequent observed quote strictly before the end; otherwise censor.",
+    "coverage": "A >60-second quote gap while exposure is open censors the unresolved trade and halts that policy. Do not infer a missing stop/target fill or erase residual exposure.",
+    "price_units": "One index point is a 1.0 change in quote price, distinct from the provider convention calling the second decimal digit a point.",
+    "barrier_exit_additional_latency_ms": 0
+  },
+  "policies": [
+    {
+      "id": "ORIGINAL_TARGET",
+      "role": "PRIMARY_RULE_FIT_BASELINE",
+      "target": "original",
+      "stop": "local far edge"
+    },
+    {
+      "id": "ORIGINAL_TARGET_BE_1R",
+      "role": "RESEARCH_EXIT_VARIANT",
+      "target": "original",
+      "breakeven_after_r": 1
+    },
+    {
+      "id": "ORIGINAL_TARGET_CONFIRMED_M1_SWING_TRAIL",
+      "role": "RESEARCH_EXIT_VARIANT",
+      "target": "original",
+      "trail_after_r": 1
+    },
+    {
+      "id": "ORIGINAL_TARGET_MAX_60M",
+      "role": "RESEARCH_EXIT_VARIANT",
+      "target": "original",
+      "max_hold_minutes": 60
+    },
+    {
+      "id": "ORIGINAL_TARGET_MAX_240M",
+      "role": "RESEARCH_EXIT_VARIANT",
+      "target": "original",
+      "max_hold_minutes": 240
+    },
+    {
+      "id": "CONTROL_FIXED_1R",
+      "role": "DIAGNOSTIC_CONTROL_NOT_ORIGINAL_TARGET_RULE",
+      "target_r": 1
+    },
+    {
+      "id": "CONTROL_FIXED_2R",
+      "role": "DIAGNOSTIC_CONTROL_NOT_ORIGINAL_TARGET_RULE",
+      "target_r": 2
+    }
+  ],
+  "cost_hypotheses": {
+    "spread": "Actual observed bid/ask spread is included through quote sides. No added duplicate spread.",
+    "commission_rate_per_leg": 5.25e-05,
+    "basis": "USD52.5 per USD1million traded, each opening/closing leg, current lowest deposit/equity/volume JForex self-trader index tier; not a claim about the user account or historical fee tier.",
+    "commission_points": "rate*(observed entry price + observed exit price), per unit of index-point exposure.",
+    "additional_slippage_cost_points_per_leg": [
+      0,
+      0.25,
+      1.0
+    ],
+    "cost_stress": "Deduct adverse cost separately from observed fill quotes. Do not rewrite observed prices.",
+    "fee_source": "https://www.dukascopy.com/swiss/english/about/fee-schedule/",
+    "fee_source_checked_utc": "2026-10-22",
+    "financing": "No assumed financing rate. Planned flat buffer precedes daily closure/rollover; missed flatten is censored.",
+    "account_size": null,
+    "dollar_risk": null,
+    "dollar_profit_claim": false
+  },
+  "validation": {
+    "full_window_raw_receipts_required": true,
+    "raw_tick_to_bid_minute_exact_reconciliation_required": true,
+    "source_hash_binding_required": true,
+    "unknown_holiday": "2026-09-07 remains unresolved under the existing engine calendar; disclose this coverage qualification.",
+    "metrics": [
+      "admissions and every rejection reason",
+      "completed and censored trade counts",
+      "net points and net R after disclosed costs",
+      "profit factor",
+      "win rate",
+      "mean and median R",
+      "observed MFE and MAE",
+      "drawdown with exact realized/unrealized definition",
+      "long versus short and chronological period breakdown"
+    ],
+    "selection": "Report every preregistered policy. Original target remains primary. Never promote fixed-R controls as current ASTRA rules; development winner is not an established edge.",
+    "oos_status": "NOT_RUN; September already exposed. No untouched evaluation period or forward trading record is established.",
+    "random_entry_control_status": "NOT_YET_RUN; fixed-R controls alone do not satisfy random-entry comparison.",
+    "profitability_established": false
+  },
+  "immutable_prior_contract": "The September SPEC, clarifications, feed decoder and old daily quarantine remain unchanged. This file defines a separate offline analysis layer.",
+  "pre_market_clarification": {
+    "initial_registered_sha256": "b646c279533bdcd559ed6f80a6dd6b8dd20b298b226dc44ff68ac8baf83088ee",
+    "no_market_outcomes_observed": true,
+    "changes": [
+      "Call the generic confirmed low/high variant a confirmed 1M swing trail; it is not the native BOS-protecting-pivot contract.",
+      "Explicitly disclose zero additional exit latency for standing market-if-touched barriers; one-second entry latency remains unchanged."
+    ]
+  }
+}

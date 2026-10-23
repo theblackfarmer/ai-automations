@@ -1,0 +1,35 @@
+{
+  "status": "PRE_OUTCOME_PERFORMANCE_REBUILD",
+  "date": "2026-10-22",
+  "previous_workspace_uncommitted_changes_available": false,
+  "user_authorized_equivalent_rebuild": true,
+  "market_outcome_observed_in_continuation": false,
+  "profitability_established": false,
+  "live_orders_enabled": false,
+  "independent_review": {
+    "scope": "Uncommitted performance diff against 95ed7d6",
+    "verdict": "No semantic regression found; provisional",
+    "synthetic_streams_compared_against_actual_HEAD_module": 1000,
+    "all_exact_matches": true,
+    "causal_positive_control_detected": true,
+    "limitations": [
+      "Full-market equivalence and speedup not yet measured",
+      "Existing cold subprocess calls have no timeout"
+    ]
+  },
+  "software_checks": {
+    "engine_unit": 281,
+    "pipeline_cases": 11,
+    "quote_unit": 89,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "frozen_sources_unchanged": [
+    "engine.py",
+    "month_replay.py",
+    "SPEC.json",
+    "PROFIT_PROTOCOL.json",
+    "collector and codec"
+  ]
+}
