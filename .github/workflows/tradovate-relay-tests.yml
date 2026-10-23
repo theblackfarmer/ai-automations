@@ -1,0 +1,26 @@
+name: Tradovate Relay Tests
+on:
+  push:
+    branches:
+      - "feature/tradovate-signal-relay-*"
+    paths:
+      - "integrations/tradovate_relay/**"
+      - "tests/test_tradovate_relay.py"
+      - ".github/workflows/tradovate-relay-tests.yml"
+  pull_request:
+    paths:
+      - "integrations/tradovate_relay/**"
+      - "tests/test_tradovate_relay.py"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.11"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m unittest tests.test_tradovate_relay -v
