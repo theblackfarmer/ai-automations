@@ -12,6 +12,6 @@ def main()->None:
     if s.discord_webhook_url: outs.append(DiscordBroadcaster(s.discord_webhook_url))
     if s.telegram_bot_token and s.telegram_chat_id: outs.append(TelegramBroadcaster(s.telegram_bot_token,s.telegram_chat_id))
     svc=RelayService(j,MultiBroadcaster(outs),set(s.account_ids))
-    run_stream(s,svc.on_entity,svc.drain_outbox)
+    run_stream(s,svc.on_entity,svc.on_snapshot,svc.drain_outbox)
 
 if __name__=="__main__": main()
