@@ -11,6 +11,10 @@ python -B resume_acquisition.py --protocol FROZEN_MONTH_PROTOCOL.json \
   --target /absolute/path/to/existing-target --route direct-https \
   --max-requests 42 --max-seconds 900 --execute
 
+An optional --request-timeout controls transport wait only (default 20 seconds,
+greater than 0 through 120). It does not change source validation, request
+spacing or retry count.
+
 Without --execute this is a no-network dry run. The time budget stops new
 requests; preload, an in-flight request and final manifest publication may
 finish afterward. SIGINT and SIGTERM request a graceful stop. Hard kills cannot

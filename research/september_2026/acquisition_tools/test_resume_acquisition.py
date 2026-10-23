@@ -110,6 +110,21 @@ class ResumeTests(unittest.TestCase):
         final=json.loads(result.stdout.splitlines()[-1])
         self.assertEqual(final['network_requests_this_run'],0)
         self.assertEqual(final['stop_reason'],'REQUEST_BUDGET_REACHED')
+    def test_request_timeout_forwarded_without_changing_route(self):
+        for value in (20,60,120):
+            self.target=self.root/('timeout-'+str(value))
+            with patch.object(w.acquisition,'fetch',side_effect=lambda epoch,**kwargs:self.packet(epoch)) as fetch:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    w.run_bounded(self.target,self.p,self.raw,self.sha,START,START+3600,1,60,
+                        'direct-https',request_timeout=value,monotonic=lambda:0,sleeper=lambda _:None)
+            fetch.assert_called_once_with(START,timeout=value,route='direct-https')
+    def test_invalid_request_timeout_cli_exits_one(self):
+        script=Path(__file__).parent/'resume_acquisition.py'
+        for value in ('0','-1','nan','inf','121'):
+            result=subprocess.run([sys.executable,'-B',str(script),'--protocol',str(self.protocol),
+                '--target',str(self.target),'--request-timeout',value],capture_output=True,text=True,timeout=10)
+            self.assertEqual(result.returncode,1,result.stderr)
+        self.assertFalse(self.target.exists())
     def test_dry_run_never_creates_target(self):
         with contextlib.redirect_stdout(io.StringIO()),patch.object(w.acquisition,'run',side_effect=AssertionError('run')):
             self.assertEqual(w.main(['--protocol',str(self.protocol),'--target',str(self.target),'--max-seconds','0']),0)

@@ -2,6 +2,8 @@
 
 Deadline stops new requests; an in-flight request finishes and persists before
 shutdown. V4 retains its lock, identity, spacing, retries and shared cooldown.
+An optional --request-timeout changes only each transport wait (default 20,
+maximum 120 seconds); it does not change validation or retry budgets.
 Network requires --execute. This wrapper never resets external retry budgets.
 """
 import argparse
@@ -20,9 +22,17 @@ def validate_budgets(max_requests, wall_seconds):
         raise ValueError('wall_seconds must be finite and nonnegative')
 
 
+def validate_timeout(value):
+    if type(value) not in (int,float) or not math.isfinite(value) or not 0 < value <= 120:
+        raise ValueError('request_timeout must be finite, positive and at most 120 seconds')
+
+
 def run_bounded(target,p,raw,psha,start,end,max_requests,wall_seconds,route='canonical',
-                *,monotonic=time.monotonic,**run_options):
+                *,request_timeout=20,monotonic=time.monotonic,**run_options):
     validate_budgets(max_requests,wall_seconds)
+    validate_timeout(request_timeout)
+    if 'fetcher' not in run_options:
+        run_options['fetcher']=lambda epoch:acquisition.fetch(epoch,timeout=request_timeout,route=route)
     if 'stop_requested' in run_options:
         raise ValueError('stop_requested belongs to wrapper')
     deadline=monotonic()+wall_seconds
@@ -51,17 +61,20 @@ def main(argv=None):
     parser.add_argument('--route',choices=sorted(acquisition.ROUTES),default='canonical')
     parser.add_argument('--max-requests',type=int,default=24)
     parser.add_argument('--max-seconds','--wall-seconds',dest='wall_seconds',type=float,default=900)
+    parser.add_argument('--request-timeout',type=float,default=20,help='Transport wait seconds: >0 and <=120; default 20')
     parser.add_argument('--execute',action='store_true')
     args=parser.parse_args(argv)
     validate_budgets(args.max_requests,args.wall_seconds)
+    validate_timeout(args.request_timeout)
     acquisition.verify_codec()
     p,raw,psha,start,end=acquisition.load_protocol(args.protocol)
     if not args.execute:
         print(json.dumps(dict(dry_run=True,network_requests=0,protocol_sha256=psha,
-            max_requests=args.max_requests,wall_seconds=args.wall_seconds,wire_route=args.route,
+            max_requests=args.max_requests,wall_seconds=args.wall_seconds,request_timeout=args.request_timeout,wire_route=args.route,
             execution_allowed=False)))
         return 0
-    manifest=run_bounded(args.target,p,raw,psha,start,end,args.max_requests,args.wall_seconds,args.route)
+    manifest=run_bounded(args.target,p,raw,psha,start,end,args.max_requests,args.wall_seconds,args.route,
+                         request_timeout=args.request_timeout)
     print(json.dumps({key:manifest[key] for key in ('network_requests_this_run','stop_reason',
         'processed_hours','expected_hours','hour_states','all_hours_validated_or_explicit_empty_200')}))
     return 0 if manifest['all_hours_validated_or_explicit_empty_200'] else 2
