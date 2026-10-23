@@ -60,5 +60,6 @@ class TradeSignal:
     def text(self) -> str:
         return (
             f"{self.kind.value} {self.symbol} | {self.side} "
-            f"{self.fill_quantity} @ {self.fill_price:g} | position {self.new_position:+d}"
+            f"{self.fill_quantity} @ {self.fill_price:g} | position {self.new_position:+d} "
+            f"| event {self.event_key}"
         )
