@@ -1,5 +1,5 @@
 from __future__ import annotations
-import json, time
+import json
 from typing import Dict, Tuple
 from .broadcasters import MultiBroadcaster
 from .engine import SignalEngine
@@ -11,6 +11,17 @@ class RelayService:
         self.journal=journal; self.engine=SignalEngine(journal); self.broadcaster=broadcaster
         self.allowed_accounts=set(allowed_accounts); self.orders:Dict[int,Tuple[int,int]]={}
 
+    def on_snapshot(self, snapshot:dict)->None:
+        for c in snapshot.get("contracts",[]) or []:
+            if c.get("id") and c.get("name"): self.engine.hydrate_contract(int(c["id"]),str(c["name"]))
+        for o in snapshot.get("orders",[]) or []:
+            if o.get("id") and o.get("accountId") and o.get("contractId"):
+                self.orders[int(o["id"])]=(int(o["accountId"]),int(o["contractId"]))
+        for p in snapshot.get("positions",[]) or []:
+            aid=p.get("accountId"); cid=p.get("contractId")
+            if aid in self.allowed_accounts and cid:
+                self.engine.hydrate_position(int(aid),int(cid),int(p.get("netPos",p.get("netQty",0)) or 0))
+
     def on_entity(self, entity_type:str, event_type:str, entity:dict)->None:
         if entity_type=="contract" and entity.get("id") and entity.get("name"):
             self.engine.hydrate_contract(int(entity["id"]),str(entity["name"])); return
@@ -19,14 +30,9 @@ class RelayService:
             if aid and cid: self.orders[int(entity["id"])]=(int(aid),int(cid))
             return
         if entity_type=="position":
-            aid=entity.get("accountId"); cid=entity.get("contractId")
-            if aid in self.allowed_accounts and cid:
-                qty=int(entity.get("netPos", entity.get("netQty", 0)) or 0)
-                self.engine.hydrate_position(int(aid),int(cid),qty)
             return
         if entity_type!="fill" or event_type not in {"Created","Updated"}: return
-        oid=int(entity.get("orderId",0) or 0)
-        resolved=self.orders.get(oid)
+        oid=int(entity.get("orderId",0) or 0); resolved=self.orders.get(oid)
         if not resolved: return
         aid,cid=resolved
         if aid not in self.allowed_accounts: return
@@ -39,7 +45,6 @@ class RelayService:
             raw=json.loads(payload); raw["kind"]=SignalKind(raw["kind"])
             signal=TradeSignal(**raw)
             try:
-                self.broadcaster.send(signal)
-                self.journal.delivered(key)
+                self.broadcaster.send(signal); self.journal.delivered(key)
             except Exception:
                 self.journal.failed_attempt(key)
