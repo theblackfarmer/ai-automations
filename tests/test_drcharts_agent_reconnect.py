@@ -24,3 +24,8 @@ class ReconnectAgent(GatewayCase):
         self.service.on_snapshot(self.snapshot([self.fill(1)], net_pos=1))
         with self.assertRaises(ReconciliationError):
             self.service.on_snapshot(self.snapshot([self.fill(1)], net_pos=5))
+
+    def test_unresolved_baseline_fill_fails_closed(self):
+        broken = self.snapshot([self.fill(1, order_id=999)], net_pos=0)
+        with self.assertRaises(ReconciliationError):
+            self.service.on_snapshot(broken)
