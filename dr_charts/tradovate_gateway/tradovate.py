@@ -30,6 +30,7 @@ def decode_frame(frame: str):
 
 
 def _receive_until_response(ws, request_id: int, on_tick: Callable[[], None]):
+    buffered = []
     while True:
         frame = ws.recv()
         kind, items = decode_frame(frame)
@@ -41,8 +42,22 @@ def _receive_until_response(ws, request_id: int, on_tick: Callable[[], None]):
             raise ConnectionError(f"Tradovate closed socket: {items}")
         for item in items:
             if item.get("i") == request_id:
-                return item
+                return item, buffered
+            buffered.append(item)
         on_tick()
+
+
+def _dispatch_events(items, on_entity: Callable[[str, str, dict], None]) -> None:
+    for item in items:
+        if item.get("e") != "props":
+            continue
+        d = item.get("d") or {}
+        entity = d.get("entity")
+        if isinstance(entity, list):
+            for e in entity:
+                on_entity(str(d.get("entityType")), str(d.get("eventType")), e)
+        elif isinstance(entity, dict):
+            on_entity(str(d.get("entityType")), str(d.get("eventType")), entity)
 
 
 def run_stream(
@@ -64,15 +79,20 @@ def run_stream(
                     raise ConnectionError("Tradovate websocket did not open")
 
                 ws.send(_request("authorize", 1, settings.access_token))
-                auth = _receive_until_response(ws, 1, on_tick)
+                auth, auth_buffer = _receive_until_response(ws, 1, on_tick)
                 if auth.get("s") != 200:
                     raise PermissionError(f"Tradovate authorization failed with status {auth.get('s')}")
+                if any(item.get("e") == "props" for item in auth_buffer):
+                    raise RuntimeError("received user events before authorization completed")
 
                 ws.send(_request("user/syncrequest", 2, {"users": [settings.user_id], "accounts": sorted(settings.account_ids)}))
-                sync = _receive_until_response(ws, 2, on_tick)
+                sync, sync_buffer = _receive_until_response(ws, 2, on_tick)
                 if sync.get("s") != 200 or not isinstance(sync.get("d"), dict):
                     raise RuntimeError(f"Tradovate sync failed with status {sync.get('s')}")
                 on_snapshot(sync["d"])
+                # Events that raced the sync response are applied after the snapshot.
+                # Snapshot duplicates are harmless because fill ids are idempotent.
+                _dispatch_events(sync_buffer, on_entity)
                 on_tick()
                 backoff = 1
 
@@ -85,21 +105,12 @@ def run_stream(
                         continue
                     if kind == "close":
                         raise ConnectionError(f"Tradovate closed socket: {items}")
-                    for item in items:
-                        if item.get("e") != "props":
-                            continue
-                        d = item.get("d") or {}
-                        entity = d.get("entity")
-                        if isinstance(entity, list):
-                            for e in entity:
-                                on_entity(str(d.get("entityType")), str(d.get("eventType")), e)
-                        elif isinstance(entity, dict):
-                            on_entity(str(d.get("entityType")), str(d.get("eventType")), entity)
+                    _dispatch_events(items, on_entity)
                     on_tick()
         except KeyboardInterrupt:
             raise
         except PermissionError:
-            # Bad credentials should not hammer the API forever.
+            # Bad or expired credentials should not hammer the API forever.
             raise
         except Exception:
             time.sleep(backoff)
