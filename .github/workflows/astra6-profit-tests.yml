@@ -6,7 +6,9 @@ on:
       - research/september_2026/**
       - .github/workflows/astra6-profit-tests.yml
   push:
-    branches: [research/september-4h-1h-1m-20261009]
+    branches:
+      - research/astra6-profit-validation-20261022
+      - research/september-4h-1h-1m-20261009
     paths:
       - research/astra6_profitability/**
       - research/september_2026/**
