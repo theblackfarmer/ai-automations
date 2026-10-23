@@ -79,7 +79,7 @@ class Journal:
 
     def all_positions(self) -> dict:
         with self._conn() as c:
-            return {(int(a), int(cid)): int(q) for a, cid, q in c.execute("SELECT account_id,contract_id,net_qty")}
+            return {(int(a), int(cid)): int(q) for a, cid, q in c.execute("SELECT account_id,contract_id,net_qty FROM positions")}
 
     def set_contract(self, contract_id: int, symbol: str) -> None:
         with self._conn() as c:
