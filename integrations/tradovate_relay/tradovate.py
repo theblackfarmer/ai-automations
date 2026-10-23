@@ -1,10 +1,10 @@
 from __future__ import annotations
 import json, time
-from typing import Callable
+from typing import Callable, Optional
 from .config import Settings
 
-def _request(path:str, request_id:int, body:dict|None=None)->str:
-    payload="" if body is None else json.dumps(body,separators=(",",":"))
+def _request(path:str, request_id:int, body:Optional[dict]=None)->str:
+    payload="" if body is None else (body if isinstance(body,str) else json.dumps(body,separators=(",",":")))
     return f"{path}\n{request_id}\n\n{payload}"
 
 def decode_frame(frame:str):
@@ -12,7 +12,7 @@ def decode_frame(frame:str):
     if not frame or frame[0]!="a": return "unknown",[]
     return "array",json.loads(frame[1:])
 
-def run_stream(settings:Settings,on_entity:Callable[[str,str,dict],None],on_tick:Callable[[],None])->None:
+def run_stream(settings:Settings,on_entity:Callable[[str,str,dict],None],on_snapshot:Callable[[dict],None],on_tick:Callable[[],None])->None:
     try:
         from websockets.sync.client import connect
     except ImportError as exc:
@@ -26,21 +26,19 @@ def run_stream(settings:Settings,on_entity:Callable[[str,str,dict],None],on_tick
                 ws.send(_request("user/syncrequest",2,{"users":[settings.user_id],"accounts":sorted(settings.account_ids)}))
                 backoff=1
                 while True:
-                    frame=ws.recv()
-                    kind,items=decode_frame(frame)
+                    frame=ws.recv(); kind,items=decode_frame(frame)
                     if kind=="h":
                         ws.send("[]"); on_tick(); continue
                     for item in items:
+                        if item.get("i")==2 and item.get("s")==200 and isinstance(item.get("d"),dict):
+                            on_snapshot(item["d"]); continue
                         if item.get("e")!="props": continue
-                        d=item.get("d") or {}
-                        entity=d.get("entity")
+                        d=item.get("d") or {}; entity=d.get("entity")
                         if isinstance(entity,list):
                             for e in entity: on_entity(str(d.get("entityType")),str(d.get("eventType")),e)
                         elif isinstance(entity,dict):
                             on_entity(str(d.get("entityType")),str(d.get("eventType")),entity)
                     on_tick()
-        except KeyboardInterrupt:
-            raise
+        except KeyboardInterrupt: raise
         except Exception:
-            time.sleep(backoff)
-            backoff=min(backoff*2,30)
+            time.sleep(backoff); backoff=min(backoff*2,30)
