@@ -1,0 +1,32 @@
+ASTRA acquisition recovery
+
+Use the existing validated target. Do not reset the frozen protocol, identities,
+rate-limit receipts, historical receipts or an earlier runner's retry counter.
+Check active collectors and ownership locks before starting a new bounded pass.
+The wrapper delegates to unchanged acquire_month_v4.py and retains its target
+lock, full-cache preload, source validation, spacing and shared cooldown.
+
+Example from acquisition_tools:
+python -B resume_acquisition.py --protocol FROZEN_MONTH_PROTOCOL.json \
+  --target /absolute/path/to/existing-target --route direct-https \
+  --max-requests 42 --max-seconds 900 --execute
+
+Without --execute this is a no-network dry run. The time budget stops new
+requests; preload, an in-flight request and final manifest publication may
+finish afterward. SIGINT and SIGTERM request a graceful stop. Hard kills cannot
+run cleanup, but per-hour receipts and periodic checkpoints remain reusable.
+Exit 0 means complete acquisition, 2 means a valid incomplete acquisition,
+and 1 means a validation, lock or I/O failure. Never promote an old manifest
+after an error. No study or performance validation is implied by acquisition.
+
+GitHub recovery uses manual dispatch only. Supply a prior run ID and a bounded
+request budget (0 through 96). It restores that run's acquisition artifact,
+resumes cached coverage and uploads acquisition before starting the study.
+Use the newest saved run as the next resume source; an obsolete parent misses
+later progress. Remote concurrency spans this frozen window across branches.
+Check for a local owner before dispatching; GitHub cannot enforce a Mac lock.
+No automatic retry chain or duplicate network collector is started by pushing.
+
+Source-hour failures remain unresolved. Never infer missing/empty hours from
+weekends or fabricate bars. A complete acquisition still requires the causal
+study, teacher-fidelity checks and separate execution validation.

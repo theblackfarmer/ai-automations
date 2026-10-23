@@ -1,17 +1,24 @@
 name: ASTRA 6 full frozen market study
 
 on:
-  push:
-    branches: [fix/astra6-engine-tests-20261022]
-    paths:
-      - '.github/workflows/astra6-full-market-study.yml'
   workflow_dispatch:
+    inputs:
+      resume_run_id:
+        description: 'Prior acquisition run whose complete saved target must be restored'
+        required: true
+        type: string
+      max_requests:
+        description: 'Bounded additional requests; cached validated hours are reused'
+        required: true
+        default: '48'
+        type: string
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
-  group: astra6-full-market-study-${{ github.ref }}
+  group: astra6-frozen-acquisition-202608-202609
   cancel-in-progress: false
 
 jobs:
@@ -27,6 +34,33 @@ jobs:
           echo "ACQ=${RUNNER_TEMP}/astra6-full-acquisition" >> "${GITHUB_ENV}"
           echo "STUDY=${RUNNER_TEMP}/astra6-full-study" >> "${GITHUB_ENV}"
 
+      - name: Validate bounded resume inputs
+        env:
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+          REQUEST_LIMIT: ${{ inputs.max_requests }}
+        run: |
+          python3 - <<'PYCODE'
+          import os
+          run_id = os.environ['RESUME_RUN_ID']
+          budget = os.environ['REQUEST_LIMIT']
+          if not run_id.isdecimal() or not budget.isdecimal() or not 0 <= int(budget) <= 96:
+              raise SystemExit('Expected numeric prior run ID and request budget between 0 and 96')
+          PYCODE
+
+      - name: Restore preserved acquisition target
+        uses: actions/download-artifact@v4
+        with:
+          name: astra6-full-market-study-${{ inputs.resume_run_id }}
+          run-id: ${{ inputs.resume_run_id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/restored-acquisition
+
+      - name: Adopt restored target without discarding receipts
+        run: |
+          test -f "${RUNNER_TEMP}/restored-acquisition/astra6-full-acquisition/MONTH_IDENTITY.json"
+          test -f "${RUNNER_TEMP}/restored-acquisition/astra6-full-acquisition/MANIFEST.json"
+          mv "${RUNNER_TEMP}/restored-acquisition/astra6-full-acquisition" "${ACQ}"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -35,25 +69,39 @@ jobs:
         working-directory: research/september_2026/acquisition_tools
         run: |
           python -I -S -B verify_offline.py
-          python -B -m unittest -v test_daily_codec_v5.py
+          python -B -m unittest -v test_daily_codec_v5.py test_resume_acquisition.py
 
       - name: Acquire frozen August-September USATECHIDXUSD ticks
         id: acquire
+        env:
+          REQUEST_LIMIT: ${{ inputs.max_requests }}
         working-directory: research/september_2026/acquisition_tools
         shell: bash
         run: |
           set +e
-          python -B acquire_month_v4.py \
+          python -B resume_acquisition.py \
             --protocol FROZEN_MONTH_PROTOCOL.json \
             --target "${ACQ}" \
             --route direct-https \
-            --max-requests 3000 \
+            --max-requests "${REQUEST_LIMIT}" \
+            --max-seconds 900 \
             --execute | tee "${RUNNER_TEMP}/full-acquisition.log"
           rc=${PIPESTATUS[0]}
           echo "exit_code=${rc}" >> "${GITHUB_OUTPUT}"
           if [ "${rc}" -ne 0 ] && [ "${rc}" -ne 2 ]; then
             exit "${rc}"
           fi
+
+      - name: Preserve acquisition before study
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra6-full-market-study-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/astra6-full-acquisition/
+            ${{ runner.temp }}/full-acquisition.log
 
       - name: Validate full acquisition gate
         id: gate
@@ -126,14 +174,13 @@ jobs:
               }, indent=2) + '\n```\n')
           PY
 
-      - name: Preserve full acquisition and study
+      - name: Preserve study outputs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: astra6-full-market-study-${{ github.run_id }}
+          name: astra6-study-results-${{ github.run_id }}
           if-no-files-found: warn
           retention-days: 30
           path: |
-            ${{ runner.temp }}/astra6-full-acquisition/
             ${{ runner.temp }}/astra6-full-study/
             ${{ runner.temp }}/full-acquisition.log
