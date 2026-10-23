@@ -1,53 +1,104 @@
-name: ASTRA 6 public data availability probe
+name: ASTRA 6 full market profit validation
 on:
+  workflow_dispatch:
   push:
     branches: [research/astra6-profit-validation-20261022]
     paths:
       - .github/workflows/astra6-profit-data-probe.yml
-      - research/astra6_profitability/PROBE_PROTOCOL.json
 permissions:
   contents: read
 concurrency:
-  group: astra6-profit-data-probe-${{ github.ref }}
+  group: astra6-full-market-validation-${{ github.ref }}
   cancel-in-progress: false
 jobs:
-  public-source-hour:
+  acquire-and-study:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 180
+    env:
+      ASTRA_ROOT: ${{ runner.temp }}/astra6-full-market-validation
     steps:
-      - name: Prepare evidence directory
-        run: |
-          mkdir -p "$RUNNER_TEMP/astra6-profit-data-probe"
-          echo "ASTRA_PROBE_OUTPUT=$RUNNER_TEMP/astra6-profit-data-probe" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Record exact source inputs
+      - name: Install pinned engine report dependency
+        run: python -m pip install --disable-pip-version-check -r research/september_2026/requirements-report.txt
+      - name: Prepare immutable evidence root
         run: |
-          git rev-parse HEAD > "$ASTRA_PROBE_OUTPUT/SOURCE_COMMIT.txt"
-          cp research/astra6_profitability/PROBE_PROTOCOL.json "$ASTRA_PROBE_OUTPUT/REQUEST_PROTOCOL.json"
-          sha256sum research/september_2026/acquisition_tools/acquire_month_v4.py research/september_2026/acquisition_tools/legacy_acquire.py research/september_2026/acquisition_tools/FROZEN_MONTH_PROTOCOL.json research/astra6_profitability/PROBE_PROTOCOL.json > "$ASTRA_PROBE_OUTPUT/SOURCE_HASHES.txt"
-      - name: Acquire one source hour with the unchanged collector
+          mkdir -p "$ASTRA_ROOT"
+          git rev-parse HEAD > "$ASTRA_ROOT/SOURCE_COMMIT.txt"
+          sha256sum research/september_2026/acquisition_tools/acquire_month_v4.py research/september_2026/acquisition_tools/legacy_acquire.py research/september_2026/acquisition_tools/FROZEN_MONTH_PROTOCOL.json research/astra6_profitability/PROFIT_PROTOCOL.json > "$ASTRA_ROOT/SOURCE_HASHES.txt"
+      - name: Acquire full frozen Aug-Sep raw BID/ASK evidence
+        id: acquisition
         run: |
           set +e
-          python -B research/september_2026/acquisition_tools/acquire_month_v4.py --protocol research/astra6_profitability/PROBE_PROTOCOL.json --target "$ASTRA_PROBE_OUTPUT/acquisition" --max-requests 2 --route direct-https --execute 2>&1 | tee "$ASTRA_PROBE_OUTPUT/collector.log"
-          command_status=("${PIPESTATUS[@]}")
-          collector_status=${command_status[0]}
-          log_status=${command_status[1]}
+          python -B research/september_2026/acquisition_tools/acquire_month_v4.py \
+            --protocol research/september_2026/acquisition_tools/FROZEN_MONTH_PROTOCOL.json \
+            --target "$ASTRA_ROOT/acquisition" \
+            --max-requests 3000 \
+            --route direct-https \
+            --execute 2>&1 | tee "$ASTRA_ROOT/acquisition.log"
+          status=${PIPESTATUS[0]}
           set -e
-          printf '%s\n' "$collector_status" > "$ASTRA_PROBE_OUTPUT/COLLECTOR_EXIT_CODE.txt"
-          if [ "$collector_status" -ne 0 ]; then exit "$collector_status"; fi
-          exit "$log_status"
-      - name: Preserve raw responses and all acquisition evidence
+          printf '%s\n' "$status" > "$ASTRA_ROOT/ACQUISITION_EXIT_CODE.txt"
+          if [ -f "$ASTRA_ROOT/acquisition/MANIFEST.json" ]; then
+            python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ["ASTRA_ROOT"])/"acquisition"/"MANIFEST.json"
+          m=json.loads(p.read_text())
+          print(json.dumps({k:m.get(k) for k in (
+              "processed_hours","expected_hours","minute_count","missing_minutes",
+              "all_hours_validated_or_explicit_empty_200","stop_reason")}, sort_keys=True))
+          PY
+          fi
+          exit "$status"
+      - name: Run real quote-priced development profit study
+        if: ${{ success() }}
+        run: |
+          python -B research/astra6_profitability/profit_study.py \
+            --acquisition "$ASTRA_ROOT/acquisition/MANIFEST.json" \
+            --output "$ASTRA_ROOT/profit-study" \
+            --causal-workers 2 2>&1 | tee "$ASTRA_ROOT/profit-study.log"
+      - name: Preserve acquisition, replay, trades, and audit evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: astra6-profit-data-probe-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/astra6-profit-data-probe/
+          name: astra6-full-market-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/astra6-full-market-validation/
           if-no-files-found: error
           retention-days: 30
-      - name: State the probe scope
+      - name: Publish result summary
         if: always()
         run: |
-          echo 'One public source hour only. Read the collector exit code and MANIFEST.json in the artifact. A successful probe establishes source availability and decoding for that hour; it supplies no full-month coverage, trading result, or execution clearance.' >> "$GITHUB_STEP_SUMMARY"
+          echo '## ASTRA 6 full market validation' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f "$ASTRA_ROOT/acquisition/MANIFEST.json" ]; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ["ASTRA_ROOT"])/"acquisition"/"MANIFEST.json"
+          m=json.loads(p.read_text())
+          print("- Acquisition hours: {}/{}".format(m.get("processed_hours"), m.get("expected_hours")))
+          print("- Observed minutes: {}".format(m.get("minute_count")))
+          print("- Missing minutes: {}".format(m.get("missing_minutes")))
+          print("- Full raw-hour gate: {}".format(m.get("all_hours_validated_or_explicit_empty_200")))
+          print("- Stop reason: {}".format(m.get("stop_reason")))
+          PY
+          fi
+          if [ -f "$ASTRA_ROOT/profit-study/RESULT.json" ]; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ["ASTRA_ROOT"])/"profit-study"/"RESULT.json"
+          r=json.loads(p.read_text())
+          print("- Study status: {}".format(r.get("status")))
+          print("- Real market backtest completed: {}".format(r.get("real_market_backtest_completed")))
+          print("- Publication integrity verified: {}".format(r.get("publication_integrity_verified")))
+          print("- Profitability established: {}".format(r.get("profitability_established")))
+          for name, summary in sorted((r.get("policy_summaries") or {}).items()):
+              print("- {}: trades={}, net_points={}, net_R={}, win_rate={}, profit_factor={}, max_drawdown_points={}".format(
+                  name, summary.get("closed_trades"), summary.get("net_points"), summary.get("net_r_sum"),
+                  summary.get("win_rate"), summary.get("profit_factor"), summary.get("max_drawdown_points")))
+          PY
+          fi
+          echo '- This remains historical research only; no live orders are enabled.' >> "$GITHUB_STEP_SUMMARY"
