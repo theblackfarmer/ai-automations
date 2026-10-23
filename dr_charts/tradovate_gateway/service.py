@@ -104,11 +104,19 @@ class RelayService:
 
         if not self.journal.is_bootstrapped():
             # First attachment is baseline-only: never broadcast historical fills.
+            # But do not silently accept a snapshot whose fills cannot be attributed.
             for entity in fills:
+                fid = int(entity.get("id", 0) or 0)
                 oid = int(entity.get("orderId", 0) or 0)
                 resolved = self.orders.get(oid)
-                if resolved and resolved[0] in self.allowed_accounts and int(entity.get("id", 0) or 0) > 0:
-                    self.journal.mark_seen(f"fill:{int(entity['id'])}")
+                if fid <= 0:
+                    self.journal.record_anomaly("invalid_baseline_fill", f"order={oid}")
+                    raise ReconciliationError("baseline contains invalid fill id")
+                if not resolved:
+                    self.journal.record_anomaly("unresolved_baseline_fill", f"fill={fid} order={oid}")
+                    raise ReconciliationError("baseline contains unresolved fill; failing closed")
+                if resolved[0] in self.allowed_accounts:
+                    self.journal.mark_seen(f"fill:{fid}")
             for p in positions:
                 aid = int(p.get("accountId", 0) or 0)
                 cid = int(p.get("contractId", 0) or 0)
