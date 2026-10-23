@@ -7,8 +7,13 @@ from typing import Callable, Optional
 from .config import Settings
 
 
-def _request(path: str, request_id: int, body: Optional[dict] = None) -> str:
-    payload = "" if body is None else json.dumps(body, separators=(",", ":"))
+def _request(path: str, request_id: int, body=None) -> str:
+    if body is None:
+        payload = ""
+    elif isinstance(body, str):
+        payload = body
+    else:
+        payload = json.dumps(body, separators=(",", ":"))
     return f"{path}\n{request_id}\n\n{payload}"
 
 
@@ -58,7 +63,7 @@ def run_stream(
                 if ws.recv() != "o":
                     raise ConnectionError("Tradovate websocket did not open")
 
-                ws.send(_request("authorize", 1, {"token": settings.access_token}))
+                ws.send(_request("authorize", 1, settings.access_token))
                 auth = _receive_until_response(ws, 1, on_tick)
                 if auth.get("s") != 200:
                     raise PermissionError(f"Tradovate authorization failed with status {auth.get('s')}")
