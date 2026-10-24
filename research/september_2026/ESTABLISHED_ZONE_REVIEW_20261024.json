@@ -1,0 +1,18 @@
+{
+  "mode": "ESTABLISHED_ZONE_REVIEW_V1",
+  "source": "Direct Isaac message in this chat, 2026-10-24",
+  "quote": "B is the confirmation candle I meant. Trace what happened before it candle by candle and compare that with the Python detector. Fix the mismatch without changing the rules.REALLY ALL OF THOSE ARE ANY TAP BACK INTO SUPPLY IS RELEVANT BECAUSE PRICE ALREAYD BROKE THE NECESARRY LEVELS TO CONFIRM THAT THE CORRECTION IS OCVER",
+  "case": "sAHOsC; B is native5M bar starting1786980600, closed1786980900",
+  "requirements": [
+    "Distinguish an already-established zone return from discovery of a new correction flip.",
+    "Bind supplied selected formation to observed origin members and earlier break/reference evidence at registration time. Do not require a new break after each return.",
+    "Emit review observations for every later observed overlap, including repeated taps. A tap is not a filled trade or an independent trade count.",
+    "Record far-edge crossing as evidence; do not erase later relevant observations solely under the old research-only wick-retirement convention. Explicit owner invalidation or missing coverage blocks subsequent relevance.",
+    "Keep native5M and native1M separate; do not fabricate minute bars or intrabar order from5M OHLC.",
+    "Teacher B label is an assertion in replay review only, never a detector input. A/B/C labels are not universal numerical confirmation rules."
+  ],
+  "scope": "Supplied selected local formation plus causal observed break verification. Not autonomous major-parent discovery or a universal confirmation/fill selector.",
+  "unchanged": ["Historical frozen engine and SPEC", "Sourced new-correction discovery mode", "ENTRY_REVIEW adapter eligibility and exact next-minute open", "No live execution"],
+  "unknowns": ["Original HTF drawing clock provenance", "Autonomous formation selection", "Universal zone invalidation semantics", "Matching native1M for this case", "Universal numerical confirmation rule"],
+  "execution_allowed": false
+}

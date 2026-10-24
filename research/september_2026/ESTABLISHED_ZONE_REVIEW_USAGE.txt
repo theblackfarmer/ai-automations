@@ -1,0 +1,42 @@
+ESTABLISHED_ZONE_REVIEW_V1 — established local zone, repeated return review
+
+Use this path when the relevant local break and responsible zone were already
+established. SourcedCorrectionObserver remains the separate new-correction
+formation path. Do not feed this case into a fresh correction search merely
+because price returns later. Historical frozen strategy rules remain unchanged.
+
+review = EstablishedZoneReview(source_sha256, symbol, feed, step=300)
+for completed_native_bar in chronological_bars:
+    review.feed_bar(completed_native_bar)
+    # At the earlier break close, the formation owner supplies its selection:
+    if owner_has_selected_this_completed_break:
+        review.establish_zone(direction=direction,
+            origin_times=observed_origin_member_starts,
+            reference_time=observed_reference_start,
+            reference_known_at=reference_confirmation_close,
+            break_time=completed_native_bar['time'],
+            selection_source=source_record, parent_id=parent_identity)
+
+The selection event is supplied, not an automatically inferred major-parent
+or formation selector. Geometry is derived from ingested origin OHLC; the
+prior reference and completed-close break are checked against observed bars.
+Register only at the break close. The registration bar is not a later return.
+
+Each later native candle overlapping the same immutable zone emits a tap
+observation. No new BOS, mandatory later return, or first-tap-only restriction.
+Boundary crossings remain visible and flag later taps. Continued review does
+not assert the zone is trade-valid after a crossing. Explicit owner invalidation
+or a missing observed bar blocks later relevance. No silent recovery.
+
+Native input contains time, known_at=time+step, complete=True, symbol, feed,
+OHLC, source_id=SHA:MINUTES:EPOCH. Use actual1M or5M. Never expand5M into1M.
+This API does not accept teacher confirmation labels, entry prices or fills.
+
+Events are review evidence, not ENTRY_REVIEW. The entry adapter intentionally
+ignores them. A sourced entry-authority implementation and observed matching
+minute bars remain necessary before hypothetical next-open/exit studies.
+
+Oct24 teacher correction resolves B as the intended example confirmation, but
+also affirms every tap into the already-established supply is relevant. The
+saved B assertion grades the replay after running; it cannot control detection.
+No universal numerical confirmation selector is inferred from that annotation.
