@@ -1,0 +1,15 @@
+{
+  "version": "PRESERVE_CORRECTION_CONTEXT_20261024",
+  "source": "Direct user correction after FIRST_STRUCTURE_QUESTION.png",
+  "verbatim": "A made a new lower low. Closing above the previous candle doesn\u2019t break the actual structure. Keep the earlier highs and lows and track the correction instead of resetting everything. A MADE A CORRECTIUON LEG DIDNT NECESARLY DO ANYTING BUYT PULL BACK",
+  "implementation": [
+    "Retain prior highs/lows and observed extended low/high on outside local turn",
+    "Record correction leg separately from actual structure break",
+    "Do not authorize a BOS or zone registration from this previous-candle cross",
+    "Mirror for upward leg pulling back",
+    "Preserve unknown intrabar order; same-bar reference/pullback ordering remains blocked",
+    "Real gaps still clear structure context"
+  ],
+  "scope": "Autonomous local research review only. Frozen engine unchanged. Local swing encoding and actual major-reference selection remain separately unverified.",
+  "execution_allowed": false
+}

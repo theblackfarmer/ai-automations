@@ -1,19 +1,20 @@
 """OHLC-only local formation discovery with teacher-selected terminal origin.
 
-Port of the frozen October 8 formation comparison, using the repository R5
-tracker. Isaac selects the last green candle for sells, last red for buys.
+Port of the frozen October 8 formation comparison, using the teacher-amended local
+swing tracker. Isaac selects the last green candle for sells, last red for buys.
 R5 and completed-close BOS are research conventions, not universal
 teacher rules. No drawings, labels, selected origin or future outcomes accepted.
 """
 from copy import deepcopy
-from engine import SwingTracker, ident
+from engine import ident
+from correction_swing_tracker_v1 import CorrectionSwingTracker
 from established_zone_review_v1 import EstablishedZoneReview
 
 
 class AutonomousZoneReview:
     def __init__(self, source_sha256, symbol, feed, step=300):
         self.review = EstablishedZoneReview(source_sha256, symbol, feed, step)
-        self.tracker = SwingTracker(step)
+        self.tracker = CorrectionSwingTracker(step)
         self.step = step
         self.previous = None
         self._events = []
@@ -24,10 +25,15 @@ class AutonomousZoneReview:
     def events(self):
         return deepcopy(self._events)
 
+    def events_since(self, cursor):
+        if type(cursor) is not int or not 0 <= cursor <= len(self._events):
+            raise ValueError("Invalid event cursor")
+        return deepcopy(self._events[cursor:])
+
     def _emit(self, kind, known_at, **details):
         self._events.append(dict(kind=kind, known_at=known_at,
                                  execution_allowed=False, entry_validated=False,
-                                 convention='ASSUMED_R5_LOCAL_SWINGS_AND_CLOSE_CROSS',
+                                 convention='TEACHER_PRESERVED_CORRECTION_CONTEXT_LOCAL_SWINGS_CLOSE_CROSS',
                                  **deepcopy(details)))
 
     def _drain(self):
@@ -59,7 +65,7 @@ class AutonomousZoneReview:
         self._events.extend(dict(deepcopy(e), execution_allowed=False,
                                  entry_validated=False) for e in tracker_events)
         self.previous = bar
-        if previous is None or any(e['kind'] == 'AMBIGUOUS_TURN' for e in tracker_events):
+        if previous is None or any(e['kind'] in ('AMBIGUOUS_TURN', 'CORRECTION_LEG_STARTED') for e in tracker_events):
             return
         for direction in ('short', 'long'):
             short = direction == 'short'
@@ -77,6 +83,8 @@ class AutonomousZoneReview:
             reasons = []
             for name, peers, label in (('REFERENCE', refs, 'LL' if short else 'HH'),
                                         ('PULLBACK', pulls, 'LH' if short else 'HL')):
+                if any(p.get('sequence_eligible') is False for p in peers[-2:]):
+                    reasons.append(name + '_OR_COMPARATOR_INTRABAR_ORDER_UNRESOLVED')
                 if len(peers) < 2:
                     reasons.append('MISSING_' + name + '_COMPARATOR')
                 elif (peers[-1]['label'] != label or not

@@ -42,6 +42,56 @@ class AutomaticTests(unittest.TestCase):
   self.assertEqual(len(z),1);self.assertEqual(z[0]['origin_times'],[1200])
   self.assertEqual(z[0]['direction'],'long')
   self.assertEqual(selected(e,'AUTOMATIC_FORMATION_COMPARISON')[0]['selected'],'terminal_single')
+ def test_outside_pullback_keeps_prior_structure_and_new_low(self):
+  d=run(BARS[:7]);old=deepcopy(d.tracker.pivots);segment=d.tracker.segment
+  a=bar(2100,104,112,102,110);d.feed_bar(a)
+  self.assertEqual(d.tracker.pivots[:-1],old)
+  self.assertEqual(d.tracker.segment,segment)
+  p=d.tracker.pivots[-1]
+  self.assertEqual((p['time'],p['price'],p['label'],p['known_at']),(2100,102,'LL',2400))
+  turn=selected(d.events,'CORRECTION_LEG_STARTED')[-1]
+  self.assertEqual(turn['correction_leg'],'long')
+  self.assertIsNone(turn['structure_break']);self.assertFalse(turn['structure_break_authorized'])
+  self.assertFalse(turn['major_reference_assessed']);self.assertEqual(turn['intrabar_order'],'UNKNOWN')
+  self.assertFalse(any(e['known_at']==2400 for e in selected(d.events,'ESTABLISHED_ZONE_REGISTERED')))
+ def test_outside_pullback_mirror_preserves_high(self):
+  bs=BARS[:7]+[bar(2100,104,112,102,110)]
+  bs=[dict(b,open=300-b['open'],high=300-b['low'],low=300-b['high'],close=300-b['close']) for b in bs]
+  d=run(bs);p=d.tracker.pivots[-1]
+  self.assertEqual((p['kind'],p['label'],p['price']),('high','HH',198))
+  self.assertEqual(selected(d.events,'CORRECTION_LEG_STARTED')[-1]['correction_leg'],'short')
+ def test_same_outside_bar_extremes_never_ordered_into_zone(self):
+  bs=BARS[:7]+[bar(2100,104,112,102,110),bar(2400,110,111,101,101.5)]
+  e=run(bs).events
+  self.assertFalse(any(x['known_at']>=2400 for x in selected(e,'ESTABLISHED_ZONE_REGISTERED')))
+  reject=selected(e,'AUTOMATIC_FORMATION_REJECTED')[-1]
+  self.assertIn('PULLBACK_NOT_LATER_THAN_REFERENCE',reject['reasons'])
+ def test_outside_case_all_prefixes_and_old_reset_control(self):
+  from engine import SwingTracker
+  bs=BARS[:7]+[bar(2100,104,112,102,110),bar(2400,110,111,101,101.5)]
+  full=run(bs).events
+  for i,b in enumerate(bs):
+   self.assertEqual(run(bs[:i+1]).events,[e for e in full if e['known_at']<=b['known_at']])
+  old=SwingTracker(300)
+  for b in bs[:8]:old.push(b)
+  self.assertEqual(old.pivots,[])  # The former reset mutation must fail retention.
+  self.assertGreater(len(run(bs[:8]).tracker.pivots),0)
+ def test_outside_opposite_extreme_cannot_gain_later_authority(self):
+  from correction_swing_tracker_v1 import CorrectionSwingTracker
+  rows=[(10,11,9,10),(10,10,7,8),(8,12,6,11),(11,11,5,5.5)]
+  tracker=CorrectionSwingTracker(300)
+  for i,row in enumerate(rows):events=tracker.push(bar(i*300,*row))
+  self.assertEqual(tracker.pivots[-1]['price'],12)
+  self.assertFalse(tracker.pivots[-1]['sequence_eligible'])
+  self.assertEqual(events[0]['pivot']['intrabar_order'],'UNKNOWN')
+ def test_later_observed_extreme_resolves_envelope(self):
+  from correction_swing_tracker_v1 import CorrectionSwingTracker
+  rows=[(10,11,9,10),(10,10,7,8),(8,12,6,11),(11,13,10,12.5),(12,12,9,9.5)]
+  tracker=CorrectionSwingTracker(300)
+  for i,row in enumerate(rows):tracker.push(bar(i*300,*row))
+  p=tracker.pivots[-1]
+  self.assertEqual((p['time'],p['price']),(900,13))
+  self.assertIsNot(p.get('sequence_eligible'),False)
  def test_every_prefix(self):
   full=run(BARS).events
   for i,b in enumerate(BARS):

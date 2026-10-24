@@ -1,3 +1,17 @@
+Linked native context: MultiTimeframeContext accepts separate 5M and 15M sources
+and retains both structures and supply/demand proposals at completed-bar clocks.
+No automatic major-trend or entry-confirmation claim is added. See
+FIVE_FIFTEEN_CONTEXT_20261024.json. Uncertain opposite extremes from outside
+candles cannot serve as later formation references or immediate comparators.
+
+CURRENT STRUCTURE CORRECTION — October 24, 2026
+
+At an outside local turn, preserve the earlier highs/lows and record a correction
+leg plus its observed extended extreme. Crossing the previous candle is not a
+major BOS. Same-bar ambiguous chronology never authorizes a formation; actual
+gaps still reset context. See PRESERVE_CORRECTION_CONTEXT_20261024.json.
+The older audit counts and ambiguity-reset descriptions below are historical.
+
 CURRENT TEACHER CORRECTION — October 24, 2026
 
 Isaac explicitly selected Y ONLY: last green candle for sells, last red candle

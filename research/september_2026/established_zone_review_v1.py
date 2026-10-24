@@ -16,8 +16,8 @@ class EstablishedZoneReview:
             raise ValueError('Exact source hash required')
         if not all(isinstance(x, str) and x for x in (symbol, feed)):
             raise ValueError('Explicit symbol and feed required')
-        if type(step) is not int or step not in (60, 300):
-            raise ValueError('Observed native 1M or 5M required')
+        if type(step) is not int or step not in (60, 300, 900):
+            raise ValueError('Observed native 1M, 5M or 15M required')
         self._source = source_sha256
         self._symbol, self._feed, self._step = symbol, feed, step
         self._bars = {}

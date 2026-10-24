@@ -1,0 +1,13 @@
+{
+  "version": "FIVE_FIFTEEN_CONTEXT_20261024",
+  "source": "Direct user teaching in this chat",
+  "verbatim": "AFTER A ALOWER LOW AND THE TREND IS DOWNWARD YOU ARE S UPPOSED TO BE LOOKING FOR THE SUPLLY FOR PRICE TO RETRUNE TO AND LOWERTIME FRAME CONFRIM THE TREND IS GOING TO CONTINE ON THE BOUCNE OF THE SUPPLY BUT YOPU AHVE TOP BE CAREUL OF TH STRUCUTRE OF MARKET TO BE ABLE TO NOT GET FAKED OUT SO KEEPING 5 MINUTE STCUTRE AND 15 MINUTE IN STUCTRUE BECAUSE ALOT OF THE TIME IT JUST PULLS BACK INTO THE 5 MIN OR 15MIN DEMAN OR SUPPLY",
+  "requirements": [
+    "Retain separate 5M and 15M structure and supply/demand context",
+    "A pullback into a zone is not itself a trend reversal",
+    "In established downward context seek relevant supply return and lower-timeframe continuation confirmation",
+    "Respect both supply and demand and timeframe ownership"
+  ],
+  "implementation_scope": "Separate native5M/native15M review streams and causal context snapshots. Local zone proposals are not validated major structure or entry confirmation.",
+  "execution_allowed": false
+}
