@@ -1,7 +1,8 @@
-"""OHLC-only local formation discovery; alternatives remain research observations.
+"""OHLC-only local formation discovery with teacher-selected terminal origin.
 
 Port of the frozen October 8 formation comparison, using the repository R5
-tracker. R5 and completed-close BOS are research conventions, not universal
+tracker. Isaac selects the last green candle for sells, last red for buys.
+R5 and completed-close BOS are research conventions, not universal
 teacher rules. No drawings, labels, selected origin or future outcomes accepted.
 """
 from copy import deepcopy
@@ -31,11 +32,11 @@ class AutonomousZoneReview:
 
     def _drain(self):
         # Preserve review authority: this wrapper supplies machine-derived
-        # alternatives, never an independently verified parent or selected zone.
+        # terminal origins, never an independently verified parent or valid trade.
         rows = self.review.events_since(self._review_cursor)
         for row in rows:
             if row['kind'] == 'ESTABLISHED_ZONE_REGISTERED':
-                row['selection_authority'] = 'AUTOMATIC_LOCAL_CANDIDATE_NOT_SELECTED'
+                row['selection_authority'] = 'AUTOMATIC_LOCAL_ORIGIN_TEACHER_TERMINAL_RULE'
                 row.pop('id')
                 row['id'] = ident(row['kind'], row)
             self._events.append(row)
@@ -136,9 +137,10 @@ class AutonomousZoneReview:
                     departure_valid=bar['close'] < low if short else bar['close'] > high)
             self._emit('AUTOMATIC_FORMATION_COMPARISON', bar['known_at'], branches=branches,
                        diagnostics=diagnostics,
-                       selected=None, selection_status=('BRANCHES_AGREE_NOT_AUTHORIZED'
-                       if begin == end else 'UNRESOLVED_BRANCH_DISAGREEMENT'), **details)
-            for branch, members in branches.items():
+                       selected='terminal_single',
+                       selection_status='TEACHER_LAST_OPPOSITE_CANDLE_20261024', **details)
+            for branch, members in [('terminal_single', branches['terminal_single'])]:
+                # Cluster is retained above only as historical diagnostic evidence.
                 # Re-crossing the same reference does not create another zone.
                 key = (direction, ref['time'], tuple(members))
                 if key in self._seen:

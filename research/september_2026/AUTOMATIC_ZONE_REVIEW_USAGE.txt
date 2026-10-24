@@ -1,3 +1,14 @@
+CURRENT TEACHER CORRECTION — October 24, 2026
+
+Isaac explicitly selected Y ONLY: last green candle for sells, last red candle
+for buys. See TEACHER_TERMINAL_ORIGIN_20261024.json for the exact quote and scope.
+The detector now registers only terminal_single for the responsible local
+formation; clusters remain historical diagnostics, never competing tap zones.
+Local BOS, parent, gap and intrabar-order limitations are unchanged.
+
+The following is the preserved PRE-CORRECTION audit; its unresolved-selection
+wording and counts describe commit fbd9328, not the amended implementation.
+
 Automatic local zone review v1
 
 AutonomousZoneReview(source_sha256, symbol, feed, step=300) consumes one

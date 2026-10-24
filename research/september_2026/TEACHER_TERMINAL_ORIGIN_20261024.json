@@ -1,0 +1,19 @@
+{
+  "version": "TEACHER_TERMINAL_ORIGIN_20261024",
+  "source": "Direct user correction in this chat after enlarged X/Y comparison",
+  "verbatim": "Y ONLY THE LAST GREEN CANDLE FOR SELLS AND LAST RED CANDLE FOR BUYS",
+  "supersedes": "Single versus cluster uncertainty for the responsible local formation in AUTOMATIC_ZONE_REVIEW_20261024.json",
+  "implementation": "Select terminal_single from the causally identified responsible local formation. Historical cluster remains diagnostic only and is never registered for tap review.",
+  "scope": "Origin membership selection; existing local BOS and responsible-pullback association unchanged. Not authorization for arbitrary last-colored candles outside responsible formation.",
+  "sell": "Last green candle (close > open)",
+  "buy": "Last red candle (close < open)",
+  "geometry": "Observed selected candle low/high, as displayed to user",
+  "doji": "Neither green nor red",
+  "unchanged": [
+    "Causal structure and missing-data guards",
+    "Parent authority remains unverified",
+    "No ENTRY_REVIEW or live trading",
+    "Original historical receipts preserved"
+  ],
+  "execution_allowed": false
+}

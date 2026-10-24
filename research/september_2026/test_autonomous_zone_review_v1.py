@@ -26,6 +26,22 @@ class AutomaticTests(unittest.TestCase):
   self.assertEqual([t['bar_start'] for t in selected(e,'ESTABLISHED_ZONE_TAP_OBSERVED')],[2100,2400,2700,3000])
   self.assertEqual(candidates(e,{}),([],[]))
   self.assertTrue(all(e['execution_allowed'] is False for e in e))
+ def test_teacher_selects_last_green_not_multi_candle_cluster(self):
+  bs=deepcopy(BARS);bs[3]['open']=105.5  # Both reference and pullback are green.
+  e=run(bs).events
+  c=selected(e,'AUTOMATIC_FORMATION_COMPARISON')[0]
+  self.assertEqual(c['branches']['historical_run'],[600,900,1200])
+  self.assertEqual(c['selected'],'terminal_single')
+  z=selected(e,'ESTABLISHED_ZONE_REGISTERED')
+  self.assertEqual(len(z),1);self.assertEqual(z[0]['origin_times'],[1200])
+  self.assertEqual(z[0]['zone_low'],106)
+ def test_teacher_selects_last_red_not_multi_candle_cluster(self):
+  bs=deepcopy(BARS);bs[3]['open']=105.5
+  bs=[dict(b,open=300-b['open'],high=300-b['low'],low=300-b['high'],close=300-b['close']) for b in bs]
+  e=run(bs).events;z=selected(e,'ESTABLISHED_ZONE_REGISTERED')
+  self.assertEqual(len(z),1);self.assertEqual(z[0]['origin_times'],[1200])
+  self.assertEqual(z[0]['direction'],'long')
+  self.assertEqual(selected(e,'AUTOMATIC_FORMATION_COMPARISON')[0]['selected'],'terminal_single')
  def test_every_prefix(self):
   full=run(BARS).events
   for i,b in enumerate(BARS):
