@@ -30,6 +30,12 @@ class EstablishedZoneReview:
     def events(self):
         return deepcopy(self._events)
 
+    def events_since(self, cursor):
+        """Copy only newly emitted observations for streaming consumers."""
+        if type(cursor) is not int or not 0 <= cursor <= len(self._events):
+            raise ValueError("Invalid event cursor")
+        return deepcopy(self._events[cursor:])
+
     def _emit(self, kind, known_at, **details):
         e = dict(kind=kind, known_at=known_at, mode='ESTABLISHED_ZONE_REVIEW_V1',
                  source_sha256=self._source, symbol=self._symbol, feed=self._feed,

@@ -27,6 +27,7 @@ REQUIRED_MODULES = (
     'test_independent_boundaries', 'test_role_review',
     'test_parent_failure_observation', 'test_gap_recovery', 'test_verify_all',
     'test_sourced_correction_v1', 'test_established_zone_review_v1',
+    'test_autonomous_zone_review_v1',
 )
 COLLECTOR_MODULES = ('test_legacy_codec', 'test_portable_v4', 'test_portable_lineage')
 PIPELINE_CASES = {

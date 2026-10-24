@@ -1,0 +1,32 @@
+{
+  "version": "AUTOMATIC_LOCAL_ZONE_REVIEW_V1",
+  "purpose": "Derive local BOS and alternative responsible origins from native OHLC, then observe subsequent overlaps without supplied zone/reference times.",
+  "teaching": "a bearish order blcok is the final bullish candle or cluser eof candles immediiately preceding a strong downward push that breaks market structre",
+  "latest_teaching": "any tap back into supply is relevant because price already broke the necessary levels to confirm the correction is over",
+  "source_hashes": {
+    "SPEC_FORMATION_BRANCH_CHECK_2026-10-08.json": "113beded23d0f409bc8fb578c3573e401aa992a422efe199d831b6e4cc9b7a8f",
+    "formation_branch_check.py": "49f2ed095b4e1f32a00e294dcdb50d1578fd56dad8f0da1a7036bea80eb836fe",
+    "ISAAC_FORMATION_LESSON_2026-10-04.md": "fbd96b0c847cadec3e6cc73c26ece7d1f15e4f295340227427dbe455e6b62483"
+  },
+  "assumptions": [
+    "Existing R5 local swing convention",
+    "Completed-close break diagnostic, not universal teacher close requirement"
+  ],
+  "constraints": [
+    "OHLC-only detector input, no teacher labels/shapes/times",
+    "Latest confirmed reference and pullback, no older easier fallback",
+    "Reference known strictly before break start; pullback may become known at break close",
+    "Keep singleton and contiguous-run alternatives without selecting by future outcome",
+    "Every overlapping candle remains review evidence; not independent trades or return episodes",
+    "Missing bars retire review context; unresolved outside-bar order resets discovery",
+    "No automatic parent authority, ENTRY_REVIEW, execution or fills"
+  ],
+  "unresolved": [
+    "General singleton versus cluster selector",
+    "Major parent context",
+    "Wick-only teacher example Qxt6em",
+    "Exact cluster memberships in saved examples"
+  ],
+  "frozen_engine_changed": false,
+  "execution_allowed": false
+}

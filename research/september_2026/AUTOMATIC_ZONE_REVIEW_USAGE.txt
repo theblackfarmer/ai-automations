@@ -1,0 +1,41 @@
+Automatic local zone review v1
+
+AutonomousZoneReview(source_sha256, symbol, feed, step=300) consumes one
+observed native bar at a time via feed_bar(). The required bar schema is the
+same as EstablishedZoneReview. It takes no selected zone, origin timestamp,
+reference timestamp, drawing, confirmation label, or future outcome.
+
+It derives local swing references, completed-close breaks and two fixed origin
+interpretations from the observed prefix. Identical candidates are deduplicated.
+Distinct singleton/cluster alternatives remain unresolved. Subsequent overlapping
+candles are observations, not independent return episodes or trades. Gaps block
+existing review zones and reset discovery; ambiguous reversal bars reset local
+swing discovery without erasing already established review observations.
+
+The frozen engine and entry/exit adapters are unchanged. This separate research
+component does not emit ENTRY_REVIEW, prove parent authority, authorize execution,
+or decide which alternative is the teacher-correct formation. R5 and close-cross
+remain explicitly assumed local diagnostic conventions. See the source-bound
+AUTOMATIC_ZONE_REVIEW_20261024.json before interpreting a match.
+
+Local real-data audit, October 24, 2026:
+- Source SHA256 05b5cd1d460a91d706ed70c9ca427ee43b23bc2860eadae3f7244010260ad19e.
+- 3,311 observed PEPPERSTONE:NAS100 native 5M candles; no synthetic market bars.
+- 39 formation comparisons, 58 distinct alternative registrations, 1,555
+  overlapping-candle observations across the stream. These are not trade counts.
+- sAHOsC: independently derives reference 30153.3 at 1786968300 and break
+  1786969500, known at 1786969800. Terminal candidate origin 1786968600 has
+  observed range 30173 to 30188.5. Wider cluster alternative remains present.
+- Seven overlaps through teacher B (1786980600), without B entering detection.
+- 121 prefix comparisons: all formation-comparison clocks, the saved 79-bar
+  window and all five example cutoffs. Intentional future-close tap leak caught.
+- Only sAHOsC recovered its exact singleton anchor at the saved cutoff. Three
+  other cases lacked usable comparator context after unresolved outside turns;
+  Qxt6em crossed a coverage gap, and its saved reference was wick-only at cutoff.
+  This is not five-example teacher fidelity. Anchor/geometry mappings also remain
+  unresolved for several drawings. No thresholds were relaxed to manufacture matches.
+- Zero adapter candidates, no fills, no profitability calculation.
+
+Run-specific raw events, per-candle CT/ET trace, scoring and failures remain in
+runs/automatic-zone-20261024 locally. No additional captured market dataset is
+published by this change. Existing approved 840-candle fixture is unchanged.
