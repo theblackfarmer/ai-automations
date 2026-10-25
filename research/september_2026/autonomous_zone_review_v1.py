@@ -9,6 +9,7 @@ from copy import deepcopy
 from engine import ident
 from correction_swing_tracker_v1 import CorrectionSwingTracker
 from established_zone_review_v1 import EstablishedZoneReview
+from origin_evidence_v1 import OriginEvidence
 
 
 class AutonomousZoneReview:
@@ -16,6 +17,7 @@ class AutonomousZoneReview:
         self.review = EstablishedZoneReview(source_sha256, symbol, feed, step)
         self.tracker = CorrectionSwingTracker(step)
         self.step = step
+        self.origins = OriginEvidence()
         self.previous = None
         self._events = []
         self._seen = set()
@@ -55,6 +57,7 @@ class AutonomousZoneReview:
                                      'close', 'source_id', 'symbol', 'feed', 'complete')}
         self.review.feed_bar(bar)
         self._drain()
+        self._events.extend(self.origins.push(bar))
         previous = self.previous
         if previous and bar['time'] != previous['known_at']:
             self.tracker.reset()

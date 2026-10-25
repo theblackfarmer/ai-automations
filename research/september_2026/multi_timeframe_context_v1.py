@@ -52,6 +52,7 @@ class MultiTimeframeContext:
                   else 'LAGGING_OR_MISSING'),
                 observed_leg=obs.tracker.run_direction,
                 pivots=obs.tracker.pivots,
+                unverified_origin_evidence=obs.origins.snapshot(),
                 local_zone_proposals=[dict(registration=z, activity=self._activity[step][zid])
                     for zid,z in self._zones[step].items()])
                 for step, obs in self.observers.items()}))

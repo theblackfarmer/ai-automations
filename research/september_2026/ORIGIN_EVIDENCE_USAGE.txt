@@ -1,0 +1,24 @@
+Origin evidence repair — 2026-10-25
+
+User confirmed 12:15 CT / 13:15 ET Aug17 supply must survive later green candles.
+Diagnosis: the existing R5 swing-turn selector never registers this origin.
+The prior chart helper's later-candle substitution was not an engine registration.
+
+New observation layer records a green candle followed immediately by a completed
+close below its low, and the bearish mirror. It requires no swing-turn label.
+This is a deliberately narrow departure observation, NOT a new strategy rule or
+universal formation definition. Candles with delayed departures are not covered.
+All origins retain separate content-bound identity and geometry. Later candles
+cannot overwrite an earlier origin. All subsequent range overlaps are observed.
+Native data gaps block active evidence; prior events remain in the audit history.
+5M/15M context exposes this evidence separately from existing zone proposals.
+
+NOT FIXED: autonomous selection of the responsible structure/parent and lower
+frame entry confirmation. No promotion to established zones or entry candidates.
+All events retain execution_allowed=false. No profitability or fills claimed.
+Teacher annotations are only post-replay scoring inputs in the local real-data
+receipt, never detector inputs. No timestamps/prices are hard-coded in detector.
+
+Local evidence: runs/origin-retention-20261025/RESULT.json and TRACE.json.
+Synthetic fixtures remain distinct from the saved market replay. No new raw
+market dataset is included in this change.
