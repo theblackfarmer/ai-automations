@@ -33,7 +33,7 @@ Confirmed swing highs/lows, equal highs/lows, unfilled gaps, unswept session ext
 ## Hard guards
 
 1. Source readings and all event times are **timezone-aware UTC**. `America/New_York` handles DST for the user-specified 03:00–08:00 window. Do not convert naive clock strings or assume 08:00 ET is always 12:00 UTC.
-2. Period high/low can become usable only after its period ends and its recorded `known_at`. Any incomplete/unknown coverage causes ineligibility. A new period cannot overwrite its recorded earlier price.
+2. Period high/low can become usable only after its period ends and its recorded `known_at`. Any incomplete/unknown coverage causes ineligibility. A new period cannot overwrite its recorded earlier price. A target candidate must match the setup's exact `dataset_id` and `contract_segment_id` (no mixing continuous-adjusted and raw/front-contract levels without verified mapping).
 3. When a completed minute **strictly crosses** a known liquidity price, record `SWEPT_RECLAIM`, `CLOSED_BEYOND` or `CROSSED_CLOSE_EQUAL_UNRESOLVED` based only on completed price evidence. It does **not** identify the intrabar crossing order or actual resting orders. A swept level is not silently reused as a *fresh* target.
 4. Unknown unscheduled coverage is **not** retroactive proof that a previous level remained available. In this prototype it blocks the affected old levels; new complete period evidence can create new levels.
 5. Break references, selected origin, parent and completed correction must all be known **before** the 15m/1h break begins. A second consecutive close beyond the same reference does not count as a fresh break.
@@ -50,4 +50,4 @@ Confirmed swing highs/lows, equal highs/lows, unfilled gaps, unswept session ext
 
 `python -m unittest -v test_adaptive_market_paths_v1.py`
 
-21 synthetic software checks pass. No historical market replay, new QuantConnect backtest, native order, cloud compile, paid node or production deployment has been run as part of this candidate. The QuantConnect MCP currently rejects full file reads/backtests unless an A1-1/A4-12/A16-32 assistant node is available.
+22 synthetic software checks pass. No historical market replay, new QuantConnect backtest, native order, cloud compile, paid node or production deployment has been run as part of this candidate. The QuantConnect MCP currently rejects full file reads/backtests unless an A1-1/A4-12/A16-32 assistant node is available.
