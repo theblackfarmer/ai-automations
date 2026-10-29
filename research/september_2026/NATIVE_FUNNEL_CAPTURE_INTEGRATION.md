@@ -1,6 +1,6 @@
 # ASTRA 6 — Native 3,069-return funnel capture (research-only)
 
-**Status:** tested read-only observer for the existing source-level `MarketContextHooks._target`, NOT a change to entry or execution logic, NOT run on actual 3,069 native events. Full private QuantConnect project source remains blocked by the dedicated Assistant-node restriction. Original project **38573075** and clone **38584738** are unchanged.
+**Status:** tested read-only observer for the existing source-level `MarketContextHooks._target`, NOT a change to entry or execution logic, NOT run on actual 3,069 native events. The `read_project` QuantConnect MCP action now successfully returns all 25 current clone source files; separate backtest, individual-file, and compile actions are still restricted by QuantConnect's dedicated Assistant-node requirement. Original project **38573075** and clone **38584738** are unchanged.
 
 ## Why this is necessary
 
@@ -8,7 +8,7 @@ The October 28 fixed-exit QuantConnect development result reports **3,069 CANDID
 
 This observer takes each **real** `CANDIDATE_RETURN` decision, its frozen context and the *current* in-process zone catalog; it does **not** replay the market or build a future-defined target. It enforces exact parity against the original selector, captures the complete four-stage no-target classification, and counts distinct original candidate IDs separately from repeated minute returns. It does not infer a target's controlling-parent relevance from mere proximity: `UNVERIFIED_FROM_CATALOG` is deliberate.
 
-## Smallest supported integration inside clone only (after original backtest source inspection)
+## Smallest supported integration inside clone only (current project source inspected)
 
 Avoid changing the original project or creating any entry/exit criteria. The existing free plan may already use 25 source-file slots; this utility can be inlined into an *existing* diagnostic module if no new file is permitted. Confirm exact current source before applying changes.
 
@@ -25,7 +25,9 @@ self._funnel.observe(capture_return(
 
 **Do not** mutate `context`, `zones`, or policy decisions. Do not call this on later bars or after a target has changed. For all 12 contract segments, use one shared collector if the source lifecycle supports it; otherwise reconcile per-session summaries without conflating candidate identities across sessions. This observer must not be reinitialized on contract changes if a single 3,069-result census is expected.
 
-At the existing result boundary after the existing trade/fee and source-provenance reporting, call `report(expected_total=3069, expected_missing=2054, expected_targets=1015)` on the complete collector. Output only a bounded **aggregate** summary, not raw bars or a 3,069-row export, subject to QuantConnect's final result/report budget. If the current log budget cannot fit the report, use only existing supported runtime statistic slots for grouped counters; don't bypass provider limits or suppress critical trade/source data. Do not run a new backtest until the historical snapshot is inspected for already-completed equivalent diagnostics, and freeze the reporting-only delta beforehand.
+At the existing result boundary **after ordinary native trade/fee and source-provenance reporting**, call `compact_receipt(...)` on the complete shared collector. For a genuinely matching full-development source cohort ONLY, supply `expected_total=3069, expected_missing=2054, expected_targets=1015`; the current clone defaults to **Q1 2023**, so those historical full-development expected counts MUST NOT be applied to a Q1-only run. Without exact cohort matching pass no expected counts and `expected_counts_reconciled=False` remains explicit.
+
+The full `report()` can exceed QuantConnect's **1,800-character per-record limit** and silently become only a hash via `NativeReporting._log_json`. The new `compact_receipt()` returns all four stage totals, same-parent/contact aligned 1m+5m counts, distinct-candidate counts, and a source-decision hash in under **1,700 characters** (verified on a synthetic 3,069-row population). Preserve the separate **8,100-character overall critical-log cap**, check the `_log_json(..., critical=True)` return value, and set available runtime statistics when the overall budget is exhausted. Do not pretend a blocked log line was saved; do not export raw bars or bypass provider limits. The obsolete `funnel_diagnosis_v1.py` snapshot is not needed to implement the current selector's diagnostic, but remains necessary if reproducing its unique historical output. Do not run a new historical backtest until the frozen reporting-only delta has been validated.
 
 Every summary bucket distinguishes:
 
@@ -38,7 +40,7 @@ Also records `M1|M5` structural agreement pairs and **all** joint context issues
 
 ## Software receipt and limitations
 
-- 28 focused synthetic regression tests: **PASS**, covering missing catalog, invalid zones, close-based retained target, direction, future-known target, exact selector parity, mismatched contact/clock, duplicate observations, repeated candidates, and fail-closed expected counts.
+- 31 focused synthetic regression tests: **PASS**, covering missing catalog, invalid zones, close-based retained target, direction, future-known target, exact selector parity, mismatched contact/clock, duplicate observations, repeated candidates, and fail-closed expected counts.
 - 1,000 seeded independent canonical-selection comparisons against the archived `MarketContextHooks._target`: **1,000 matching zone IDs**, all categories represented. This verifies the observer's reproduction of the **archived source** only.
 - **No actual 3,069-row native population was processed.** Do not report a breakdown of the 2,054 cases, more eligible trades, returns, R, or expectancy from this synthetic fixture.
 - This observer is a **diagnostic**, not permission to use PDH/PDL, PWH/PWL, previous-month or 03:00–08:00 NY premarket as executable targets; adaptive break/reversal entries and authenticated liquidity coverage still require their separate source verification.
