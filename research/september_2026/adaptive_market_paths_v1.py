@@ -334,7 +334,10 @@ def evaluate_break(setup: StructureSetup, levels: list[LiquidityLevel]) -> Decis
         setup.side not in SIDES or setup.parent_side not in SIDES or
         setup.parent_state not in ("ACTIVE", "INVALID", "UNKNOWN") or
         setup.confirmation_tf_minutes not in (15, 60) or
+        type(setup.correction_validated) is not bool or
         not setup.dataset_id or not setup.contract_segment_id or
+        setup.dataset_id == "UNSPECIFIED_DATASET" or
+        setup.contract_segment_id == "UNSPECIFIED_SEGMENT" or
         other[0] not in ("ALIGNED", "OPPOSED", "UNKNOWN") or
         other[1] not in ("ALIGNED", "OPPOSED", "UNKNOWN") or
         t1 - t0 != timedelta(minutes=setup.confirmation_tf_minutes)):
