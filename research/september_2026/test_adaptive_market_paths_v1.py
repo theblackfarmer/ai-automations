@@ -155,6 +155,11 @@ class BreakPathTests(unittest.TestCase):
         self.assertEqual(self.candidate(s).reason,"OPPOSING_ZONE_NOT_BROKEN_BY_COMPLETED_CLOSE")
         self.assertEqual(self.candidate(replace(s,zone_far_edge=107)).status,"BREAK_CONFIRMED_AWAITING_OPEN")
 
+    def test_unverified_source_or_untyped_correction_cannot_pass(self):
+        self.assertEqual(self.candidate(setup(dataset_id="UNSPECIFIED_DATASET")).status,"REJECT")
+        self.assertEqual(self.candidate(setup(contract_segment_id="UNSPECIFIED_SEGMENT")).status,"REJECT")
+        self.assertEqual(self.candidate(setup(correction_validated="yes")).status,"REJECT")
+
     def test_unknown_parent_not_reversal(self):
         self.assertEqual(self.candidate(setup(parent_state="UNKNOWN")).status,"WAIT")
 
