@@ -50,5 +50,5 @@ Confirmed swing highs/lows, equal highs/lows, unfilled gaps, unswept session ext
 
 `python -m unittest -v test_adaptive_market_paths_v1.py`
 
-26 synthetic software checks pass after the source-continuity correction. No historical market replay, new QuantConnect backtest, native order, cloud compile, paid node or production deployment has been run as part of this candidate. The QuantConnect MCP currently rejects full file reads/backtests unless an A1-1/A4-12/A16-32 assistant node is available.
+27 synthetic software checks pass after the source-continuity correction. No historical market replay, new QuantConnect backtest, native order, cloud compile, paid node or production deployment has been run as part of this candidate. The QuantConnect MCP currently rejects full file reads/backtests unless an A1-1/A4-12/A16-32 assistant node is available.
 **Correction:** a prior supplied close must be timestamped at the current break start; old-parent invalidation must not follow new-parent confirmation. Minute price updates and premarket sealing must match the referenced dataset and contract segment. Without a complete supplied per-period native minute prefix, liquidity targets remain unknown. These software checks are not independent authentication of the supplied bars or an autonomous detector.
