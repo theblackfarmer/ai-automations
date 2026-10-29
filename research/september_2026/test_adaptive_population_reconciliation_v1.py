@@ -75,9 +75,9 @@ class AdaptivePopulationReconciliationTests(unittest.TestCase):
         self.assertFalse(r["summary"]["original_cohort_complete"])
         self.assertEqual(r["summary"]["distinct_original_no_target_observations_linked"], 1)
         d = r["adaptive_events"][0]
-        self.assertEqual(d["break_state"], "BREAK_CONFIRMED_AWAITING_OPEN")
-        self.assertEqual(d["next_open_status"], "RESEARCH_ENTRY_GEOMETRY_ONLY")
-        self.assertEqual(d["level_continuity"], "UNVERIFIED")
+        self.assertEqual(d["break_state"], "WATCH")
+        self.assertEqual(d["next_open_status"], "NOT_EVALUATED")
+        self.assertEqual(d["level_continuity"], "PARTIAL_OR_UNVERIFIED_SOURCE_PREFIX")
         self.assertTrue(d["strictly_later_than_original_decision"])
         self.assertFalse(d["execution_allowed"])
         self.assertFalse(d["historical_pnl_established"])
@@ -105,7 +105,7 @@ class AdaptivePopulationReconciliationTests(unittest.TestCase):
         e = event(path="REVERSAL")
         r = self.result(events=[e])
         self.assertEqual(r["adaptive_events"][0]["path"], "REVERSAL")
-        self.assertEqual(r["adaptive_events"][0]["break_state"], "BREAK_CONFIRMED_AWAITING_OPEN")
+        self.assertEqual(r["adaptive_events"][0]["break_state"], "WATCH")
         k = copy.deepcopy(e)
         k["setup"]["new_parent_confirmed_at"] = None
         r = self.result(events=[k])
@@ -170,6 +170,46 @@ class AdaptivePopulationReconciliationTests(unittest.TestCase):
         e = event()
         e["setup"]["break_start"] = "2026-10-28T14:00:00"
         with self.assertRaisesRegex(ValueError, "timezone offset"):
+            self.result(events=[e])
+
+    def test_empty_prefix_cannot_certify_unswept_prior_liquidity(self):
+        e = event()
+        e["known_coverage_complete"] = True
+        r = self.result(events=[e])
+        d = r["adaptive_events"][0]
+        self.assertEqual(d["break_state"], "WATCH")
+        self.assertEqual(d["next_open_status"], "NOT_EVALUATED")
+        self.assertTrue(d["periods_with_unverified_continuity"])
+
+    def test_complete_source_prefix_allows_nonexecuting_geometry_only(self):
+        e = event()
+        start = datetime(2026, 10, 28, 13, 57, tzinfo=UTC)
+        e["liquidity_periods"][0]["known_at"] = iso(start)
+        e["known_completed_minutes"] = [minute(start + timedelta(minutes=i), source_id=f"N{i}") for i in range(3)]
+        e["known_coverage_complete"] = True
+        r = self.result(events=[e])
+        d = r["adaptive_events"][0]
+        self.assertEqual(d["break_state"], "BREAK_CONFIRMED_AWAITING_OPEN")
+        self.assertEqual(d["next_open_status"], "RESEARCH_ENTRY_GEOMETRY_ONLY")
+        self.assertEqual(d["level_continuity"], "COMPLETE_SUPPLIED_PREFIX_NOT_INDEPENDENTLY_AUTHENTICATED")
+        self.assertFalse(d["execution_allowed"])
+
+    def test_missing_first_or_last_minute_raises_no_entry_proposal(self):
+        start = datetime(2026, 10, 28, 13, 57, tzinfo=UTC)
+        for indices in ((1,2), (0,1), (0,2)):
+            with self.subTest(indices=indices):
+                e = event()
+                e["liquidity_periods"][0]["known_at"] = iso(start)
+                e["known_completed_minutes"] = [minute(start + timedelta(minutes=i), source_id=f"N{i}") for i in indices]
+                e["known_coverage_complete"] = True
+                d = self.result(events=[e])["adaptive_events"][0]
+                self.assertEqual(d["break_state"], "WATCH")
+                self.assertEqual(d["next_open_status"], "NOT_EVALUATED")
+
+    def test_missing_coverage_assertion_is_rejected(self):
+        e = event()
+        del e["known_coverage_complete"]
+        with self.assertRaisesRegex(ValueError, "explicit source coverage"):
             self.result(events=[e])
 
     def test_original_cohort_remains_unchanged_and_replay_deterministic(self):
