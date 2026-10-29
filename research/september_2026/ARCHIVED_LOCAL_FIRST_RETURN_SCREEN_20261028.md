@@ -33,6 +33,12 @@
 
 The 15m events were additionally checked for completed-bar clocks, strict crossing of a previously known structure reference, 15 ordered minute source IDs, active selected parent, and matching direction. **They are research progression events, not source-complete 15-minute breakout entries or verified trades.** A future-known event is never used to revise an earlier return.
 
+## Archived target-selector source finding
+
+The retained (not newly cloud-inspected) `source/astra_structure_exit_work/plain_upload/market_primitives.py` implements `MarketContextHooks._target` as a **nearest-valid opposing-zone** filter: a zone must have recorded `target_valid`, be known by the decision, oppose the original direction, and be entirely ahead of a conservative `max(proximal,current_close)` long or `min(proximal,current_close)` short entry reference. Only surviving registered 15m/1h/4h supply/demand formations are considered. Ranking is proximity first, then larger timeframe and later recognition. The selector does **not** evaluate PDH/PDL, premarket, PWH/PWL, or an alternative continuation strategy. It does **not** explicitly score source-owned parent/context relevance for target selection.
+
+This explains the *mechanical eligibility definition* behind target absence in the archived local candidate population, but it does **not** establish that the omitted levels are legitimate first-opposing-zone targets, or prove which native 2,054 rows are recoverable. The independent continuation path must retain its own frozen entry, stop and exit protocol; never relabel a diagnostic liquidity proxy as an executable opposing zone.
+
 ## Next validation gate
 
 Restore archived native `funnel_diagnosis_v1.py` via backtest snapshot **38595614** (QuantConnect Code tab / Clone Algorithm). Require the full decision-level native 3,069-row ledger, original 1m NQ bar source, actual parent/correction/origin membership, source continuity, realistic next-minute price fill and stop/target behavior. Keep the canonical mandatory 1m+5m rule and first opposing-zone exit unchanged; the new continuation/reversal routes remain independent, non-executing research candidates.
