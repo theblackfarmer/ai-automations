@@ -199,3 +199,37 @@ class NativeFunnelCensus:
             'source_catalog_parent_relevance_validated':False,
             'trade_admission':False,'performance_test':False,'orders_changed':False
         }
+
+    def compact_receipt(self, expected_total=None, expected_missing=None, expected_targets=None):
+        """Return auditable counts below QuantConnect's per-record log limit.
+
+        All source decisions stay in memory; no raw price or private event row
+        is exported. A receipt without all three expected totals is not a claim
+        of complete population validation.
+        """
+        checked = self.report(expected_total, expected_missing, expected_targets)
+        codes = ('NONE', 'INVALID', 'BEHIND', 'TARGET')
+        out = dict(
+            kind='ASTRA_NATIVE_FUNNEL_COMPACT_V1',
+            observations=checked['return_observations'],
+            missing_target=checked['missing_target'],
+            with_target=checked['with_target'],
+            stages={code: self.stages[stage] for stage,code in zip(STAGES, codes)},
+            both_1m_5m_aligned_by_stage={
+                code:self.stage_state_pairs[stage+'|ALIGNED|ALIGNED']
+                for stage,code in zip(STAGES, codes)},
+            distinct_candidates=checked['distinct_candidates'],
+            first_return_no_target_candidates=checked['first_return_no_target_candidates'],
+            first_missing_later_target_candidates=checked['first_missing_later_target_candidates'],
+            source_decision_sha256=checked['source_decision_sha256'],
+            expected_counts_reconciled=all(x is not None for x in
+                                           (expected_total,expected_missing,expected_targets)),
+            raw_decision_rows_exported=0,
+            parent_relevance_authenticated=False,
+            entries_authorized=False,
+            performance_test=False,
+        )
+        encoded=json.dumps(out, sort_keys=True, separators=(',',':'))
+        if len(encoded)>1700:
+            raise ValueError('COMPACT_NATIVE_FUNNEL_RECEIPT_EXCEEDS_LOG_RECORD_LIMIT')
+        return out
