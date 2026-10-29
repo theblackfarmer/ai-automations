@@ -100,6 +100,12 @@ class NativeFunnelTests(unittest.TestCase):
         a=capture_return(source_namespace=SRC,event=mk_event(),context=mk_ctx(reasons=['NO_RELEVANT_OPPOSING_TARGET','M1_STRUCTURE_UNKNOWN']),packet=mk_packet(),catalog=[])
         c=NativeFunnelCensus();c.observe(a)
         self.assertEqual(c.report()['joint_issue_counts']['M1_STRUCTURE_UNKNOWN'],1)
+    def test_stage_structure_cross_table_counts(self):
+        c=NativeFunnelCensus();c.observe(cap());c.observe(cap(cid='C2',zones=[mk_zone()],actual={'zone_id':'Z1'}))
+        r=c.report()
+        self.assertEqual(r['stage_by_m1_m5']['NO_OPPOSING_ZONE_KNOWN|ALIGNED|ALIGNED'],1)
+        self.assertEqual(r['stage_by_m1_m5']['TARGET_AVAILABLE|ALIGNED|ALIGNED'],1)
+
     def test_stably_ordered_rank_timeframe(self):
         a=mk_zone(id='A',tf=900);b=mk_zone(id='B',tf=3600)
         self.assertEqual(cap([a,b],{'zone_id':'B'})['selected_zone_id'],'B')
