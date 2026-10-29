@@ -68,7 +68,8 @@ def _source_bar(blob, name, *, expected_dataset, expected_segment):
         raise ValueError(f"{name}: real source and segment proof required")
     if not isinstance(blob.get("source_id"), str) or not blob["source_id"].strip():
         raise ValueError(f"{name}: native source_id required")
-    v = {k: blob[k] for k in ("open", "high", "low", "close", "source_id")}
+    v = {k: blob[k] for k in ("open", "high", "low", "close", "source_id",
+                              "dataset_id", "contract_segment_id")}
     v["start"] = when(blob.get("start"), f"{name}.start")
     v["end"] = when(blob.get("end"), f"{name}.end")
     return MinuteBar(**v)
@@ -118,12 +119,14 @@ def reconcile(original_rows, new_events, *, expected_total=3069,
                 setup.contract_segment_id == "UNSPECIFIED_SEGMENT"):
             raise ValueError(f"{event_id}: explicit immutable dataset/contract binding required")
         book = CausalLiquidityBook()
+        period_records = []
         for i, period in enumerate(event.get("liquidity_periods", [])):
             obj = typed(PeriodEvidence, period, PERIOD_TIME_FIELDS, f"{event_id}.period[{i}]")
             if (obj.dataset_id != setup.dataset_id or
                     obj.contract_segment_id != setup.contract_segment_id):
                 raise ValueError(f"{event_id}: liquidity provenance contradicts setup")
             book.register(obj)
+            period_records.append(obj)
         # The caller must supply a *full* actual continuity prefix (since each
         # period became known) to certify statuses. If incomplete, keep a
         # provisional proposal only, not a confirmed ready-for-trade event.
@@ -131,6 +134,7 @@ def reconcile(original_rows, new_events, *, expected_total=3069,
         if not isinstance(prefix, list):
             raise ValueError(f"{event_id}: minute prefix must be a list")
         previous_end = None
+        actual_bars = []
         for i, item in enumerate(prefix):
             bar = _source_bar(item, f"{event_id}.prefix[{i}]",
                               expected_dataset=setup.dataset_id,
@@ -143,22 +147,59 @@ def reconcile(original_rows, new_events, *, expected_total=3069,
                 if bar.start > previous_end:
                     book.note_coverage_unknown(bar.start, f"GAP_OBSERVED_{event_id}_{i}")
             previous_end = bar.end
+            actual_bars.append(bar)
             book.observe_completed_bar(bar)
-        if event.get("known_coverage_complete") is not True:
-            known_coverage_status = "UNVERIFIED"
-        else:
-            known_coverage_status = "SOURCE_CLAIM_REQUIRES_AUDIT"
+        # Require an actual one-minute source prefix for *each* published
+        # liquidity period between its knowledge time and the new break.
+        # A summary boolean, or an empty/truncated event stream, cannot prove
+        # a level remained available. A scheduled market closure needs a
+        # separate explicit audited bridge, not synthetic bars.
+        supplied_complete = event.get("known_coverage_complete") is True
+        if not isinstance(event.get("known_coverage_complete"), bool):
+            raise ValueError(f"{event_id}: explicit source coverage assertion required")
+        incomplete_periods = []
+        for p in period_records:
+            if p.known_at > setup.break_start:
+                continue
+            cursor = p.known_at
+            complete = supplied_complete and p.coverage_complete
+            if complete:
+                for bar in actual_bars:
+                    if bar.end <= cursor:
+                        continue
+                    if bar.start != cursor:
+                        complete = False
+                        break
+                    cursor = bar.end
+                    if cursor == setup.break_start:
+                        break
+                if cursor != setup.break_start:
+                    complete = False
+            if not complete:
+                incomplete_periods.append((p.kind, p.period_id))
+                book.note_coverage_unknown(
+                    setup.break_start,
+                    f"UNVERIFIED_CONTINUITY:{event_id}:{p.kind}:{p.period_id}",
+                    {f"{p.kind}:{p.period_id}:H", f"{p.kind}:{p.period_id}:L"},
+                )
+        known_coverage_status = (
+            "PARTIAL_OR_UNVERIFIED_SOURCE_PREFIX" if incomplete_periods else
+            "COMPLETE_SUPPLIED_PREFIX_NOT_INDEPENDENTLY_AUTHENTICATED"
+        )
         decision = evaluate_break(setup, book.levels(setup.break_start))
         open_status = "NOT_EVALUATED"
         nxt = event.get("next_minute")
-        if decision.status == "BREAK_CONFIRMED_AWAITING_OPEN" and nxt is not None:
+        if nxt is not None:
+            # Validate even when an entry was not proposed; optional future
+            # evidence cannot evade source/clock checks by taking a WAIT branch.
             b = _source_bar(nxt, f"{event_id}.next_minute",
                             expected_dataset=setup.dataset_id,
                             expected_segment=setup.contract_segment_id)
             if b.start != setup.break_end:
                 raise ValueError(f"{event_id}: next-minute open must start at break close")
-            probe = evaluate_next_open(decision, b.open, b.start)
-            open_status = probe.status
+            if decision.status == "BREAK_CONFIRMED_AWAITING_OPEN":
+                probe = evaluate_next_open(decision, b.open, b.start)
+                open_status = probe.status
         row = {
             "event_id": event_id,
             "related_original_observation_id": original_id,
@@ -176,6 +217,7 @@ def reconcile(original_rows, new_events, *, expected_total=3069,
             "next_open_status": open_status,
             "potential_liquidity_proxy": decision.target_id,
             "level_continuity": known_coverage_status,
+            "periods_with_unverified_continuity": [list(k) for k in incomplete_periods],
             "execution_allowed": False,
             "historical_pnl_established": False,
             "candidate_evidence_requires_independent_source_audit": True,
