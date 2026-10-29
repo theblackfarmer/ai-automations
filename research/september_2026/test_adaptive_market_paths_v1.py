@@ -56,7 +56,7 @@ class LevelTests(unittest.TestCase):
         day=date(2026,10,28);pm=Premarket0300To0800();b=CausalLiquidityBook()
         for i in range(300):
             t=local(day,3)+timedelta(minutes=i)
-            bar=MinuteBar(t,t+timedelta(minutes=1),100,110+i/300,90,99,f"{i}")
+            bar=MinuteBar(t,t+timedelta(minutes=1),100,110+i/300,90,99,f"{i}","RAW_NQ_MINUTE","NQ_2026_DEC")
             pm.feed(bar)
         with self.assertRaises(ValueError):pm.seal(day,local(day,7,59),"id")
         p=pm.seal(day,local(day,8),"id","RAW_NQ_MINUTE","NQ_2026_DEC");b.register(p)
@@ -70,13 +70,23 @@ class LevelTests(unittest.TestCase):
         for i in range(300):
             if i==123:continue
             t=local(day,3)+timedelta(minutes=i)
-            pm.feed(MinuteBar(t,t+timedelta(minutes=1),100,110,90,99,f"{i}"))
+            pm.feed(MinuteBar(t,t+timedelta(minutes=1),100,110,90,99,f"{i}","RAW_NQ_MINUTE","NQ_2026_DEC"))
         p=pm.seal(day,local(day,8),"id","RAW_NQ_MINUTE","NQ_2026_DEC")
         self.assertFalse(p.coverage_complete)
 
     def test_dst_shift_not_hardcoded_utc(self):
         self.assertEqual(local(date(2026,10,28),3).hour,7) # EDT
         self.assertEqual(local(date(2026,11,2),3).hour,8)  # EST
+
+    def test_premarket_cannot_be_sealed_with_mixed_contract_bars(self):
+        day=date(2026,10,28);pm=Premarket0300To0800()
+        for i in range(300):
+            t=local(day,3)+timedelta(minutes=i)
+            segment="OTHER_SEGMENT" if i==299 else "NQ_2026_DEC"
+            pm.feed(MinuteBar(t,t+timedelta(minutes=1),100,110,90,99,
+                              f"PM{i}","RAW_NQ_MINUTE",segment))
+        with self.assertRaisesRegex(ValueError,"source/contract"):
+            pm.seal(day,local(day,8),"SOURCE","RAW_NQ_MINUTE","NQ_2026_DEC")
 
     def test_contract_dataset_mismatch_blocks_cross_segment_target(self):
         p=sample_period();b=CausalLiquidityBook();b.register(p)
@@ -125,6 +135,16 @@ class BreakPathTests(unittest.TestCase):
         s=setup(correction_known_at=setup().break_end)
         self.assertEqual(self.candidate(s).reason,"REQUIRED_CONTEXT_NOT_KNOWN_BEFORE_BREAK")
 
+    def test_previous_structure_close_cannot_be_stale(self):
+        s=setup(previous_close_known_at=setup().break_start-timedelta(minutes=15))
+        self.assertEqual(self.candidate(s).reason,
+                         "PREVIOUS_STRUCTURE_CLOSE_NOT_AT_BREAK_START")
+
+    def test_parent_must_invalidate_before_new_parent_confirmation(self):
+        s=setup(path="REVERSAL", old_parent_invalidated_at=setup().break_start-timedelta(minutes=5),
+                new_parent_confirmed_at=setup().break_start-timedelta(minutes=10))
+        self.assertEqual(self.candidate(s).reason,"REVERSAL_REQUIRES_CONFIRMED_NEW_PARENT")
+
     def test_no_chasing_old_break_without_new_structure(self):
         self.assertEqual(self.candidate(setup(previous_close=108)).reason,
                          "NO_NEW_CAUSAL_PROTECTED_STRUCTURE_BREAK")
@@ -161,7 +181,7 @@ class LiquidityStateTests(unittest.TestCase):
     def test_sweep_reclaim_and_future_not_retroactive(self):
         p=sample_period(high=110);b=CausalLiquidityBook();b.register(p)
         t=datetime(2026,10,28,12,tzinfo=UTC)
-        b.observe_completed_bar(MinuteBar(t,t+timedelta(minutes=1),109,111,106,108,"C1"))
+        b.observe_completed_bar(MinuteBar(t,t+timedelta(minutes=1),109,111,106,108,"C1","RAW_NQ_MINUTE","NQ_2026_DEC"))
         older={l.id:l.state for l in b.levels(t)}
         newer={l.id:l.state for l in b.levels(t+timedelta(minutes=1))}
         self.assertEqual(older["PD_ETH:2026-10-27:H"],"AVAILABLE")
@@ -170,7 +190,7 @@ class LiquidityStateTests(unittest.TestCase):
     def test_completed_close_consumes_level(self):
         p=sample_period(high=110);b=CausalLiquidityBook();b.register(p)
         t=datetime(2026,10,28,12,tzinfo=UTC)
-        b.observe_completed_bar(MinuteBar(t,t+timedelta(minutes=1),109,111,106,110.5,"C1"))
+        b.observe_completed_bar(MinuteBar(t,t+timedelta(minutes=1),109,111,106,110.5,"C1","RAW_NQ_MINUTE","NQ_2026_DEC"))
         high=next(l for l in b.levels(t+timedelta(minutes=1)) if l.side=="BUY_SIDE")
         self.assertEqual(high.state,"CLOSED_BEYOND")
 
@@ -182,10 +202,22 @@ class LiquidityStateTests(unittest.TestCase):
         self.assertEqual({l.state for l in b.levels(t-timedelta(minutes=1))}, {"AVAILABLE"})
         self.assertEqual(evaluate_break(setup(),b.levels(setup().break_start)).status,"WATCH")
 
+    def test_a_bar_from_another_contract_cannot_change_levels(self):
+        b=CausalLiquidityBook();p=sample_period(high=110);b.register(p)
+        t=datetime(2026,10,28,12,tzinfo=UTC)
+        b.observe_completed_bar(MinuteBar(t,t+timedelta(minutes=1),109,112,106,109,
+                                        "OTHER", "RAW_NQ_MINUTE", "OTHER_SEGMENT"))
+        self.assertEqual(next(l for l in b.levels(t+timedelta(minutes=1))
+                              if l.side=="BUY_SIDE").state,"AVAILABLE")
+        b.observe_completed_bar(MinuteBar(t+timedelta(minutes=1),t+timedelta(minutes=2),
+                                        109,112,106,109,"RIGHT","RAW_NQ_MINUTE","NQ_2026_DEC"))
+        self.assertEqual(next(l for l in b.levels(t+timedelta(minutes=2))
+                              if l.side=="BUY_SIDE").state,"SWEPT_RECLAIM")
+
     def test_already_swept_level_not_a_fresh_destination(self):
         b=CausalLiquidityBook();b.register(sample_period(high=125))
         t=datetime(2026,10,28,12,tzinfo=UTC)
-        b.observe_completed_bar(MinuteBar(t,t+timedelta(minutes=1),124,126,121,123,"SWEEP"))
+        b.observe_completed_bar(MinuteBar(t,t+timedelta(minutes=1),124,126,121,123,"SWEEP","RAW_NQ_MINUTE","NQ_2026_DEC"))
         self.assertEqual(evaluate_break(setup(),b.levels(setup().break_start)).status,"WATCH")
 
 if __name__=="__main__":
