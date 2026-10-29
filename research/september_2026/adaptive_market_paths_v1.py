@@ -44,13 +44,17 @@ class MinuteBar:
     low: float
     close: float
     source_id: str
+    dataset_id: str = "UNSPECIFIED_DATASET"
+    contract_segment_id: str = "UNSPECIFIED_SEGMENT"
 
     def __post_init__(self):
         a, b = _utc(self.start, "bar.start"), _utc(self.end, "bar.end")
         if b - a != timedelta(minutes=1):
             raise ValueError("Only complete one-minute bars are accepted")
         o, h, lo, c = (_price(getattr(self, n), n) for n in ("open", "high", "low", "close"))
-        if not lo <= min(o, c) <= max(o, c) <= h or not self.source_id:
+        if (not lo <= min(o, c) <= max(o, c) <= h or
+            any(not isinstance(s, str) or not s.strip() for s in
+                (self.source_id, self.dataset_id, self.contract_segment_id))):
             raise ValueError("Invalid OHLC/source")
         object.__setattr__(self, "start", a)
         object.__setattr__(self, "end", b)
@@ -119,11 +123,13 @@ class CausalLiquidityBook:
             raise ValueError("Level events must advance causal clocks")
         prior.append((time, state, source_id))
 
-    def note_coverage_unknown(self, known_at: datetime, source_id: str):
-        """Irreversible unknown until a new complete period is registered."""
+    def note_coverage_unknown(self, known_at: datetime, source_id: str,
+                              level_ids: set[str] | None = None):
+        """Mark only affected known levels unknown; never revive stale liquidity."""
         t = _utc(known_at, "known_at")
         for level in self.levels(t, latest_only=False):
-            if level.state == "AVAILABLE":
+            if (level.state == "AVAILABLE" and
+                (level_ids is None or level.id in level_ids)):
                 self._record(level.id, t, "UNKNOWN_COVERAGE", source_id)
 
     def observe_completed_bar(self, bar: MinuteBar):
@@ -133,7 +139,11 @@ class CausalLiquidityBook:
         strict crossings, but do not infer which occurred first.
         """
         for level in self.levels(bar.start, latest_only=False):
-            if level.state != "AVAILABLE" or not level.coverage_complete:
+            if (level.state != "AVAILABLE" or not level.coverage_complete or
+                level.dataset_id != bar.dataset_id or
+                level.contract_segment_id != bar.contract_segment_id or
+                bar.dataset_id == "UNSPECIFIED_DATASET" or
+                bar.contract_segment_id == "UNSPECIFIED_SEGMENT"):
                 continue
             if level.side == "BUY_SIDE":
                 crossed = bar.high > level.price
@@ -234,11 +244,15 @@ class Premarket0300To0800:
             if self._sealed[day].source_id != source_id:
                 raise ValueError("Cannot replace a sealed source")
             return self._sealed[day]
-        if bars:
-            high, low = max(b.high for b in bars.values()), min(b.low for b in bars.values())
-        else:
+        if not bars:
             # An unavailable period has no actual levels and cannot be registered.
             raise ValueError("No premarket source bars: no price levels exist")
+        if (dataset_id == "UNSPECIFIED_DATASET" or
+            contract_segment_id == "UNSPECIFIED_SEGMENT" or
+            any(b.dataset_id != dataset_id or
+                b.contract_segment_id != contract_segment_id for b in bars.values())):
+            raise ValueError("Premarket source/contract does not match sealed period")
+        high, low = max(b.high for b in bars.values()), min(b.low for b in bars.values())
         p = PeriodEvidence("PREMARKET_0300_0800", day.isoformat(), start, end,
                            end, high, low, source_id, full,
                            dataset_id, contract_segment_id)
@@ -334,10 +348,14 @@ def evaluate_break(setup: StructureSetup, levels: list[LiquidityLevel]) -> Decis
               setup.previous_close_known_at]
     if any(_utc(c, "known_at") > t0 for c in clocks):
         return decision("WAIT", "REQUIRED_CONTEXT_NOT_KNOWN_BEFORE_BREAK")
+    if _utc(setup.previous_close_known_at, "previous_close_known_at") != t0:
+        return decision("WAIT", "PREVIOUS_STRUCTURE_CLOSE_NOT_AT_BREAK_START")
     if setup.path == "REVERSAL":
         if (setup.old_parent_invalidated_at is None or setup.new_parent_confirmed_at is None or
             _utc(setup.old_parent_invalidated_at, "old_parent_invalidated_at") > t0 or
-            _utc(setup.new_parent_confirmed_at, "new_parent_confirmed_at") > t0):
+            _utc(setup.new_parent_confirmed_at, "new_parent_confirmed_at") > t0 or
+            _utc(setup.old_parent_invalidated_at, "old_parent_invalidated_at") >
+                _utc(setup.new_parent_confirmed_at, "new_parent_confirmed_at")):
             return decision("WAIT", "REVERSAL_REQUIRES_CONFIRMED_NEW_PARENT")
     ref, prev, close = (_price(getattr(setup, n), n) for n in
                         ("protected_reference_price", "previous_close", "break_close"))
