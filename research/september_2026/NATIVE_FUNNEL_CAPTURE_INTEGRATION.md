@@ -34,11 +34,14 @@ Every summary bucket distinguishes:
 - `VALID_OPPOSING_NOT_AHEAD`: at least one target-valid opposing zone exists, none entirely ahead under exact canonical geometry.
 - `TARGET_AVAILABLE`: same known-time and nearest-valid-zone ordering as the frozen selector.
 
-Also records `M1|M5` structural agreement pairs and **all** joint context issues; the `m1`/`m5` states are matched to selected parent **and contact lineage**, not candle colors. Counts of first-return missing-target candidates and later reacquisition are separate from total observations.
+Also records `M1|M5` structural agreement pairs and **all** joint context issues; the `m1`/`m5` states are matched to selected parent **and contact lineage**, not candle colors. Counts of first-return missing-target candidates and later reacquisition are separate from total observations. The cross-table `stage_by_m1_m5` shows which exact target-inventory stages co-occur with confirmed aligned 1m and 5m structural states.
 
 ## Software receipt and limitations
 
-- 27 focused synthetic regression tests: **PASS**, covering missing catalog, invalid zones, close-based retained target, direction, future-known target, exact selector parity, mismatched contact/clock, duplicate observations, repeated candidates, and fail-closed expected counts.
+- 28 focused synthetic regression tests: **PASS**, covering missing catalog, invalid zones, close-based retained target, direction, future-known target, exact selector parity, mismatched contact/clock, duplicate observations, repeated candidates, and fail-closed expected counts.
 - 1,000 seeded independent canonical-selection comparisons against the archived `MarketContextHooks._target`: **1,000 matching zone IDs**, all categories represented. This verifies the observer's reproduction of the **archived source** only.
 - **No actual 3,069-row native population was processed.** Do not report a breakdown of the 2,054 cases, more eligible trades, returns, R, or expectancy from this synthetic fixture.
 - This observer is a **diagnostic**, not permission to use PDH/PDL, PWH/PWL, previous-month or 03:00–08:00 NY premarket as executable targets; adaptive break/reversal entries and authenticated liquidity coverage still require their separate source verification.
+## Independently verified older local archive
+
+The optional `replay_archived_local_stream.py` performs a source-hash-verified retrospective check against the separate archived 4,153-return local dataset; it is not the native 3,069-run. See `ARCHIVED_LOCAL_CENSUS_FINDINGS.md`. The observer precisely recovered 3,298 missing targets, 855 targets, and 701 M1+M5-aligned no-target observations on that local source. It did not create any new orders or returns.
