@@ -146,7 +146,7 @@ class NativeFunnelCensus:
         self.observations=set()
         self.first={}
         self.first_missing_then_target=set()
-        self.stages=Counter();self.state_pairs=Counter();self.reasons=Counter()
+        self.stages=Counter();self.state_pairs=Counter();self.stage_state_pairs=Counter();self.reasons=Counter()
         self.distinct_by_stage={x:set() for x in STAGES}
         self.samples={x:[] for x in STAGES}
         self._fingerprint=sha256()
@@ -165,6 +165,7 @@ class NativeFunnelCensus:
         self.stages[row['stage']]+=1
         self.distinct_by_stage[row['stage']].add(candidate)
         self.state_pairs[row['m1']+'|'+row['m5']]+=1
+        self.stage_state_pairs[row['stage']+'|'+row['m1']+'|'+row['m5']]+=1
         for reason in row['joint_reasons']:self.reasons[reason]+=1
         if len(self.samples[row['stage']])<self.samples_per_stage:
             self.samples[row['stage']].append({k:row[k] for k in
@@ -191,6 +192,7 @@ class NativeFunnelCensus:
             'first_missing_later_target_candidates':len(self.first_missing_then_target),
             'stage_counts':{k:self.stages[k] for k in STAGES},
             'm1_m5_joint_counts':dict(sorted(self.state_pairs.items())),
+            'stage_by_m1_m5':dict(sorted(self.stage_state_pairs.items())),
             'joint_issue_counts':dict(sorted(self.reasons.items())),
             'per_stage_samples':deepcopy(self.samples),
             'source_decision_sha256':self._fingerprint.hexdigest(),
