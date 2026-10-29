@@ -113,4 +113,34 @@ class NativeFunnelTests(unittest.TestCase):
         x=NativeFunnelCensus();x.observe(cap());r=x.report()
         self.assertFalse(r['trade_admission']);self.assertFalse(r['orders_changed'])
 
+
+    def test_compact_receipt_has_real_counts_within_log_limit(self):
+        c=NativeFunnelCensus(samples_per_stage=10)
+        for i in range(3069):
+            kw=dict(cid='C'+str(i),at=600+60*i)
+            if i<2054:
+                if i%3==0:r=cap(**kw)
+                elif i%3==1:r=cap(zones=[mk_zone(id='Z'+str(i),target_valid=False)],**kw)
+                else:r=cap(zones=[mk_zone(id='Z'+str(i),low=96,high=99)],**kw)
+            else:r=cap(zones=[mk_zone(id='Z'+str(i))],actual={'zone_id':'Z'+str(i)},**kw)
+            c.observe(r)
+        r=c.compact_receipt(expected_total=3069,expected_missing=2054,expected_targets=1015)
+        self.assertEqual(r['observations'],3069)
+        self.assertEqual(r['missing_target'],2054)
+        self.assertEqual(sum(r['stages'].values()),3069)
+        self.assertEqual(sum(r['both_1m_5m_aligned_by_stage'].values()),3069)
+        self.assertTrue(r['expected_counts_reconciled'])
+        self.assertEqual(r['raw_decision_rows_exported'],0)
+        import json
+        self.assertLess(len(json.dumps(r,sort_keys=True,separators=(',',':'))),1800)
+
+    def test_compact_receipt_fails_if_expected_population_incomplete(self):
+        c=NativeFunnelCensus();c.observe(cap())
+        with self.assertRaisesRegex(ValueError,'INCOMPLETE_NATIVE_POPULATION'):
+            c.compact_receipt(3069,2054,1015)
+
+    def test_compact_receipt_without_count_assertions_stays_unverified(self):
+        c=NativeFunnelCensus();c.observe(cap())
+        self.assertFalse(c.compact_receipt()['expected_counts_reconciled'])
+
 if __name__=='__main__':unittest.main()
