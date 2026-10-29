@@ -43,3 +43,18 @@ Report distinct **opportunities** separately from repeated **return observations
 
 ## Coordination
 This is a non-executable research specification attached to ASTRA draft PR #6. A separate independent **ASTRA 6 Full Validation** task is already running: preserve its task ownership, avoid duplicate work and merge conflicts. Do not change original QuantConnect projects `38573075` or `38584738`, and do not submit live orders or purchase Assistant nodes.
+
+## User's latest clarification — Entry timing experiment is the PRIMARY objective
+
+**Research question:** Does a causally recognized EQH/EQL liquidity raid followed by actual direction confirmation help ASTRA select better entries or better timing *relative to what the original engine already does*? The sweep is **not** automatically a new requirement, hard filter, or target prerequisite. Evaluate whether it improves timing, reduces adverse excursion/early stops, or merely delays and misses valid trades. All findings are hypotheses until demonstrated on authentic independent data.
+
+Freeze and compare on the SAME original setup population with the SAME source contract, stop, target policy, and transaction cost assumptions:
+
+- **A — Original baseline:** unmodified ASTRA parent, 1m AND 5m structure agreement, correction/resumption, later responsible-zone return and exact original selected-origin far-wick stop.
+- **B — Optional sweep-context annotation:** same A entries and exits, tag decision-known EQH/EQL pool status, raid direction, reclaim, post-raid BOS and time elapsed; **no economic change**. This determines whether the signal distinguishes later winners from losers without hindsight.
+- **C — Delayed/confirmed timing proposal:** the same predeclared setups, with an explicit independent confirmation clock (known EQH/EQL raid → reclaim → later valid BOS in intended direction) and a later first permissible entry. Do **not** silently drop setups with no confirmation: report them as no-entry/missed-opportunity. Preserve strict first eligible minute/next open, parent authority, original source-candle far-wick stop, and only available causal target; the original entry cannot be retrospectively moved to the favorable candle.
+- **D — Separately labeled continuation case:** where price accepts a break and keeps moving without reclaim or later zone return, test parent-owned continuation separately, not by calling the price-taking candle a confirmed sweep reversal.
+
+**Primary comparisons:** counts of all common-source setups and uniquely accepted entries; first entry timestamp versus proposed entry timestamp and delay distribution; time of sweep, reclaim and BOS; evidence availability; entry price and signed stop distance, planned R; subsequent MAE/MFE and early-stop fraction; missed original winners versus avoided original losers; realized net R/expectancy, fees, fill assumptions and overlap-adjusted portfolio drawdown where executable bars permit. Break out outcomes by confirmed parent and market session, long vs short, previously taken vs fresh EQH/EQL, and continuity quality. Use unchanged historical samples first for diagnostics; evaluate any frozen winner hypothesis on untouched chronology before deployment. Report inability to compare actual profits when missing minute/quote/native order data.
+
+**Decision criterion:** Keep EQH/EQL as optional market-context evidence until independently validated incremental entry/timing benefit exceeds missed-opportunity costs. Never add it as a universal gate solely because it might reduce losing entries in an already examined sample.
