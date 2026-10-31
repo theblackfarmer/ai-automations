@@ -1,6 +1,13 @@
 name: ASTRA research verification
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'research/**'
+      - 'astra6_causal_transition_engine.py'
+      - '.github/workflows/astra_research_verification.yml'
   schedule:
     - cron: '17 10 * * 1'
 permissions:
@@ -17,11 +24,13 @@ jobs:
       - name: Install deterministic research dependencies
         run: python -m pip install pandas numpy pyarrow
       - name: Causal regime unit tests
-        run: python -m unittest discover -s research -p 'test_astra_market_regime.py' -v
+        run: python -m unittest discover -s research -p 'test_astra_*.py' -v
       - name: Frozen ASTRA discovery setup run
         run: python astra6_causal_transition_engine.py
       - name: Classify frozen setups against completed 15m bars
         run: python research/astra_regime_shadow_existing_setups.py
+      - name: Compare causal regime definitions
+        run: python research/astra_regime_experiments.py
       - name: Upload research-only findings
         if: always()
         uses: actions/upload-artifact@v4
@@ -32,3 +41,5 @@ jobs:
             astra6_causal_summary.csv
             astra_regime_shadow_setups.csv
             astra_regime_shadow_census.csv
+            astra_regime_experiment_summary.csv
+            astra_regime_experiment_setups.csv
