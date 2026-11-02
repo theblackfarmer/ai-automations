@@ -1,0 +1,53 @@
+name: Dr Charts Gateway Adversarial
+on:
+  push:
+    branches:
+      - "feature/dr-charts-tradovate-gateway-*"
+    paths:
+      - "dr_charts/**"
+      - "tests/test_drcharts_agent_*.py"
+      - "tests/drcharts_gateway_common.py"
+      - ".github/workflows/drcharts-gateway-adversarial.yml"
+  pull_request:
+    paths:
+      - "dr_charts/**"
+      - "tests/test_drcharts_agent_*.py"
+      - "tests/drcharts_gateway_common.py"
+      - ".github/workflows/drcharts-gateway-adversarial.yml"
+
+jobs:
+  adversarial-agent:
+    name: ${{ matrix.agent }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - agent: "Agent 1 - Protocol Breaker"
+            module: "tests.test_drcharts_agent_protocol"
+          - agent: "Agent 2 - Event Ordering Breaker"
+            module: "tests.test_drcharts_agent_ordering"
+          - agent: "Agent 3 - Reconnect Breaker"
+            module: "tests.test_drcharts_agent_reconnect"
+          - agent: "Agent 4 - Delivery Breaker"
+            module: "tests.test_drcharts_agent_delivery"
+          - agent: "Agent 5 - Validation/Security Breaker"
+            module: "tests.test_drcharts_agent_validation"
+          - agent: "Agent 6 - Crash-State Breaker"
+            module: "tests.test_drcharts_agent_state"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - run: python -m unittest ${{ matrix.module }} -v
+
+  compatibility:
+    name: Python 3.11 full adversarial suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m unittest discover -s tests -p "test_drcharts_agent_*.py" -v
